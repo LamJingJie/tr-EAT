@@ -1,5 +1,7 @@
 {
   "name": "tr-EAT",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
