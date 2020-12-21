@@ -24,6 +24,7 @@ If already commited and wish to revert back to previous commit
 
 Run on ANDROID PHONE
 - ionic cordova run android --device
+- ionic cordova run android --device --livereload 
 
 Run on Android Emulator
 - ionic cordova run android

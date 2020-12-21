@@ -8,7 +8,19 @@
 
 <ion-content [fullscreen]="true">
 
-  <app-explore-container name="Tab 1 page">Test</app-explore-container>
-  <p>ABDFJIABFNDNKASND</p>
-  <p>TEST</p>
+  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!--This entire section below here are all for testing purposes. You can remove them anytime-->
+  <div>
+    <h4>Testing firebase (Canteen DataTable)</h4>
+    
+      <p *ngFor = "let ct of canteen">
+        Canteen Name: {{ct.canteenname}}
+      </p>
+
+      <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
+      <ng-template #pass> Loading...</ng-template>
+      <ng-template #fail> Loaded</ng-template>
+
+   
+  </div>
 </ion-content>

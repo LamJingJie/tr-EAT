@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AlertController } from '@ionic/angular'; 
+import {CanteenService} from '../services/canteen/canteen.service';
 
 @Component({
   selector: 'app-tab1',
@@ -6,7 +8,12 @@ import { Component } from '@angular/core';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  canteen: any = [];
+  data: boolean;
+  constructor(private canteenService: CanteenService, private alertController: AlertController) {
+    this.data = true;
 
-  constructor() {}
+    canteenService.getAll().subscribe((data) => {this.canteen = data;});
+  }
 
 }
