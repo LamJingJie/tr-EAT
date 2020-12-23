@@ -36,4 +36,5 @@ export class AuthenticationService {
    SignUp(email, password){
     return this.ngFireAuth.createUserWithEmailAndPassword(email, password)
    }
+
 }

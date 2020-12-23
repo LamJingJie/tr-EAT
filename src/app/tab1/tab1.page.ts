@@ -18,8 +18,6 @@ export class Tab1Page {
     canteenService.getAll().subscribe((data) => {this.canteen = data;});
   }
 
-  goSignUp(){
-    this.router.navigate(['signup']);
-  }
+
 
 }
