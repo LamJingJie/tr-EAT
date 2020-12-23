@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>signup for sponsors</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
+      <ion-card>
+        <ion-item>
+          <ion-input type="email" formControlName="email" placeholder="Enter your email"></ion-input>
+        </ion-item>
+      </ion-card>
+      
+      <ion-card>
+        <ion-item>
+          <ion-input type="password" formControlName="password" placeholder="Enter your password"></ion-input>
+        </ion-item>
+      </ion-card>
+      
+      <ion-card>
+        <ion-item>
+          <ion-input type="password" formControlName = "confirmPassword" placeholder="Confirm your password"></ion-input>
+          {{signup_sponsor_form.get('confirmPassword').value}}
+        </ion-item> 
+      </ion-card>
+
+      <ion-card>
+        <ion-item>
+          <ion-input  type="text" disabled formControlName = "role" ></ion-input>
+        </ion-item> 
+      </ion-card>
+
+      
+      <div>
+        <ion-button type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
+      </div>
+    </form>
+</ion-content>
