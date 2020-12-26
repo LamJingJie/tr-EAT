@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 
-export interface User{
+/*export interface User{
   email: string,
   role: string,
-}
+}*/
 
-const ITEM_KEY = 'my-user'
+//const ITEM_KEY = 'my-user'
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,7 @@ export class UserService {
 
 
   // Those 2 functions below are for when the user log in, the 
-  addUser(user: User): Promise<any>{
+  /*addUser(user: User): Promise<any>{
     console.log("add User: " + user);
     return this.storage.get(ITEM_KEY).then((users: User[]) => {
 
@@ -53,5 +53,5 @@ export class UserService {
 
   deleteUser(): Promise<User[]>{
     return this.storage.remove(ITEM_KEY);
-  }
+  }*/
 }

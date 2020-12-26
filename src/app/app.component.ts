@@ -6,7 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { UserService, User } from 'src/app/services/user/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +14,7 @@ import { UserService, User } from 'src/app/services/user/user.service';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
-  users: User[] = [];
+  //users: User[] = [];
   currentRole: any;
 
   constructor(

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import {CanteenService} from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { UserService, User } from '../services/user/user.service';
+import { UserService } from '../services/user/user.service';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Storage } from '@ionic/storage';
@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 })
 
 export class Tab1Page {
-users: User[] = [];
+//users: User[] = [];
 userRole: any;
 userEmail: any;
 test: any;
@@ -54,13 +54,13 @@ canteenSub: Subscription;
     
   }
 
-  ionViewWillEnter(){
+    ionViewWillEnter(){
     this.storage.get('email').then(res=>{
       console.log("email tab1: " + res);
       this.userRole = res;
-      //If nvr retrieve properly, run again
       
     });
+ 
     
   }
 

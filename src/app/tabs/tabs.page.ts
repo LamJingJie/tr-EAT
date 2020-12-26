@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TimeoutError } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { UserService, User } from '../services/user/user.service';
+import { UserService } from '../services/user/user.service';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -11,7 +11,7 @@ import { Storage } from '@ionic/storage';
 })
 export class TabsPage {
   currentRole: any;
-  users: User[] = [];
+  //users: User[] = [];
 
   constructor( private authService: AuthenticationService, private userService: UserService, private storage: Storage,) {
 
