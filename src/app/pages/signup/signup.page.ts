@@ -18,6 +18,7 @@ export class SignupPage implements OnInit {
     private authService: AuthenticationService,
     private userService: UserService,
     private toast: ToastController,
+    private router: Router,
     private navCtrl: NavController) {
 
       this.signup_sponsor_form = this.formBuilder.group({
@@ -37,6 +38,8 @@ export class SignupPage implements OnInit {
         role: new FormControl('sponsor', Validators.compose([
           Validators.minLength(1)
         ]))
+
+      
       })
 
 
@@ -56,22 +59,23 @@ export class SignupPage implements OnInit {
   }
 
 
-  signup(){
+   signup(){
 
-      console.log(this.signup_sponsor_form.value);
-      
-       this.authService.SignUp(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['password']).then((res)=>{
-         this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']);
-        // console.log(res);
-         console.log("Successfully Signed Up");
-         this.navCtrl.pop();
+     // console.log(this.signup_sponsor_form.value['role']);
+       this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']).then((res)=>{
+     //   console.log(res);
+         this.authService.SignUp(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['password'], this.signup_sponsor_form.value['role']).then((res)=>{
+          //this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']);
+          //console.log(res);
+          //console.log("Successfully Signed Up");
+         this.signup_sponsor_form.reset();
+ 
+        }).catch((error)=>{
+          //console.log(error.message);
+           this.showError("Error: " + error.message);
+        })
+      })
 
-       }).catch((error)=>{
-         console.log(error.message);
-          this.showError(error.message);
-       })
-
-  
   }
 
   //If type password change to text, otherwise change to password

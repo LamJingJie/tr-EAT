@@ -15,19 +15,24 @@ import { AngularFirestoreModule} from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { IonicStorageModule } from '@ionic/storage';
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule,AngularFireModule.initializeApp(environment.firebase),
+  imports: [BrowserModule, IonicModule.forRoot({
+    rippleEffect: false,
+  }), AppRoutingModule, HttpClientModule,AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
+    IonicStorageModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
     AngularFirestoreModule],
   providers: [
     StatusBar,
     SplashScreen,
+    Storage,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
