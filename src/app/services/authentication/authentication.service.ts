@@ -103,6 +103,7 @@ export class AuthenticationService {
       
       //Wait till this function has completely finish before moving on.
       //Prevent error with "this.loading.dismiss()"
+      //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
       await this.presentLoading();
        if(e){
         //console.log(e.email);
@@ -117,21 +118,16 @@ export class AuthenticationService {
 
          
       //  });
-       //This acts as a sort of buffer, when login, gives time for the system to add the values into the storage
-       setTimeout(async ()=>{
+       
         await this.navCtrl.navigateRoot('/tabs');
         console.log("Logged In");
-        this.loading.dismiss();
-        console.log("Loading Dismissed!");
        
-      },200);
 
 
       }else{
         await this.navCtrl.navigateRoot('/login');
         console.log("Logged Out");
-        this.loading.dismiss();
-        console.log("Loading Dismissed!");
+        
       }
       
     });
@@ -142,10 +138,13 @@ export class AuthenticationService {
      //alert("Open Loading");
      const loading = await this.loading.create({
        cssClass: 'my-custom-class',
+       duration: 200
      });
      await loading.present();
 
-     console.log("Loading Present!");
+     await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+
+     console.log("Loading Dismiss!");
    }
 
    
