@@ -101,10 +101,7 @@ export class AuthenticationService {
      checkAuth(){
      this.ngFireAuth.onAuthStateChanged(async e =>{
       
-      //Wait till this function has completely finish before moving on.
-      //Prevent error with "this.loading.dismiss()"
-      //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
-      await this.presentLoading();
+      
        if(e){
         //console.log(e.email);
 
@@ -118,6 +115,11 @@ export class AuthenticationService {
 
          
       //  });
+
+      //Wait till this function has completely finish before moving on.
+      //Prevent error with "this.loading.dismiss()"
+      //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
+      await this.presentLoading();
        
         await this.navCtrl.navigateRoot('/tabs');
         console.log("Logged In");

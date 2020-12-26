@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { UserService, User } from 'src/app/services/user/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 })
 export class LoginPage implements OnInit {
   login_form: FormGroup; 
-  newUser: User = <User>{}
+  //newUser: User = <User>{}
   gettingRoleSubscription: Subscription;
 
   constructor(private router: Router,
