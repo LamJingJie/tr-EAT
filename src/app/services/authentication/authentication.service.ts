@@ -69,13 +69,15 @@ export class AuthenticationService {
     })
  
    }
+
+   //For Sponsor Accounts Only!
    SignUp(email, password,role){
      //In this case, if the promise is not fulfilled (signup) then they would have failed the promise, thus having the
     //reject() being called.
     return new Promise((resolve, reject)=>{
       this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
         resolve(res);
-
+        await this.userService.addSponsor(email, role);
         //Use storage because ngFireAuth doesn't store role, only store email, providerID, uid, etc and not where I can just set
         //a custom parameter inside it and so to store the role of current user, i just use storage.
         await this.storage.set('role',role);
@@ -100,7 +102,6 @@ export class AuthenticationService {
 
      checkAuth(){
      this.ngFireAuth.onAuthStateChanged(async e =>{
-      
       
        if(e){
         //console.log(e.email);

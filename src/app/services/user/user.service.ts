@@ -17,9 +17,9 @@ export class UserService {
 
   constructor(private firestore: AngularFirestore, public storage: Storage) { }
 
-   addSponsor(email, role){
+   async addSponsor(email, role){
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role});
+      return await this.firestore.collection('users').doc(email).set({role: role});
   }
   getOne(email){
     //return this.firestore.collection('users').doc(email).get();

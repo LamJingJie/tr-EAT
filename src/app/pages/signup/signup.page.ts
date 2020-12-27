@@ -62,10 +62,10 @@ export class SignupPage implements OnInit {
    signup(){
 
      // console.log(this.signup_sponsor_form.value['role']);
-       this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']).then((res)=>{
+      // this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']).then((res)=>{
      //   console.log(res);
-         this.authService.SignUp(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['password'], this.signup_sponsor_form.value['role']).then((res)=>{
-          //this.userService.addSponsor(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['role']);
+         this.authService.SignUp(this.signup_sponsor_form.value['email'], this.signup_sponsor_form.value['password'], this.signup_sponsor_form.value['role']).then(async (res)=>{
+         
           //console.log(res);
           //console.log("Successfully Signed Up");
          this.signup_sponsor_form.reset();
@@ -74,7 +74,7 @@ export class SignupPage implements OnInit {
           //console.log(error.message);
            this.showError("Error: " + error.message);
         })
-      })
+    //  })
 
   }
 
