@@ -9,6 +9,8 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
+import { HttpClientModule, HttpClient } from '@angular/common/http'; 
+
 
 @Component({
   selector: 'app-tab1',
@@ -28,9 +30,9 @@ canteenSub: Subscription;
   data: boolean;
   constructor(private canteenService: CanteenService, private alertController: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
-    public ngFireAuth: AngularFireAuth, private storage: Storage,) {
+    public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient) {
     this.data = true;
-
+    
     this.canteenSub = canteenService.getAll().subscribe((data) => {this.canteen = data;});
 
    // this.userRole = this.authService.currentUserRole();
@@ -44,6 +46,7 @@ canteenSub: Subscription;
   }
 
   ngOnInit(){
+    
     
   }
 
@@ -68,6 +71,7 @@ canteenSub: Subscription;
   SignOut(){
     this.authService.SignOut();
   }
+  
 
   
 
