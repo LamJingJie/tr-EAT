@@ -1,0 +1,110 @@
+<!---IGNORE THE NAME OF THE FILE ITS SUPPOSE TO BE ADD ALL USERS INCLUSIVE OF "STUDENT" & "VENDOR"-->
+
+<ion-header>
+  <ion-toolbar>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+       <!--Radio Button-->
+       <ion-card>
+        <ion-item>
+          <ion-select value="vendor" (ionChange)="changeRole($event)">
+            <ion-select-option value="vendor">vendor</ion-select-option>
+            <ion-select-option value="student" >student</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-card>
+
+
+  <!--Vendor-->
+  <form [formGroup] = "adduser_form" (ngSubmit)="addVendor(adduser_form.value)" *ngIf="currentRole == 'vendor'">
+
+    <ion-card >
+      <ion-item>
+        <ion-input type="email" formControlName="email" placeholder="Enter your email"></ion-input>
+        <ion-icon *ngIf="email.invalid && (email.dirty || email.touched)" name ="alert-circle" color="danger"></ion-icon>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-input type="text" required formControlName="stallname" placeholder="Enter stall name"></ion-input>
+      </ion-item>
+    </ion-card>
+    <ion-card>
+    <!--Radio Button-->
+      <ion-item >
+        <ion-select placeholder="Select Canteen" formControlName="canteen">
+          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.id}}</ion-select-option>
+        </ion-select>
+        <!--<ion-input type="text" formControlName="canteen" placeholder="Select Canteen"></ion-input>-->
+      </ion-item>
+    </ion-card>
+    
+    <ion-card>
+      <ion-item>
+        <ion-input #password1 type="password" formControlName="password" placeholder="Enter your password"></ion-input>
+        <ion-icon *ngIf="password.invalid && (password.dirty || password.touched)" name="alert-circle" color="danger"></ion-icon>
+        <ion-icon *ngIf="password1.type == 'text'" name="eye" (click)="showPassword1(password1)"></ion-icon>
+        <ion-icon *ngIf="password1.type == 'password'"name ="eye-outline" (click)="showPassword1(password1)"></ion-icon>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-input #password2 type="password" formControlName = "confirmPassword" placeholder="Confirm your password"></ion-input>
+        <ion-icon *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" name="alert-circle" color="danger"></ion-icon>
+        <ion-icon *ngIf="password2.type == 'text'" name="eye" (click)="showPassword2(password2)"></ion-icon>
+        <ion-icon *ngIf="password2.type == 'password'"name ="eye-outline" (click)="showPassword2(password2)"></ion-icon>
+      </ion-item> 
+    </ion-card>
+
+    <ion-button type="submit" [disabled] = '!adduser_form.valid || adduser_form.value["password"] != adduser_form.value["confirmPassword"]'>Sign Up</ion-button>
+
+  </form>
+
+
+
+  <!--STUDENT-->
+  <form [formGroup] = "addstudent_form" (ngSubmit)="addStudent(addstudent_form.value)" *ngIf="currentRole =='student'">
+
+   <ion-card>
+     <ion-item>
+       <ion-input type="email" formControlName="email1" placeholder="Enter your email"></ion-input>
+       <ion-icon *ngIf="email1.invalid && (email1.dirty || email1.touched)" name ="alert-circle" color="danger"></ion-icon>
+     </ion-item>
+   </ion-card>
+   
+   <ion-card>
+     <ion-item>
+       <ion-input #password3 type="password" formControlName="password1" placeholder="Enter your password"></ion-input>
+       <ion-icon *ngIf="password1.invalid && (password1.dirty || password1.touched)" name="alert-circle" color="danger"></ion-icon>
+       <ion-icon *ngIf="password3.type == 'text'" name="eye" (click)="showPassword3(password3)"></ion-icon>
+       <ion-icon *ngIf="password3.type == 'password'"name ="eye-outline" (click)="showPassword3(password3)"></ion-icon>
+     </ion-item>
+   </ion-card>
+
+   <ion-card>
+     <ion-item>
+       <ion-input #password4 type="password" formControlName = "confirmPassword1" placeholder="Confirm your password"></ion-input>
+       <ion-icon *ngIf="confirmPassword1.invalid && (confirmPassword1.dirty || confirmPassword1.touched)" name="alert-circle" color="danger"></ion-icon>
+       <ion-icon *ngIf="password4.type == 'text'" name="eye" (click)="showPassword4(password4)"></ion-icon>
+       <ion-icon *ngIf="password4.type == 'password'"name ="eye-outline" (click)="showPassword4(password4)"></ion-icon>
+     </ion-item> 
+   </ion-card>
+
+   <ion-card >
+    <ion-item>
+      <ion-input type="number" formControlName="stamp" placeholder="Stamp Assigned"></ion-input>
+      <ion-icon *ngIf="stamp.invalid && (stamp.dirty || stamp.touched)" name ="alert-circle" color="danger"></ion-icon>
+    </ion-item>
+  </ion-card>
+
+  <ion-button type="submit" [disabled] = '!addstudent_form.valid || addstudent_form.value["password1"] != addstudent_form.value["confirmPassword1"]'>Sign Up</ion-button>
+
+ </form>
+
+</ion-content>

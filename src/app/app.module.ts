@@ -16,6 +16,8 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+//import {InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 
@@ -29,7 +31,9 @@ import { IonicStorageModule } from '@ionic/storage';
     IonicStorageModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    AngularFirestoreModule],
+    AngularFirestoreModule,
+    AngularFireStorageModule
+  ],
   providers: [
     StatusBar,
     SplashScreen,

@@ -3,6 +3,8 @@ import { TimeoutError } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from '../services/user/user.service';
 import { Storage } from '@ionic/storage';
+import { AlertController, Platform } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -12,8 +14,9 @@ import { Storage } from '@ionic/storage';
 export class TabsPage {
   currentRole: any;
   //users: User[] = [];
-
-  constructor( private authService: AuthenticationService, private userService: UserService, private storage: Storage,) {
+  customBackBtnSubscription: Subscription;
+  constructor( private authService: AuthenticationService, private userService: UserService, private storage: Storage,
+    private alertCtrl: AlertController, private platform: Platform) {
 
     
    
@@ -24,12 +27,59 @@ export class TabsPage {
   }
  
   ionViewWillEnter(){
+
     this.storage.get('role').then(res =>{
       this.currentRole = res;
       console.log("Role tabs: " + this.currentRole);
-      //If fail to retrieve properly, rerun the code again
+     // alert("Role tabs: " + this.currentRole);
       
      });
+     this.storage.get('email').then(res =>{
+    
+      console.log("Email tabs: " + res);
+      //alert("Email tabs: " + res);
+     });
+
+     if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribe(() => {
+        this.leavePopup();
+      });
+    }
+  }
+
+  ionViewWillLeave(){
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
+  }
+
+  ngOnDestroy(){
+   
+  }
+
+
+  
+  async leavePopup(){
+    
+    const alert1 = await this.alertCtrl.create({
+      message: 'Close the application?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            navigator['app'].exitApp();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
   }
 
 

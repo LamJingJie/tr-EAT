@@ -24,6 +24,7 @@ export class LoginPage implements OnInit {
     private userService: UserService,
     private canteenService: CanteenService,
     private toast: ToastController,
+    private loading: LoadingController,
     private navCtrl: NavController) {
 
       this.login_form = this.fb.group({
@@ -36,10 +37,14 @@ export class LoginPage implements OnInit {
           Validators.required
         ]))
       })
+     
      }
 
   ngOnInit() {
-    
+    //this.authService.checkAuth();
+  }
+  ionViewWillEnter(){
+   
   }
 
   get email(){
@@ -55,45 +60,36 @@ export class LoginPage implements OnInit {
   }
 
 
-   login(){
-     this.gettingRoleSubscription =  this.userService.getOne(this.login_form.value['email']).subscribe((roles) =>{
+   async login(){
+     await this.presentLoadingLogin();
+     
+     this.gettingRoleSubscription = await this.userService.getOne(this.login_form.value['email']).subscribe(async (roles) =>{
       //console.log("AHH: " + roles['role']);
-      this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], roles['role']).then((res) => {
-        //this.userService.getOne(this.login_form.value['email']).subscribe((res) =>{
-        //  console.log(res['role']);
-         /* const data = {email: this.login_form.value['email'],role: res['role']};
-          this.newUser = data;
-          console.log("new user login: " +this.newUser);
-          this.userService.addUser(this.newUser).then(item => {
-            this.newUser = <User>{}
-            console.log(item + ' insert');
-           
-            //this.router.navigateByUrl('/tabs');
-        
-            });     */
-  
-       //     this.authService.setUserData(this.login_form.value['email'],res['role']);
-       //     this.login_form.reset();
-        //  this.router.navigateByUrl('/tabs');
-      //  });
+     
+      await this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], roles['role']).then((res) => {
+
   
       this.login_form.reset();
+      this.loading.dismiss(null,null,'loginUser');
      // console.log("Return Login Page: " + JSON.stringify(res));
         
        // this.authService.setUserData(this.login_form.value);
      //   this.router.navigateByUrl("");
       }).catch((error) => {
-        this.showError("Login Page Error: " + error.message);
+        this.loading.dismiss(null,null,'loginUser');
+        this.showError("Error: " + error.message);
       });
+      
       this.gettingRoleSubscription.unsubscribe();
     });
+   
     
   //  console.log(this.login_form.value);
   }
 
 
   goSignUp(){
-    this.router.navigate(['signup']);
+    this.router.navigateByUrl("signup");
   }
 
   async showError(error){
@@ -109,6 +105,19 @@ export class LoginPage implements OnInit {
     }
     
     //console.log("test");
+  }
+
+  async presentLoadingLogin(){
+    const loading3 = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message: 'Logging in...',
+      id: 'loginUser'
+    });
+    await loading3.present();
+
+    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+
+    console.log("Logging In...");
   }
 
 }

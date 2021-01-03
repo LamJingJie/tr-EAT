@@ -17,10 +17,35 @@ export class UserService {
 
   constructor(private firestore: AngularFirestore, public storage: Storage) { }
 
-   async addSponsor(email, role){
-    //console.log(email + role);
-      return await this.firestore.collection('users').doc(email).set({role: role});
+    addSponsor(email, role){
+    // console.log(email + role);
+      return  this.firestore.collection('users').doc(email).set({role: role});
+
   }
+
+   addVendor(email, canteenid, stallname, role){
+    //console.log(email + role);
+      return  this.firestore.collection('users').doc(email).set({role: role, canteenid: canteenid, stallname: stallname});
+  }
+
+   addStudent(email, stamp, role){
+    //console.log(email + role);
+      return  this.firestore.collection('users').doc(email).set({role: role, stampCount: stamp, favourite: []});
+  }
+
+  getAll(){
+    return this.firestore.collection('users').valueChanges({idField: 'id'});
+  }
+
+  getOnlyVendor(){
+    return this.firestore.collection('users', ref => ref.where('role', '==',"vendor")).valueChanges({idField: 'id'});
+  }
+
+  deleteUser(id){
+    return this.firestore.collection('users').doc(id).delete();
+  }
+
+
   getOne(email){
     //return this.firestore.collection('users').doc(email).get();
     return this.firestore.collection('users').doc(email).valueChanges({idField: 'id'});

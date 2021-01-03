@@ -13,4 +13,6 @@ export class CanteenService {
   getAll(){
     return this.firestore.collection('canteen').valueChanges({idField: 'id'});
   }
+
+  
 }

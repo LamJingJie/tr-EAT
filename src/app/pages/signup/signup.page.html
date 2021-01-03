@@ -6,17 +6,17 @@
 
 <ion-content>
 
-    <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
+   <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
       <ion-card>
         <ion-item>
-          <ion-input required type="email" formControlName="email" placeholder="Enter your email"></ion-input>
+          <ion-input  type="email" formControlName="email" placeholder="Enter your email"></ion-input>
           <ion-icon *ngIf="email.invalid && (email.dirty || email.touched)" name="alert-circle" color="danger"></ion-icon>
         </ion-item>
       </ion-card>
       
       <ion-card>
         <ion-item>
-          <ion-input required #password1 type="password" formControlName="password" placeholder="Enter your password"></ion-input>
+          <ion-input  #password1 type="password" formControlName="password" placeholder="Enter your password"></ion-input>
           <ion-icon *ngIf="password.invalid && (password.dirty || password.touched)" name="alert-circle" color="danger"></ion-icon>
           <ion-icon *ngIf="password1.type == 'text'" name="eye" (click)="showPassword1(password1)"></ion-icon>
           <ion-icon *ngIf="password1.type == 'password'"name ="eye-outline" (click)="showPassword1(password1)"></ion-icon>
@@ -25,16 +25,10 @@
       
       <ion-card>
         <ion-item>
-          <ion-input required #password2 type="password" formControlName = "confirmPassword" placeholder="Confirm your password"></ion-input>
+          <ion-input  #password2 type="password" formControlName = "confirmPassword" placeholder="Confirm your password"></ion-input>
           <ion-icon *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched)" name="alert-circle" color="danger"></ion-icon>
           <ion-icon *ngIf="password2.type == 'text'" name="eye" (click)="showPassword2(password2)"></ion-icon>
           <ion-icon *ngIf="password2.type == 'password'"name ="eye-outline" (click)="showPassword2(password2)"></ion-icon>
-        </ion-item> 
-      </ion-card>
-
-      <ion-card>
-        <ion-item>
-          <ion-input  type="text" hidden formControlName = "role" ></ion-input>
         </ion-item> 
       </ion-card>
 
@@ -43,4 +37,7 @@
         <ion-button type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
       </div>
     </form>
+
+    <ion-button (click)="resendVerificationEmail()">Resend Verification Email</ion-button>
+ 
 </ion-content>
