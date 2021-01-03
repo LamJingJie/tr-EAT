@@ -47,7 +47,7 @@ export class AuthenticationService {
         if((await this.ngFireAuth.currentUser).emailVerified == true){
           await this.storage.set('role',role); 
           await this.storage.set('email',email);
-          await this.navCtrl.navigateRoot('/tabs');
+         // await this.router.navigateByUrl("tabs");
          
           console.log("Successfully login!");
           resolve(res);
@@ -186,23 +186,25 @@ export class AuthenticationService {
         //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
         if((await this.ngFireAuth.currentUser).emailVerified == true){
            //await this.presentLoading();
-            await this.navCtrl.navigateRoot('/tabs');
+           await this.router.navigateByUrl("tabs");
             console.log("Logged In");
            
              
-        }
-        //For admin users, prevent them from accessing login and signup pages after adding new accounts
-        await this.storage.get('email').then(async res =>{
+        }else{
+          //For admin users, prevent them from accessing login and signup pages after adding new accounts
+          await this.storage.get('email').then(async res =>{
           //console.log(res);
           if(res == null){
             await this.SignOut();
           
           }else{
-            //console.log("Not Empty");
+            console.log("Not Empty");
           
-            await this.navCtrl.navigateRoot('/tabs');
+            await this.router.navigateByUrl("tabs");
           }
-        });
+          });
+        }
+        
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
 
        
@@ -215,7 +217,7 @@ export class AuthenticationService {
         //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
         //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
         //Im not willing to spent another 5hrs of my life debugging
-        this.navCtrl.navigateRoot('/login');
+        this.router.navigateByUrl("login");
         console.log("Logged Out");  
       }
     });
