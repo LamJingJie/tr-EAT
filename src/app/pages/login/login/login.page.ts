@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
-import { LoadingController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 
 
@@ -17,7 +17,7 @@ export class LoginPage implements OnInit {
   login_form: FormGroup; 
   //newUser: User = <User>{}
   gettingRoleSubscription: Subscription;
-
+  customBackBtnSubscription: Subscription;
   constructor(private router: Router,
     private authService: AuthenticationService,
     private fb: FormBuilder,
@@ -25,7 +25,9 @@ export class LoginPage implements OnInit {
     private canteenService: CanteenService,
     private toast: ToastController,
     private loading: LoadingController,
-    private navCtrl: NavController) {
+    private navCtrl: NavController,
+    private alertCtrl: AlertController,
+    private platform: Platform) {
 
       this.login_form = this.fb.group({
         email: new FormControl('', Validators.compose([
@@ -45,6 +47,43 @@ export class LoginPage implements OnInit {
   }
   ionViewWillEnter(){
    
+  }
+
+  ionViewDidEnter(){
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
+  }
+
+  ionViewWillLeave(){
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
+  }
+
+  async leavePopup(){
+    
+    const alert1 = await this.alertCtrl.create({
+      message: 'Close the application?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            navigator['app'].exitApp();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+  
+    await alert1.present();
   }
 
   get email(){

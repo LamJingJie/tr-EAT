@@ -186,6 +186,7 @@ export class AuthenticationService {
         //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
         if((await this.ngFireAuth.currentUser).emailVerified == true){
            //await this.presentLoading();
+          // await this.navCtrl.navigateRoot('tabs');
            await this.router.navigateByUrl("tabs");
             console.log("Logged In");
            

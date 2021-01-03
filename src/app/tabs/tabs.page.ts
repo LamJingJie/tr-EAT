@@ -17,8 +17,6 @@ export class TabsPage {
   customBackBtnSubscription: Subscription;
   constructor( private authService: AuthenticationService, private userService: UserService, private storage: Storage,
     private alertCtrl: AlertController, private platform: Platform) {
-
-    
    
     
   }
@@ -26,7 +24,7 @@ export class TabsPage {
    
   }
  
-  ionViewWillEnter(){
+  ionViewDidEnter(){
 
     this.storage.get('role').then(res =>{
       this.currentRole = res;
@@ -41,7 +39,7 @@ export class TabsPage {
      });
 
      if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribe(() => {
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
