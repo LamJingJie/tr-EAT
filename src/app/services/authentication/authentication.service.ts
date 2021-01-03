@@ -63,8 +63,8 @@ export class AuthenticationService {
         // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
         //await this.storage.set('role',role);
         //await this.storage.set('email',email);
-        
-        //this.router.navigateByUrl("/tabs");
+        // resolve(res);
+     
         //console.log("Successfully login!");
         // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
         
@@ -111,7 +111,7 @@ export class AuthenticationService {
         // await this.storage.set('role',role);
         //await this.storage.set('email',email);
         //console.log("Successfully Sign Up!");
-        //this.router.navigateByUrl("/tabs");
+        //resolve(res);
         // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
 
         
@@ -210,7 +210,7 @@ export class AuthenticationService {
 
        
         // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
-        //await this.navCtrl.navigateRoot('/tabs');
+        //await this.router.navigateByUrl("tabs");
        // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
 
 
