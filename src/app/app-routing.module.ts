@@ -34,6 +34,14 @@ const routes: Routes = [
   {
     path: 'adminfood',
     loadChildren: () => import('./pages/adminfood/adminfood.module').then( m => m.AdminfoodPageModule)
+  },
+  {
+    path: 'viewaccount',
+    loadChildren: () => import('./pages/viewaccount/viewaccount.module').then( m => m.ViewaccountPageModule)
+  },
+  {
+    path: 'admin-account-details/:account',
+    loadChildren: () => import('./pages/admin-account-details/admin-account-details.module').then( m => m.AdminAccountDetailsPageModule)
   }
 ];
 @NgModule({

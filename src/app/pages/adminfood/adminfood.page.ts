@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController, ToastController } from '@ionic/angular'; 
+import { AlertController, ModalController, NavController, ToastController } from '@ionic/angular'; 
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -22,7 +22,7 @@ export class AdminfoodPage implements OnInit {
   currentAcc: string;
 
   constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthenticationService, private foodService: FoodService,
-    private modalCtrl: ModalController, private router: Router) {
+    private modalCtrl: ModalController, private router: Router, private navCtrl: NavController) {
     console.log(this.currentAcc);
     this.vendorSubscription = this.userService.getOnlyVendor().subscribe((res)=>{
      // console.log(res);
@@ -43,6 +43,10 @@ export class AdminfoodPage implements OnInit {
       console.log(res);
       this.foodData = res;
     })
+  }
+
+  dismiss(){
+    this.navCtrl.pop();
   }
 
 

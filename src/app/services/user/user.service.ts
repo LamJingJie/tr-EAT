@@ -33,8 +33,8 @@ export class UserService {
       return  this.firestore.collection('users').doc(email).set({role: role, stampCount: stamp, favourite: []});
   }
 
-  getAll(){
-    return this.firestore.collection('users').valueChanges({idField: 'id'});
+  getAll(role){
+    return this.firestore.collection('users', ref => ref.where('role', '!=', "admin").where('role','==', role)).valueChanges({idField: 'id'});
   }
 
   getOnlyVendor(){

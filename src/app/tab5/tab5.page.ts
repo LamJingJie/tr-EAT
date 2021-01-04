@@ -73,6 +73,10 @@ export class Tab5Page {
    
   }
 
+  ViewAccount(){
+    this.router.navigate(['/viewaccount']);
+  }
+
 
   
 
