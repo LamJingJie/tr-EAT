@@ -57,8 +57,6 @@ export class TabsPage {
    
   }
 
-
-  
   async leavePopup(){
     
     const alert1 = await this.alertCtrl.create({

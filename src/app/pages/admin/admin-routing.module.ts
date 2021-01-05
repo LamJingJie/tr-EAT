@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ModalAddvendorPage } from './modal-addvendor.page';
+
+import { AdminPage } from './admin.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: ModalAddvendorPage
+    component: AdminPage
   }
 ];
 
@@ -13,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ModalAddvendorPageRoutingModule {}
+export class AdminPageRoutingModule {}

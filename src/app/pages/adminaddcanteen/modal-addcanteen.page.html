@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <ion-card class="ion-text-center" *ngIf="!isUploading && !isUploaded">
+    <ion-card-header>
+      <ion-card-title>Choose Images to Upload</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+
+      <!--This is to select file based on image in the computer-->
+      <ion-button color="success" shape="round" size="large">
+        <span>Select Image</span>
+        <input id="uploadBtn" type="file" class="upload" (change)="uploadFile($event.target.files)" />
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <!--Shows the selected files about to be uploaded-->
+  <ion-card class="ion-text-center" *ngIf="isUploading && !isUploaded">
+    <ion-card-header>
+      <ion-card-title>Selected File:<b>{{ fileName }}</b></ion-card-title>
+    </ion-card-header>
+
+    <!--Shows the progress of uploading images to firestore-->
+    <ion-card-content>
+      <div *ngIf="percentage | async as pct">
+        Progress: {{ pct | number }}%
+        <ion-progress-bar value="{{ pct / 100 }}"></ion-progress-bar>
+      </div>
+      <div *ngIf="snapshot | async as snap">
+        File Size: {{ snap.totalBytes | fileSizePipe }} Transfered:
+        {{ snap.bytesTransferred | fileSizePipe }}
+        <div *ngIf="snapshot && snap.bytesTransferred != snap.totalBytes">
+          <ion-button color="warning" size="small" (click)="task.pause()" class="button is-warning">Pause</ion-button>
+          <ion-button size="small" (click)="task.resume()" class="button is-info">Resume</ion-button>
+          <ion-button color="danger" size="small" (click)="task.cancel()" class="button is-danger">Cancel</ion-button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  <!--When file is uploaded, post "Uploaded"-->
+  <ion-card class="ion-text-center" *ngIf="!isUploading && isUploaded">
+    <ion-card-header>
+      <ion-card-title>
+        <b>{{ fileName }}</b> Uploaded!
+      </ion-card-title>
+    </ion-card-header>
+
+    <!--This allows for download of the image AFTER it has been uploaded-->
+    <ion-card-content>
+      <div *ngIf="UploadedFileURL | async as url">
+        <img [src]="url" />
+        <a [href]="url" target="_blank" rel="noopener">Download</a>
+      </div>
+      File Size: {{ fileSize | fileSizePipe }}
+      <ion-button expand="full" color="success" (click)="isUploading = isUploaded = false">Upload More</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <h2 class="ion-text-center">Uploaded Canteen Images</h2>
+
+  <ion-card color="light" class="ion-text-center" *ngFor="let item of images | async">
+    <ion-card-header>
+      <ion-card-title>
+        {{ item.name }}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <img [src]="item.filepath" />
+      <a [href]="item.filepath" target="_blank" rel="noopener">Download</a>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

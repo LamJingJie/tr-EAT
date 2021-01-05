@@ -67,6 +67,10 @@ export class Tab5Page {
      
     
   }
+  async addCanteenPopUp(){
+     this.router.navigate(['/adminaddcanteen']);
+  }
+
 
   viewFoodBtn(){
     this.router.navigate(['/adminfood']);

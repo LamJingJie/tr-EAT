@@ -24,6 +24,10 @@ const routes: Routes = [
     loadChildren: () => import('./pages/adminaddvendor/modal-addvendor.module').then( m => m.ModalAddvendorPageModule)
   },
   {
+    path: 'adminaddcanteen',
+    loadChildren: () => import('./pages/adminaddcanteen/modal-addcanteen.module').then( m => m.AdminaddcanteenPageModule)
+  },
+  {
     path: 'modal-addfood/:account',
     loadChildren: () => import('./Modal/modal-addfood/modal-addfood.module').then( m => m.ModalAddfoodPageModule)
   },
@@ -43,6 +47,8 @@ const routes: Routes = [
     path: 'admin-account-details/:account',
     loadChildren: () => import('./pages/admin-account-details/admin-account-details.module').then( m => m.AdminAccountDetailsPageModule)
   }
+
+
 ];
 @NgModule({
   imports: [
