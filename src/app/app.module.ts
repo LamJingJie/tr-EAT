@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -20,14 +21,13 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http'; 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
-//import {InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot({
+  imports: [CommonModule,BrowserModule, IonicModule.forRoot({
     rippleEffect: false,
   }), AppRoutingModule, HttpClientModule,AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,

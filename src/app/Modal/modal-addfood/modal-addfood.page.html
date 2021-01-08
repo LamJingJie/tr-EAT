@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title slot="start">Add Food For {{currentAccount}}</ion-title>
+    <ion-title slot="start">Add Food</ion-title>
     <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
@@ -26,8 +26,8 @@
     <ion-card>
       <ion-item>
         <ion-label floating>Halal</ion-label>
-        <ion-select value="true" formControlName="halal" >
-          <ion-select-option value="true">True</ion-select-option>
+        <ion-select value="true" (ionChange)="changeHalal($event)" >
+          <ion-select-option  value="true">True</ion-select-option>
           <ion-select-option value="false">False</ion-select-option>
         </ion-select>
       </ion-item>
@@ -36,8 +36,8 @@
     <ion-card>
       <ion-item>
         <ion-label floating>Vegetarian</ion-label>
-        <ion-select value="true" formControlName="vegetarian" >
-          <ion-select-option value="true">True</ion-select-option>
+        <ion-select  value="true" (ionChange)="changeVeg($event)" >
+          <ion-select-option  value="true">True</ion-select-option>
           <ion-select-option value="false">False</ion-select-option>
         </ion-select>
       </ion-item>
@@ -45,8 +45,20 @@
 
     <ion-card>
       <ion-item>
-        <ion-label floating>Food Image</ion-label>
-        <ion-input type="file" formControlName="foodimage" placeholder="image" id="file-id"  (change) = "onFileSelected($event)"></ion-input>
+        <div id="center">
+          <img src = "{{files}}" alt='image' width='50%' *ngIf="files != null"/>
+        </div>
+
+      </ion-item>
+      <ion-item >
+        <div id="centerv2">
+
+           <ion-button color="success" shape="round" size="small" >
+          <span>Select Image</span>
+          <input id="files"type="file" formControlName="foodimage" (change)="onFileSelected($event)" />
+        </ion-button>
+
+        </div>
       </ion-item>
     </ion-card>
 

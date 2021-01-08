@@ -2,10 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 
-/*export interface User{
+export interface User{
   email: string,
-  role: string,
-}*/
+}
 
 //const ITEM_KEY = 'my-user'
 
@@ -19,18 +18,18 @@ export class UserService {
 
     addSponsor(email, role){
     // console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role});
+      return  this.firestore.collection('users').doc(email).set({role: role, listed: true});
 
   }
 
    addVendor(email, canteenid, stallname, role){
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, canteenid: canteenid, stallname: stallname});
+      return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true});
   }
 
    addStudent(email, stamp, role){
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, stampCount: stamp, favourite: []});
+      return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true});
   }
 
   getAll(role){
@@ -50,6 +49,28 @@ export class UserService {
     //return this.firestore.collection('users').doc(email).get();
     return this.firestore.collection('users').doc(email).valueChanges({idField: 'id'});
   }
+
+  //Change listing status
+  updateListing(email, listed){
+    return this.firestore.collection('users').doc(email).update({listed: listed});
+  }
+
+  //Change canteenID inside vendor users
+  updateCanteen(email, canteen){
+    return this.firestore.collection('users').doc(email).update({canteenID: canteen});
+  }
+
+  //Change stallname insdie vendor users
+  updateStallName(email, stallname){
+    return this.firestore.collection('users').doc(email).update({stallname: stallname});
+  }
+
+  updateStamp(email, stamp: number){
+    console.log(stamp);
+    return this.firestore.collection('users').doc(email).update({stampLeft: stamp})
+  }
+
+ 
 
 
 

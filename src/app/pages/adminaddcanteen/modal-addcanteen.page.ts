@@ -8,6 +8,7 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { finalize, tap } from 'rxjs/operators';
+import { NavController } from '@ionic/angular';
 
 //1.)Issue for this is to retrieve the rest of the images in the Canteen Database
 //2.)
@@ -50,7 +51,7 @@ export class ModalAddcanteenPage{
   isUploaded: boolean;
 
   private imageCollection: AngularFirestoreCollection<MyData>;
-  constructor(private storage: AngularFireStorage, private database: AngularFirestore) {
+  constructor(private storage: AngularFireStorage, private database: AngularFirestore, private navCtrl: NavController) {
     this.isUploading = false;
     this.isUploaded = false;
 
@@ -114,6 +115,9 @@ export class ModalAddcanteenPage{
         this.fileSize = snap.totalBytes;
       })
     )
+  }
+  dismiss(){
+    this.navCtrl.back();
   }
 
   addImagetoDB(image: MyData) {

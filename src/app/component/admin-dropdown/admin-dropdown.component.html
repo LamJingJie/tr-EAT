@@ -1,0 +1,14 @@
+<ion-list >
+  <div *ngIf="listed === true">
+    <ion-item (click)="unlistAcc()" id="text">
+      <ion-label  >Unlist account</ion-label>
+    </ion-item>
+  </div>
+  <div *ngIf="listed === false">
+    <ion-item (click)="unlistAcc()" id="text" >
+      <ion-label >List account</ion-label>
+    </ion-item>
+  </div>
+
+ 
+</ion-list>

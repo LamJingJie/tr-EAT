@@ -1,9 +1,78 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>modal_editdelfood</ion-title>
+    <ion-title>Edit Food</ion-title>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
+
+  <form [formGroup] = "editfood_form" (ngSubmit)="editFood(editfood_form.value)">
+    <ion-card >
+      <ion-item>
+        Name: <ion-input type="text" formControlName="foodname" [(ngModel)]="foodData.foodname" ></ion-input>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        Price: <ion-input type="number" formControlName="foodprice"  [(ngModel)]="foodData.foodprice" ></ion-input>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        Quantity Available: <ion-input type="number"   formControlName="availquantity" [(ngModel)]="foodData.availquantity"></ion-input>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <ion-label floating>Halal</ion-label>
+        <ion-select value="{{currentHalal}}"  formControlName="halal">
+          <ion-select-option value="{{currentHalal}}">{{currentHalal}}</ion-select-option>
+          <ion-select-option value="false" *ngIf="currentHalal === true">false</ion-select-option>
+          <ion-select-option value="true" *ngIf="currentHalal === false">true</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-card>
+  
+    <ion-card>
+      <ion-item>
+        <ion-label floating>Vegetarian</ion-label>
+        <ion-select  value="{{currentVeg}}" formControlName="vegetarian">
+          <ion-select-option value="{{currentVeg}}">{{currentVeg}}</ion-select-option>
+          <ion-select-option value="false" *ngIf="currentVeg === true" >false</ion-select-option>
+          <ion-select-option value="true" *ngIf="currentVeg === false" >true</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-card>
+  
+    <ion-card>
+      <ion-item>
+        <div id="center">
+
+          <img src="{{foodData.image}}" alt='image' width="50%;"  *ngIf="files == null" />
+          <img src = "{{files}}" alt='image' width='50%' *ngIf="files != null"/>
+
+        </div>
+
+      </ion-item>
+      <ion-item >
+        <div id="centerv2">
+
+           <ion-button color="success" shape="round" size="small" >
+          <span>Change Image</span>
+          <input id="files"type="file" (change)="onFileSelected($event)" />
+        </ion-button>
+
+        </div>
+      </ion-item>
+    </ion-card>
+    
+    <ion-button type="submit" [disabled] = '!editfood_form.valid'>Confirm</ion-button>
+  </form>
+
+  
 </ion-content>

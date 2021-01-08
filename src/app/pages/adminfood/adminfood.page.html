@@ -1,28 +1,25 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Foods</ion-title>
-    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-card>
-    <ion-item>
-      <ion-icon name="person-outline"></ion-icon>
-      <ion-select placeholder="Select Vendor" (ionChange)="SelectVendorAcc($event)">
-        <ion-select-option  *ngFor="let acc of vendoracc" value={{acc.id}}>{{acc.id}}</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </ion-card>
 
- 
+
+
   <ion-card *ngFor="let food of foodData">
     <ion-item>
       <img src="{{food.image}}" alt='image' width="50%;" />
-      <div>{{food.foodname}}</div>
+      <div>
+        <h5>{{food.foodname}}</h5>
+        <ion-button [routerLink]="['/modal-editdelfood', food.id]">Edit</ion-button>
+        <ion-button (click)="deleteFoodPopUp(food.id, food.foodname)">Delete</ion-button>
+      </div>
     </ion-item>
   </ion-card>
-    
+
 
   <div style="text-align: center; position: relative; top:30%;" *ngIf="foodData.length == 0">
     No Food Retrieved

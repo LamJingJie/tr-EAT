@@ -23,26 +23,30 @@ export class TabsPage {
   ngOnInit(){
    
   }
+
+  ionViewWillEnter(){
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
+  }
  
   ionViewDidEnter(){
 
     this.storage.get('role').then(res =>{
       this.currentRole = res;
-      console.log("Role tabs: " + this.currentRole);
+     // console.log("Role tabs: " + this.currentRole);
      // alert("Role tabs: " + this.currentRole);
       
      });
      this.storage.get('email').then(res =>{
     
-      console.log("Email tabs: " + res);
+     // console.log("Email tabs: " + res);
       //alert("Email tabs: " + res);
      });
 
-     if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
-        this.leavePopup();
-      });
-    }
+    
   }
 
   ionViewWillLeave(){

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController, ToastController, NavController } from '@ionic/angular'; 
+import { AlertController, ModalController, ToastController, NavController, LoadingController } from '@ionic/angular'; 
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { FoodService } from 'src/app/services/food/food.service';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireAuth } from "@angular/fire/auth";
 
 @Component({
   selector: 'app-admin-account-details',
@@ -17,36 +18,179 @@ import { AngularFireStorage } from '@angular/fire/storage';
 export class AdminAccountDetailsPage implements OnInit {
   currentAccount: string;
   userDetailsSubscription: Subscription;
+  canteenSubscription: Subscription;
   userDetails: any = [];
+  listed: boolean;
+  currentRole: string;
+  canteenData: any = [];
+  canteenChanged: any;
+  editstall_form: FormGroup; 
+  editedStall: boolean;
 
-  constructor(private activatedRoute: ActivatedRoute, private navCtrl:NavController, private userService: UserService) {
 
+  constructor(private activatedRoute: ActivatedRoute, private navCtrl:NavController, private userService: UserService,
+    private router:Router, private alertCtrl: AlertController,public ngFireAuth: AngularFireAuth,
+    private authService: AuthenticationService, private toast: ToastController, private loading: LoadingController,
+    private canteenService: CanteenService, private fb: FormBuilder) {
+
+      this.editedStall = false;
+      
+       //Edit Vendor Food Form
+       this.editstall_form = this.fb.group({
+        stallname: new FormControl('', Validators.compose([ 
+          Validators.required
+        ]))
+      })
     
    }
 
   ngOnInit() {
+
+    this.canteenSubscription = this.canteenService.getAll().subscribe((data)=>{
+      this.canteenData = data;
+      //console.log(this.canteenData);
+    });
+
+    let account = this.activatedRoute.snapshot.paramMap.get('account');
+    this.currentAccount = account;
+
+    this.userDetailsSubscription = this.userService.getOne(this.currentAccount).subscribe((data) => {
+      this.userDetails = data;
+      this.listed = this.userDetails.listed;
+      this.currentRole = this.userDetails.role
+      //console.log(this.listed);
+    });
+
     
   }
 
   ionViewWillEnter(){
-    let account = this.activatedRoute.snapshot.paramMap.get('account');
-    this.currentAccount = account;
-    console.log(account);
+ 
+   
     
   }
 
   ionViewDidEnter(){
-    this.userDetailsSubscription = this.userService.getAll(this.currentAccount).subscribe((data) => {this.userDetails = data;});
+    
+    //console.log(this.userDetails);
   }
 
+  //Canteen will change everytime user clicks on a new canteen
+  changeCanteen(canteen){
+    //console.log(canteen.detail.value);
+    this.canteenChanged = canteen.detail.value;
+    this.userService.updateCanteen(this.currentAccount, this.canteenChanged).then(res=>{
+      this.UpdateshowSuccess_canteen();
+    }).catch(err =>{
+      this.showError(err);
+    })
+  }
+  
+  editStallName(){
+    this.editedStall = true;
+  }
+
+  editStall(){
+    //console.log(this.editstall_form.value['stallname']);
+    this.userService.updateStallName(this.currentAccount, this.editstall_form.value['stallname']).then(res=>{
+      this.editedStall = false;
+      this.UpdateshowSuccess_stallname();
+    }).catch(err=>{
+      this.showError(err);
+    })
+  }
+
+
   dismiss(){
-    this.navCtrl.pop();
+    this.navCtrl.back();
   }
 
   ngOnDestroy(){
     if(this.userDetailsSubscription){
       this.userDetailsSubscription.unsubscribe();
     }
+    if(this.canteenSubscription){
+      this.canteenSubscription.unsubscribe();
+    }
+  }
+
+  async deleteAccPopUp(){
+    const alert = await this.alertCtrl.create({
+      header:'Delete Account',
+      subHeader:'Decision is irreversible',
+      message:'Note: Everything relating to the account will be deleted',
+      inputs:[
+        {
+          type:'password',
+          name: 'password',
+          placeholder: 'Provide deleting account password',
+          id:'deleteAccountPassword'
+        }
+      ],
+      buttons:[
+        {
+          text: 'Delete',
+          handler: async password=>{
+              
+              //console.log(password.password);
+              //console.log(this.currentAccount);
+              if(password.password != ""){
+                await this.presentDelAccLoad();
+                await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole)
+              .then(res =>{
+                this.loading.dismiss(null,null,'deleteAccount');
+                this.DeleteshowSuccess_account();
+              }).catch(err=>{
+                this.loading.dismiss(null,null,'deleteAccount');
+                this.showError(err);
+              });
+              
+              }
+              
+          }
+        },
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler:()=>{
+            console.log("Cancel");
+            
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+  }
+
+  async presentDelAccLoad(){
+    const loading = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message: 'Deleting...',
+      id: 'deleteAccount'
+    });
+    await loading.present();
+  }
+
+  async DeleteshowSuccess_account(){
+    const toast = await this.toast.create({message: "Account and anything related to it has been deleted", position: 'bottom', duration: 2000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async UpdateshowSuccess_canteen(){
+    const toast = await this.toast.create({message: "Canteen Updated", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async UpdateshowSuccess_stallname(){
+    const toast = await this.toast.create({message: "Stall Updated", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+
+  async showError(error){
+    const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 
 }

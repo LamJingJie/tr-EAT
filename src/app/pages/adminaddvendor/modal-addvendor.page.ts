@@ -114,7 +114,7 @@ export class ModalAddvendorPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.pop();
+    this.navCtrl.back();
   }
 
   async addVendor(){
@@ -131,7 +131,6 @@ export class ModalAddvendorPage implements OnInit {
       await this.authService.SignUpVendor(this.adduser_form.value['email'], this.adduser_form.value['password'], this.adduser_form.value['canteen'], this.adduser_form.value['stallname'], this.currentRole).then(async (res)=>{
       await this.adduser_form.reset();
       //console.log(res);
-      this.dismiss();
       this.loading.dismiss(null, null, 'adminSignUp');
       await this.showToast();
       
@@ -156,7 +155,6 @@ export class ModalAddvendorPage implements OnInit {
     await this.authService.SignUpStudent(this.addstudent_form.value['email1'], this.addstudent_form.value['password1'],this.addstudent_form.value['stamp'] , this.currentRole).then(async (res)=>{
       await this.addstudent_form.reset();
 
-      this.dismiss();
       this.loading.dismiss(null, null, 'adminSignUp');
       await this.showToast();
     }).catch(async (error)=>{

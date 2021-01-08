@@ -5,10 +5,13 @@ import { Router } from "@angular/router";
 import { auth } from 'firebase/app';
 import * as firebase from 'firebase';
 import 'firebase/auth';
-import {  UserService } from '../user/user.service'
+import {  UserService, User } from '../user/user.service'
 import { Storage } from '@ionic/storage';
 import { LoadingController, NavController, ToastController } from '@ionic/angular';
 import { rejects } from 'assert';
+import { Subscription } from 'rxjs';
+import {  FoodService } from '../food/food.service'
+import { CartService } from '../cart/cart.service'
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +21,8 @@ export class AuthenticationService {
   
   email: string;
   user_exists: string;
+  userListed: Subscription;
+  deleteAccount: boolean = false;
  // user: User[] = []
 //  users: User[] = [];
  // newUser: User = <User>{}
@@ -31,28 +36,38 @@ export class AuthenticationService {
     private storage: Storage,
     private loading: LoadingController,
     private toast: ToastController,
-    private userService: UserService
+    private userService: UserService,
+    private foodService: FoodService,
+    private cartService: CartService
   ) {
  
    }
+
+
 
     SignIn(email, password,role){
 
 
     return new Promise(async (resolve, reject)=>{
+      await this.storage.set('role',role); 
+      await this.storage.set('email',email);
       await this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
-      
+        //Retrieve "listing" field data and set it in storage
        
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
         if((await this.ngFireAuth.currentUser).emailVerified == true){
-          await this.storage.set('role',role); 
-          await this.storage.set('email',email);
-         // await this.router.navigateByUrl("tabs");
+  
+            //await this.storage.set('role',role); 
+            //await this.storage.set('email',email);
+            
+           // await this.router.navigateByUrl("tabs");
+           
+            console.log("Successfully login!");
+            resolve(res);
          
-          console.log("Successfully login!");
-          resolve(res);
         }else{
-         
+          await this.storage.remove('role');
+          await this.storage.remove('email');
           console.log("Email Not Yet Verified");
           this.emailNotVerified();
           resolve(res);
@@ -70,19 +85,19 @@ export class AuthenticationService {
         
       }).catch(async (error)=>{
         reject(error)
-        
+        await this.storage.remove('role');
+        await this.storage.remove('email');
         console.log("Error: " + error.message);
-      });
-   
-    
+      }); 
     })
-    
    }
 
    async emailNotVerified(){
     const toast = await this.toast.create({message: "Email Not Verified", position: 'bottom', duration: 5000,buttons: [ { text: 'Resend', handler: () => { this.SendVerificationMail();} } ]});
     toast.present();
   }
+
+  
 
    //For Sponsor Accounts Only!
    async SignUp(email, password,role){
@@ -164,7 +179,7 @@ export class AuthenticationService {
 
      //Send Email Verification
      async SendVerificationMail() {
-      console.log(this.ngFireAuth.currentUser);
+     // console.log(this.ngFireAuth.currentUser);
       return this.ngFireAuth.currentUser
       .then((u) => {
         //console.log(u)
@@ -174,34 +189,46 @@ export class AuthenticationService {
     
 
      async checkAuth(){
-       
      this.ngFireAuth.onAuthStateChanged(async e =>{
-      // console.log((await this.ngFireAuth.currentUser).email);
       //console.log((await this.ngFireAuth.currentUser).emailVerified);
       await this.presentLoading();
+ 
        if(e){
-        
+  
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
         ///Prevent error with "this.loading.dismiss()"
         //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
-        if((await this.ngFireAuth.currentUser).emailVerified == true){
-           //await this.presentLoading();
-          // await this.navCtrl.navigateRoot('tabs');
-           await this.router.navigateByUrl("tabs");
-            console.log("Logged In");
-           
-             
+        if((await this.ngFireAuth.currentUser).emailVerified === true){
+
+          //Check if user is listed before logging in
+          this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
+            if(res['listed'] === true){
+              await this.router.navigateByUrl("tabs");
+              //await this.navCtrl.navigateRoot("tabs");
+              console.log("Logged In")
+              this.loading.dismiss(null , null, 'presentLoad');
+            }else{
+              await this.SignOut();
+              console.log("You have been unlisted by the admin");
+              this.loading.dismiss(null, null, 'presentLoad');
+            }
+            this.userListed.unsubscribe();
+          })
+                
         }else{
+    
           //For admin users, prevent them from accessing login and signup pages after adding new accounts
           await this.storage.get('email').then(async res =>{
           //console.log(res);
-          if(res == null){
+          if(res === null){
             await this.SignOut();
-          
+            console.log("Admin nvr add new accounts")
+            this.loading.dismiss(null, null, 'presentLoad');
           }else{
-            console.log("Not Empty");
-          
+            console.log("Admin added new accounts")
             await this.router.navigateByUrl("tabs");
+            //await this.navCtrl.navigateRoot("tabs");
+            this.loading.dismiss(null, null, 'presentLoad');
           }
           });
         }
@@ -215,11 +242,27 @@ export class AuthenticationService {
 
 
       }else{
+
         //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
         //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
         //Im not willing to spent another 5hrs of my life debugging
-        this.router.navigateByUrl("login");
-        console.log("Logged Out");  
+
+        //For admin users, prevent them from being logged out after deleting accounts
+        await this.storage.get('email').then(async res =>{
+          if(res === null){
+            this.router.navigateByUrl("login");
+            //await this.navCtrl.navigateRoot("login");
+            console.log("Logged Out");  
+            this.loading.dismiss(null, null, 'presentLoad');
+          }else{
+            await this.router.navigateByUrl("tabs");
+            
+            //await this.navCtrl.navigateRoot("tabs");
+            console.log("Admin deleted accounts")
+            this.loading.dismiss(null, null, 'presentLoad');
+          }
+        })
+       
       }
     });
    }
@@ -227,29 +270,89 @@ export class AuthenticationService {
    async presentLoading(){
      const loading = await this.loading.create({
        cssClass: 'my-custom-class',
-       duration: 300
+       id: 'presentLoad'
      });
      await loading.present();
 
-     //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+   }
 
-     console.log("Loading Dismiss!");
+   async presentLoading2(){
+    const loading = await this.loading.create({
+      cssClass: 'my-custom-class',
+      id: 'presentLoad2'
+    });
+    await loading.present();
+
+  }
+
+   //Sign Out and remove from localStorage
+    async SignOut(){
+      this.presentLoading2();
+      console.log("Sign out")
+      await this.storage.remove('role');
+      await this.storage.remove('email');
+
+      //Since when admin delete an account, the ngFireAuth will think that we have already logged out. Since the 
+      //ngFireAuth.delete() also causes a signout(). So this basically just checks if the admin has deleted any account
+      //and if so, determine how to "logout" because the standard signout() won't work since its alrdy "signed out" technically
+      this.storage.get('deleteAcc').then(async res =>{
+        //console.log(res);
+        if(res === null){
+
+          console.log("Normal users will get this")
+          this.loading.dismiss(null, null, 'presentLoad2');
+          this.ngFireAuth.signOut();
+          
+        }else{
+
+          //Admin/user did delete account
+          console.log("Admin deleted account and want to log out")
+          this.router.navigateByUrl("login");
+          await this.storage.remove('deleteAcc');
+          this.loading.dismiss(null, null, 'presentLoad2');
+        }
+      })
+     
    }
 
 
+   //Delete user accounts for admin users only
+   async deleteUserAdmin(email, password,role){
+      await this.storage.set('deleteAcc',true);
 
-   
-   //Sign Out and remove from localStorage
-    SignOut(){
-      console.log("Sign out")
-     return this.ngFireAuth.signOut().then(async ()=>{
-       //localStorage.removeItem(this.role);
-       //localStorage.removeItem(this.email);
-       //this.userService.deleteUser();
-        await this.storage.remove('role');
-        await this.storage.remove('email');
-       
-     })
+      return this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
+        
+        //Delete account from firebase auth
+        (await this.ngFireAuth.currentUser).delete();
+        
+        //Delete account from firebase cloud database
+        await this.userService.deleteUser(email);
+ 
+        if(role === "vendor"){   
+         // console.log(role)
+          try {
+            await this.foodService.deleteFoodVendorEmail(email);
+          } catch (error) {
+            console.log(error);
+          }
+        }
+        if(role === "student"){
+          //console.log(role)
+        }
+        if(role === "sponsor"){
+          //console.log(role)
+          //Delete "history" collection (maybe)
+
+          //Delete Cart
+          await this.cartService.deleteRespectiveCart(email).catch(err=>{
+            console.log(err);
+          });
+        }
+        
+
+       }).catch(err=>{
+         this.storage.remove('deleteAcc');
+       }) 
    }
 
 

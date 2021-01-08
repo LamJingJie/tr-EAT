@@ -32,11 +32,11 @@ const routes: Routes = [
     loadChildren: () => import('./Modal/modal-addfood/modal-addfood.module').then( m => m.ModalAddfoodPageModule)
   },
   {
-    path: 'modal-editdelfood',
+    path: 'modal-editdelfood/:id',
     loadChildren: () => import('./Modal/modal-editdelfood/modal-editdelfood.module').then( m => m.ModalEditdelfoodPageModule)
   },
   {
-    path: 'adminfood',
+    path: 'adminfood/:account',
     loadChildren: () => import('./pages/adminfood/adminfood.module').then( m => m.AdminfoodPageModule)
   },
   {

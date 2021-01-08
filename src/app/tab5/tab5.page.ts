@@ -45,7 +45,7 @@ export class Tab5Page {
   }
 
 
-  async addAccountPopUp(){
+ /* async addAccountPopUp(){
     /*const alert = await this.alertCtrl.create({
       header: 'Add Vendor Accounts',
       inputs: [{
@@ -63,19 +63,15 @@ export class Tab5Page {
     });
      await modal.present();*/
 
-     this.router.navigate(['/adminaddvendor']);
+    // this.router.navigate(['/adminaddvendor']);
      
     
-  }
+  
   async addCanteenPopUp(){
      this.router.navigate(['/adminaddcanteen']);
   }
 
 
-  viewFoodBtn(){
-    this.router.navigate(['/adminfood']);
-   
-  }
 
   ViewAccount(){
     this.router.navigate(['/viewaccount']);

@@ -1,7 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>viewaccount</ion-title>
-    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -17,10 +16,42 @@
     </ion-item>
   </ion-card>
 
-  <ion-card *ngFor="let user of userData" [routerLink]="['/admin-account-details', user.value]">
-    <ion-item>
-      {{user.id}}
+  <ion-card *ngFor="let user of userData" >
+    <ion-item id="account">
+      <div id="users" [routerLink]="['/admin-account-details', user.id]">
+        <ion-badge color="danger" *ngIf="user.listed === false"><ion-icon name="alert-outline"></ion-icon></ion-badge> 
+        <ion-badge color="success" *ngIf="user.listed === true"><ion-icon name="checkmark-outline"></ion-icon></ion-badge>
+        {{user.id}}
+      </div>
+
+        <button ion-button icon-only (click)="presentPopover($event, user.id, user.listed, user.stampLeft)">
+          <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+        </button>
+
     </ion-item>
+    <ion-item *ngIf="user.role == 'student'"  style="font-size: 14px; display: flex;">
+
+      <div (click)="openStampAlert(user.stampLeft)" style="flex: 1;">
+        <p>Stamp Left: {{user.stampLeft}}</p> 
+      </div>
+      <div>
+        <ion-button (click)="deductStamp(user.id, user.stampLeft)">-1</ion-button>
+      </div>
+      <div>
+        <ion-button (click)="addStamp(user.id, user.stampLeft)">+1</ion-button>
+      </div>
+
+    </ion-item>
+  
   </ion-card>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="currentRole != null">
+    <ion-fab-button>
+      <ion-icon name="add"  [routerLink]="['/adminaddvendor']">Add Accounts</ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+ 
 
 </ion-content>

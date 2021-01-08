@@ -46,15 +46,15 @@ export class LoginPage implements OnInit {
     //this.authService.checkAuth();
   }
   ionViewWillEnter(){
-   
-  }
-
-  ionViewDidEnter(){
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
+  }
+
+  ionViewDidEnter(){
+   
   }
 
   ionViewWillLeave(){
@@ -63,6 +63,7 @@ export class LoginPage implements OnInit {
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
+    this.login_form.reset();
   }
 
   async leavePopup(){
@@ -102,28 +103,29 @@ export class LoginPage implements OnInit {
    async login(){
      await this.presentLoadingLogin();
      
-     this.gettingRoleSubscription = await this.userService.getOne(this.login_form.value['email']).subscribe(async (roles) =>{
+     this.gettingRoleSubscription = await this.userService.getOne(this.login_form.value['email']).subscribe(async (data) =>{
       //console.log("AHH: " + roles['role']);
-     
-      await this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], roles['role']).then((res) => {
+      if(data['listed'] === true){
+        await this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], data['role']).then((res) => {
 
-  
-      this.login_form.reset();
-      this.loading.dismiss(null,null,'loginUser');
-     // console.log("Return Login Page: " + JSON.stringify(res));
-        
-       // this.authService.setUserData(this.login_form.value);
-     //   this.router.navigateByUrl("");
-      }).catch((error) => {
+          this.loading.dismiss(null,null,'loginUser');
+          
+
+          }).catch((error) => {
+            this.loading.dismiss(null,null,'loginUser');
+            this.showError("Error: " + error.message);
+          });
+          
+      }else{
+        console.log("Unlisted");
         this.loading.dismiss(null,null,'loginUser');
-        this.showError("Error: " + error.message);
-      });
-      
+        this.notlisted();
+        
+      }
+     
       this.gettingRoleSubscription.unsubscribe();
     });
    
-    
-  //  console.log(this.login_form.value);
   }
 
 
@@ -133,6 +135,11 @@ export class LoginPage implements OnInit {
 
   async showError(error){
     const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async notlisted(){
+    const toast = await this.toast.create({message: "Account has been unlisted", position: 'bottom', duration: 5000,buttons: [ { text: 'ok' } ]});
     toast.present();
   }
 

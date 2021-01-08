@@ -20,7 +20,9 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
-              "@firebase/auth"
+              "@firebase/auth",
+              "firebase/app",
+              "@firebase/component"
             ],
             "assets": [
               {

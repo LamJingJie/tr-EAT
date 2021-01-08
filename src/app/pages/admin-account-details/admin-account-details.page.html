@@ -1,11 +1,74 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>adminAccountDetails</ion-title>
-    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-title>{{currentAccount}}</ion-title>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  
+
+  <ion-card *ngIf = "userDetails.role == 'vendor'">
+    
+    
+      <form [formGroup] = "editstall_form" (ngSubmit)="editStall()">
+        <ion-item>
+          Stall:
+          <ion-input [(ngModel)]="userDetails.stallname"  (ionChange)="editStallName()" formControlName="stallname"></ion-input>
+          <ion-button type="submit" *ngIf="editedStall === true" [disabled] = '!editstall_form.valid'>
+            <ion-icon name="checkmark-outline"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </form>
+ 
+    <ion-item>
+      Role: {{userDetails.role}}
+    </ion-item>
+    <ion-item>
+        Canteen:
+        <!---Added NgIf because of a bug that hasn't been fixed yet by the ionic team. The ngIf solves it by rerendering the control,
+        thus displaying the value on load.--->
+        <ion-select *ngIf="canteenData && canteenData.length" value={{userDetails.canteenID}} (ionChange)="changeCanteen($event)">
+          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.id}}</ion-select-option>
+        </ion-select>
+ 
+     
+    </ion-item>
+    <ion-item>
+      Listed: {{userDetails.listed}}
+    </ion-item>
+    
+    <ion-button [routerLink]="['/adminfood', currentAccount]">View Food</ion-button>
+  </ion-card>
+
+  <ion-card *ngIf = "userDetails.role == 'student'">
+    <ion-item>
+      Name: {{userDetails.id}}
+    </ion-item>
+    <ion-item>
+      Role: {{userDetails.role}}
+    </ion-item>
+    <ion-item>
+      Stamps Left: {{userDetails.stampLeft}} <!--Allow admin to add or deduct existing stamps-->
+    </ion-item>
+    <ion-item>
+      Listed: {{userDetails.listed}}
+    </ion-item>
+  </ion-card>
+
+  <ion-card *ngIf = "userDetails.role == 'sponsor'">
+    <ion-item>
+      Name: {{userDetails.id}}
+    </ion-item>
+    <ion-item>
+      Role: {{userDetails.role}}
+    </ion-item>
+    <ion-item>
+      Listed: {{userDetails.listed}}
+    </ion-item>
+  </ion-card>
+
+
+  <ion-button (click)="deleteAccPopUp()">Delete Account</ion-button>
+
 
 </ion-content>
