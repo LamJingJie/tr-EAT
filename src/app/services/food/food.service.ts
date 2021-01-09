@@ -57,12 +57,12 @@ export class FoodService {
 
   //When admin didn't select any images to update/edit
   editFoodNoImg(foodname, foodprice, availquantity, halal:boolean, vegetarian:boolean, userid, id){
-    return this.firestore.collection('food').doc(id).set({availquantity: availquantity, foodname: foodname, foodprice:foodprice,
-    halal: halal, userid:userid, vegetarian: vegetarian});
+    return this.firestore.collection('food').doc(id).update({availquantity:availquantity, foodname: foodname, foodprice:foodprice,
+      halal: halal, userid:userid, vegetarian: vegetarian})
   }
 
   //When admin has select an image to update/edit
-  async editFoodWithImg(foodname, foodprice, availquantity, halal:boolean, vegetarian:boolean, userid, id, image, filename){
+  async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal:boolean, vegetarian:boolean, userid, id, image, filename){
     var storageURL = 'Food Images/';
     var mergedName = filename + userid + foodname + foodprice;
 
@@ -70,7 +70,7 @@ export class FoodService {
     var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
 
     return this.firestore.collection('food').doc(id).set({availquantity: availquantity, foodname: foodname, foodprice: foodprice,
-    halal: halal, userid: userid, vegetarian, image: downloadURL})
+    halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL})
   }
 
   
