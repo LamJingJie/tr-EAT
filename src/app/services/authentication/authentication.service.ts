@@ -208,8 +208,9 @@ export class AuthenticationService {
               console.log("Logged In")
               this.loading.dismiss(null , null, 'presentLoad');
             }else{
-              await this.SignOut();
               console.log("You have been unlisted by the admin");
+              await this.SignOut();
+              
               this.loading.dismiss(null, null, 'presentLoad');
             }
             this.userListed.unsubscribe();
@@ -221,8 +222,9 @@ export class AuthenticationService {
           await this.storage.get('email').then(async res =>{
           //console.log(res);
           if(res === null){
-            await this.SignOut();
             console.log("Admin nvr add new accounts")
+            await this.SignOut();
+            
             this.loading.dismiss(null, null, 'presentLoad');
           }else{
             console.log("Admin added new accounts")
@@ -287,7 +289,7 @@ export class AuthenticationService {
 
    //Sign Out and remove from localStorage
     async SignOut(){
-      this.presentLoading2();
+      await this.presentLoading2();
       console.log("Sign out")
       await this.storage.remove('role');
       await this.storage.remove('email');
@@ -298,19 +300,23 @@ export class AuthenticationService {
       this.storage.get('deleteAcc').then(async res =>{
         //console.log(res);
         if(res === null){
-
-          console.log("Normal users will get this")
-          this.loading.dismiss(null, null, 'presentLoad2');
-          this.ngFireAuth.signOut();
           
+          console.log("Normal users will get this")
+        
+          this.ngFireAuth.signOut();
+          this.loading.dismiss(null, null, 'presentLoad2');
         }else{
-
+         
           //Admin/user did delete account
           console.log("Admin deleted account and want to log out")
           this.router.navigateByUrl("login");
+          this.ngFireAuth.signOut();
           await this.storage.remove('deleteAcc');
           this.loading.dismiss(null, null, 'presentLoad2');
         }
+      }).catch(err=>{
+        console.log(err);
+        this.loading.dismiss(null, null, 'presentLoad2');
       })
      
    }
@@ -319,39 +325,46 @@ export class AuthenticationService {
    //Delete user accounts for admin users only
    async deleteUserAdmin(email, password,role){
       await this.storage.set('deleteAcc',true);
-
+    
       return this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
-        
+       
         //Delete account from firebase auth
         (await this.ngFireAuth.currentUser).delete();
-        
+     
         //Delete account from firebase cloud database
-        await this.userService.deleteUser(email);
+         this.userService.deleteUser(email);
  
         if(role === "vendor"){   
          // console.log(role)
           try {
-            await this.foodService.deleteFoodVendorEmail(email);
+            this.foodService.deleteFoodVendorEmail(email);
+           
           } catch (error) {
             console.log(error);
           }
+          
         }
         if(role === "student"){
           //console.log(role)
+         
         }
         if(role === "sponsor"){
           //console.log(role)
           //Delete "history" collection (maybe)
 
           //Delete Cart
-          await this.cartService.deleteRespectiveCart(email).catch(err=>{
-            console.log(err);
-          });
+            this.cartService.deleteRespectiveCart(email).then(res =>{
+              console.log(res);
+            }).catch(err=>{
+              console.log(err);
+            })
+         
         }
         
 
        }).catch(err=>{
          this.storage.remove('deleteAcc');
+         console.log(err);
        }) 
    }
 
