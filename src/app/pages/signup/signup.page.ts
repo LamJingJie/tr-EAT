@@ -100,10 +100,6 @@ export class SignupPage implements OnInit {
 
   }
 
-  resendVerificationEmail(){
-    this.authService.SendVerificationMail();
-  }
-
   //If type password change to text, otherwise change to password
   showPassword1(val: any){
     //console.log(val);

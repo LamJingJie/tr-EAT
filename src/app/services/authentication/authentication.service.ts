@@ -330,10 +330,10 @@ export class AuthenticationService {
        
           //Delete account from firebase auth
           (await this.ngFireAuth.currentUser).delete();
-       
+
           //Delete account from firebase cloud database
-           this.userService.deleteUser(email);
-   
+          this.userService.deleteUser(email);
+         
           if(role === "vendor"){   
            // console.log(role)
             try {
@@ -360,6 +360,7 @@ export class AuthenticationService {
               })
            
           }
+        
           resolve(res);
   
          }).catch(err=>{
