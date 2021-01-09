@@ -136,11 +136,12 @@ export class AdminAccountDetailsPage implements OnInit {
               //console.log(this.currentAccount);
               if(password.password != ""){
                 await this.presentDelAccLoad();
-                await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole)
-              .then(res =>{
+                await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole).then(res =>{
+                  console.log(res);
                 this.loading.dismiss(null,null,'deleteAccount');
+                this.dismiss();
                 this.DeleteshowSuccess_account();
-              }).catch(err=>{
+              }).catch((err)=>{
                 this.loading.dismiss(null,null,'deleteAccount');
                 this.showError(err);
               });

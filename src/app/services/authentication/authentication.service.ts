@@ -323,50 +323,52 @@ export class AuthenticationService {
 
 
    //Delete user accounts for admin users only
-   async deleteUserAdmin(email, password,role){
+   async deleteUserAdmin(email, password,role){ 
       await this.storage.set('deleteAcc',true);
-    
-      return this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
+
+      return new Promise((resolve, reject) =>{
+        this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
        
-        //Delete account from firebase auth
-        (await this.ngFireAuth.currentUser).delete();
-     
-        //Delete account from firebase cloud database
-         this.userService.deleteUser(email);
- 
-        if(role === "vendor"){   
-         // console.log(role)
-          try {
-            this.foodService.deleteFoodVendorEmail(email);
-           
-          } catch (error) {
-            console.log(error);
+          //Delete account from firebase auth
+          (await this.ngFireAuth.currentUser).delete();
+       
+          //Delete account from firebase cloud database
+           this.userService.deleteUser(email);
+   
+          if(role === "vendor"){   
+           // console.log(role)
+            try {
+              this.foodService.deleteFoodVendorEmail(email);
+             
+            } catch (error) {
+              console.log(error);
+            }
+            
           }
-          
-        }
-        if(role === "student"){
-          //console.log(role)
-         
-        }
-        if(role === "sponsor"){
-          //console.log(role)
-          //Delete "history" collection (maybe)
-
-          //Delete Cart
-            this.cartService.deleteRespectiveCart(email).then(res =>{
-              console.log(res);
-            }).catch(err=>{
-              console.log(err);
-            })
-         
-        }
-        
-
-       }).catch(err=>{
-         this.storage.remove('deleteAcc');
-         console.log(err);
-       }) 
-   }
-
+          if(role === "student"){
+            //console.log(role)
+           
+          }
+          if(role === "sponsor"){
+            //console.log(role)
+            //Delete "history" collection (maybe)
+  
+            //Delete Cart
+              this.cartService.deleteRespectiveCart(email).then(res =>{
+                console.log(res);
+              }).catch(err=>{
+                console.log(err);
+              })
+           
+          }
+          resolve(res);
+  
+         }).catch(err=>{
+           this.storage.remove('deleteAcc');
+           console.log(err);
+           reject(err);
+         }) 
+     })
+    }
 
 }
