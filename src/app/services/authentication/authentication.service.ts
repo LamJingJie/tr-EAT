@@ -56,20 +56,17 @@ export class AuthenticationService {
        
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
         if((await this.ngFireAuth.currentUser).emailVerified == true){
-  
-            //await this.storage.set('role',role); 
-            //await this.storage.set('email',email);
-            
-           // await this.router.navigateByUrl("tabs");
            
             console.log("Successfully login!");
             resolve(res);
          
         }else{
+          this.SendVerificationMail();
+          this.emailNotVerified();
           await this.storage.remove('role');
           await this.storage.remove('email');
           console.log("Email Not Yet Verified");
-          this.emailNotVerified();
+          
           resolve(res);
         }
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
@@ -93,7 +90,7 @@ export class AuthenticationService {
    }
 
    async emailNotVerified(){
-    const toast = await this.toast.create({message: "Email Not Verified", position: 'bottom', duration: 5000,buttons: [ { text: 'Resend', handler: () => { this.SendVerificationMail();} } ]});
+    const toast = await this.toast.create({message: "Email Not Verified. Verification has been sent again. Do check your indox or spam folders", position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('cancel')} } ]});
     toast.present();
   }
 
@@ -199,22 +196,30 @@ export class AuthenticationService {
         ///Prevent error with "this.loading.dismiss()"
         //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
         if((await this.ngFireAuth.currentUser).emailVerified === true){
-
-          //Check if user is listed before logging in
-          this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
-            if(res['listed'] === true){
-              await this.router.navigateByUrl("tabs");
-              //await this.navCtrl.navigateRoot("tabs");
-              console.log("Logged In")
-              this.loading.dismiss(null , null, 'presentLoad');
-            }else{
-              console.log("You have been unlisted by the admin");
-              await this.SignOut();
-              
-              this.loading.dismiss(null, null, 'presentLoad');
-            }
-            this.userListed.unsubscribe();
-          })
+          
+            this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
+              if(res['listed'] === true){
+                await this.router.navigateByUrl("tabs");
+                console.log("Logged In")
+                this.loading.dismiss(null, null, 'presentLoad');
+              }else{
+                 //Check if admin delete account that is verified
+                await this.storage.get('email').then(async res =>{
+                if(res === null){
+                  console.log("You have been unlisted by the admin");
+                  await this.SignOut();
+                  this.loading.dismiss(null, null, 'presentLoad');
+                }else{
+                  await this.router.navigateByUrl("tabs");
+                  console.log("Admin deleted verified account")
+                  this.loading.dismiss(null, null, 'presentLoad');
+                }
+              })
+              }
+              this.userListed.unsubscribe();
+            })
+             
+                
                 
         }else{
     
@@ -235,12 +240,6 @@ export class AuthenticationService {
           });
         }
         
-        // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
-
-       
-        // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
-        //await this.router.navigateByUrl("tabs");
-       // ****************************UNCOMMENT THIS DURING TESTING/DEVELOPMENT***************************** //
 
 
       }else{
