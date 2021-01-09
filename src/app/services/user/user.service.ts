@@ -27,7 +27,7 @@ export class UserService {
       return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true});
   }
 
-   addStudent(email, stamp, role){
+   addStudent(email, stamp:number, role){
     //console.log(email + role);
       return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true});
   }
@@ -51,7 +51,7 @@ export class UserService {
   }
 
   //Change listing status
-  updateListing(email, listed){
+  updateListing(email, listed:boolean){
     return this.firestore.collection('users').doc(email).update({listed: listed});
   }
 

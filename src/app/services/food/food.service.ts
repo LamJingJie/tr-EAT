@@ -24,7 +24,7 @@ export class FoodService {
     return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
   }
 
-  async addFood(foodname, foodprice, halal, userid, vegetarian, image, filename){
+  async addFood(foodname, foodprice:number, halal, userid, vegetarian, image, filename){
     //console.log(image);
     var storageURL = 'Food Images/';
     var mergedName = filename + userid + foodname + foodprice;
@@ -56,7 +56,7 @@ export class FoodService {
   }
 
   //When admin didn't select any images to update/edit
-  editFoodNoImg(foodname, foodprice, availquantity, halal:boolean, vegetarian:boolean, userid, id){
+  editFoodNoImg(foodname, foodprice:number, availquantity:number, halal:boolean, vegetarian:boolean, userid, id){
     return this.firestore.collection('food').doc(id).update({availquantity:availquantity, foodname: foodname, foodprice:foodprice,
       halal: halal, userid:userid, vegetarian: vegetarian})
   }
