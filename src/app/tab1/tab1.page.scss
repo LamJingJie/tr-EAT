@@ -1,17 +1,30 @@
 .canteen{
     width: 100%;
     height: 100%;
+    z-index: 1;
 }
 
 #canteen_txt{
-    font-size: 12px;
+    z-index: -1;
+    font-size: 13px;
     position: relative;
     top:30%;
     background-color: rgba(white, 0.5);
     color: black;
-    font-weight: bold;
+    font-weight: bolder;
 }
 
 #slider{
     height: 100%;
+}
+#btnClick{
+    height: 100%;
+}
+#btnClick:active{
+    background-color: rgba(#000000, 0.3);
+    height: 100%;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+   outline: none;
 }

@@ -9,23 +9,29 @@
 <ion-content [fullscreen]="true">
 
   <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
+  <!---Canteen Carousel--->
   <div style="padding:5px;">
     <h6>Canteens</h6>
-    <div style="height: 70px;">
+    <div style="height: 100px;">
       <ion-slides [options]="sliderConfig" id="slider">
-        <ion-slide>
+        <ion-slide id="slide">
           <ion-card class='canteen' (click)="ChosenCanteen('ALL')">
-            <div id="canteen_txt">
-              ALL
+            <div id="btnClick">
+              <div id="canteen_txt">
+                ALL
+              </div>
             </div>
           </ion-card>
         </ion-slide>
         <ion-slide *ngFor = "let ct of canteen" id="slide">
           <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)">
-              <img style="position: absolute; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
-            <div id="canteen_txt">
-              {{ct.id}}
+            <div id="btnClick">
+              <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
+              <div id="canteen_txt">
+                {{ct.id}}
+              </div>
             </div>
+            
           </ion-card>
         </ion-slide>
       </ion-slides>

@@ -32,9 +32,8 @@ data: boolean;
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: false,
-    slidesPerView: 3.5,
-    slidesPerGroup: 3.5,
-    roundLengths: true,
+    slidesPerView: 2.5,
+    roundLengths: true
   }
 
 
