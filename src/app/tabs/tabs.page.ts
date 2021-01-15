@@ -30,10 +30,6 @@ export class TabsPage {
         this.leavePopup();
       });
     }
-  }
- 
-  ionViewDidEnter(){
-
     this.storage.get('role').then(res =>{
       this.currentRole = res;
      // console.log("Role tabs: " + this.currentRole);
@@ -45,8 +41,10 @@ export class TabsPage {
      // console.log("Email tabs: " + res);
       //alert("Email tabs: " + res);
      });
+  }
+ 
+  ionViewDidEnter(){
 
-    
   }
 
   ionViewWillLeave(){

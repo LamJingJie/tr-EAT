@@ -21,11 +21,6 @@ export class OrderService {
     return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2)).valueChanges({idField: 'id'});
   }
 
-  getAllOrders2(date){
-   
-    //return this.firestore.collection('orders', ref=> ref.where('date','==',date)).valueChanges({idField: 'id'});
-  }
-
 
 
 }
