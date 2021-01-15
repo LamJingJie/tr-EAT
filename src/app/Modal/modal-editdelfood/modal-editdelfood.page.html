@@ -53,7 +53,7 @@
       <ion-item>
         <div id="center">
 
-          <img src="{{foodData.image}}" alt='image' width="50%;"  *ngIf="files == null" />
+          <img src="{{foodData.image}}"  alt='image' width="50%;"  *ngIf="files == null" />
           <img src = "{{files}}" alt='image' width='50%' *ngIf="files != null"/>
 
         </div>
@@ -70,6 +70,7 @@
         </div>
       </ion-item>
     </ion-card>
+    <ion-input hidden formControlName="mergedName" value={{foodData.mergedName}}>{{foodData.mergedName}}</ion-input>
     
     <ion-button type="submit" [disabled] = '!editfood_form.valid'>Confirm</ion-button>
   </form>

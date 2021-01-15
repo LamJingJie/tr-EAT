@@ -46,7 +46,17 @@ const routes: Routes = [
   {
     path: 'admin-account-details/:account',
     loadChildren: () => import('./pages/admin-account-details/admin-account-details.module').then( m => m.AdminAccountDetailsPageModule)
+  },
+  {
+    path: 'adminorders',
+    loadChildren: () => import('./pages/adminorders/adminorders.module').then( m => m.AdminordersPageModule)
+  },  {
+    path: 'calendar-modal',
+    loadChildren: () => import('./Modal/calendar-modal/calendar-modal.module').then( m => m.CalendarModalPageModule)
   }
+
+
+
 
 
 ];

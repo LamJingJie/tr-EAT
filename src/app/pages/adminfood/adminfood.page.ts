@@ -47,18 +47,20 @@ export class AdminfoodPage implements OnInit {
 
   
 
-   async deleteFood(id){
+   async deleteFood(id, mergedName){
+
      await this.presentDelFood();
-    this.foodService.deleteFood(id).then(async res =>{
+    this.foodService.deleteFood(id, mergedName).then(async res =>{
       await this.loading.dismiss(null, null, 'delFoodAdmin');
       this.showSuccess();
      }).catch(async (error) =>{
       await this.loading.dismiss(null, null, 'delFoodAdmin');
        this.showError(error);
      })
+
    }
 
-   async deleteFoodPopUp(id, name){
+   async deleteFoodPopUp(id, name, mergedName){
     
     const alert1 = await this.alertCtrl.create({
       message: 'Are you sure you want to delete ' + '"'+ name + '"' + '?',
@@ -66,7 +68,7 @@ export class AdminfoodPage implements OnInit {
         {
           text: 'Yes',
           handler:()=>{
-            this.deleteFood(id);
+            this.deleteFood(id, mergedName);
           }
         },
         {

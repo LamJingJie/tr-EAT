@@ -71,10 +71,12 @@ export class Tab5Page {
      this.router.navigate(['/adminaddcanteen']);
   }
 
-
-
   ViewAccount(){
     this.router.navigate(['/viewaccount']);
+  }
+
+  openOrders(){
+    this.router.navigate(['/adminorders']);
   }
 
 

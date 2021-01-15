@@ -15,7 +15,7 @@
       <div>
         <h5>{{food.foodname}}</h5>
         <ion-button [routerLink]="['/modal-editdelfood', food.id]">Edit</ion-button>
-        <ion-button (click)="deleteFoodPopUp(food.id, food.foodname)">Delete</ion-button>
+        <ion-button (click)="deleteFoodPopUp(food.id, food.foodname, food.mergedName)">Delete</ion-button>
       </div>
     </ion-item>
   </ion-card>

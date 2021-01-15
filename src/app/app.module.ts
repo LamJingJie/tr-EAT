@@ -22,6 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { KeyValuePipe } from '@angular/common';
+import { CalendarModule } from 'ion2-calendar';
 
 
 @NgModule({
@@ -35,12 +37,14 @@ import { IonicStorageModule } from '@ionic/storage';
     FormsModule,
     ReactiveFormsModule,
     AngularFirestoreModule,
+    CalendarModule,
     AngularFireStorageModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
     Storage,
+    KeyValuePipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

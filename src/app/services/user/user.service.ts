@@ -39,6 +39,7 @@ export class UserService {
   getOnlyVendor(){
     return this.firestore.collection('users', ref => ref.where('role', '==',"vendor")).valueChanges({idField: 'id'});
   }
+  
 
   deleteUser(id){
     return this.firestore.collection('users').doc(id).delete();

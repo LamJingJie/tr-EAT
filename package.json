@@ -28,8 +28,10 @@
     "angularfire2": "^5.4.2",
     "cordova-android": "9.0.0",
     "firebase": "^7.24.0",
+    "ion2-calendar": "^3.0.0-rc.0",
+    "moment": "^2.29.1",
     "rxjs": "~6.5.5",
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.3",
     "zone.js": "~0.10.3"
   },
   "devDependencies": {

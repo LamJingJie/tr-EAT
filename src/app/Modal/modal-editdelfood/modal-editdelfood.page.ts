@@ -51,6 +51,9 @@ foodSubscription: Subscription;
         vegetarian: new FormControl('',Validators.compose([ 
           Validators.required
         ])),
+        mergedName: new FormControl('',Validators.compose([ 
+          Validators.required
+        ]))
      
       })
 
@@ -112,7 +115,7 @@ foodSubscription: Subscription;
     //  console.log(this.foodData.userid);
      // console.log(this.id);
       this.foodService.editFoodWithImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
-      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.id, this.image, this.filename)
+      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.id, this.image, this.filename, this.editfood_form.value['mergedName'])
       .then(res=>{
         this.loading.dismiss(null, null, 'editFoodAdmin');
         this.dismiss();

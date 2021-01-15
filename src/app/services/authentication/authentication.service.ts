@@ -198,6 +198,7 @@ export class AuthenticationService {
         if((await this.ngFireAuth.currentUser).emailVerified === true){
           
             this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
+              //console.log(res['listed']);
               if(res['listed'] === true){
                 await this.router.navigateByUrl("tabs");
                 console.log("Logged In")
