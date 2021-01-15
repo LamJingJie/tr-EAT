@@ -310,7 +310,6 @@ export class AuthenticationService {
           //Admin/user did delete account
           console.log("Admin deleted account and want to log out")
           this.router.navigateByUrl("login");
-          this.ngFireAuth.signOut();
           await this.storage.remove('deleteAcc');
           this.loading.dismiss(null, null, 'presentLoad2');
         }

@@ -40,16 +40,19 @@
     <ion-card>
      
       <div style="text-align:center;">
-        
-        <h6 style="text-decoration: underline; font-weight: bold;">
+        <!---Get vendor name-->
+        <h6 style="font-weight: bold;">
           <ion-icon name="person-outline"></ion-icon>
           {{order.key | adminorders: vendorArray2 | async}}
         </h6>
+        
         <div style="font-size: 14px; display:flex;">
+          <!---Get vendor canteen-->
           <div id="canteen">
             <ion-icon name="restaurant-outline"></ion-icon>
             {{order.key | adminOrderCanteen: vendorArray2 | async}}
           </div>
+          <!---Get vendor stall name-->
           <div style="flex:1;"> - </div>
           <div id="stallname">
             <ion-icon name="storefront-outline"></ion-icon>
@@ -57,7 +60,7 @@
           </div>
         </div>
       </div>
-    
+      <!--Display each food from each vendor-->
       <ion-item  *ngFor="let o of order.value" id="orderData">
 
         <div style="display:flex; width:100%;">
@@ -81,7 +84,7 @@
               
             </div>
             <div *ngIf="o.foodprice == null">
-              <ion-badge color="success" style="font-size: 18px;">Total Cost: ${{o}}</ion-badge>
+              <ion-badge color="success" style="font-size: 15px;">Total Cost: ${{o}}</ion-badge>
             </div>
           </div>
         </div>
@@ -96,7 +99,7 @@
   <p *ngIf = "newOrderArray.length == 0; then NoData;"></p>
   <ng-template #NoData>No Data Retrieved</ng-template>
 
-  
+  <!--Allow admin to select any date-->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button>
       <ion-datetime id="date_calendar" (ionChange)="dateChanged2($event)" [max]='today3'></ion-datetime>
