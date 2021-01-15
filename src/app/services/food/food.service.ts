@@ -24,7 +24,7 @@ export class FoodService {
     return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
   }
 
-  async addFood(foodname, foodprice:number, halal, userid, vegetarian, image, filename){
+  async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
     //console.log(image);
     var storageURL = 'Food Images/';
     var mergedName = filename + userid + foodname + foodprice;
