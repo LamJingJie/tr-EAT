@@ -9,24 +9,37 @@
 <ion-content [fullscreen]="true">
 
   <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
-  <!--This entire section below here are all for testing purposes. You can remove them anytime-->
-  <div>
-    <h4>Testing firebase (Canteen DataTable)</h4>
+  <div style="padding:5px;">
+    <h6>Canteens</h6>
+    <div style="height: 70px;">
+      <ion-slides [options]="sliderConfig" id="slider">
+        <ion-slide>
+          <ion-card class='canteen' (click)="ChosenCanteen('ALL')">
+            <div id="canteen_txt">
+              ALL
+            </div>
+          </ion-card>
+        </ion-slide>
+        <ion-slide *ngFor = "let ct of canteen" id="slide">
+          <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)">
+              <img style="position: absolute; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
+            <div id="canteen_txt">
+              {{ct.id}}
+            </div>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
+   
     
-      <ion-card *ngFor = "let ct of canteen">
-        <div class='allusers'>
-          Canteen ID: {{ct.id}}
-        </div>
-        
-        <img src="{{ct.image}}" alt = "image">   
-      </ion-card>
+
+ 
 
       <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
       <ng-template #pass> Loading...</ng-template>
       <ng-template #fail> Loaded</ng-template>
 
-   
-  </div>
 
   <ion-button (click)="SignOut()">Log Out</ion-button>
   

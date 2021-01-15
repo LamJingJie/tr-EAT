@@ -25,10 +25,19 @@ userEmail: any;
 test: any;
 canteenSub: Subscription;
 customBackBtnSubscription: Subscription;
+canteen: any = [];
+data: boolean;
 
-  
-  canteen: any = [];
-  data: boolean;
+  sliderConfig={
+    spaceBetween: 1,
+    setWrapperSize: true,
+    centeredSlides: false,
+    slidesPerView: 3.5,
+    slidesPerGroup: 3.5,
+    roundLengths: true,
+  }
+
+
   constructor(private canteenService: CanteenService, private alertController: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
     public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient, private platform: Platform) {
@@ -49,8 +58,12 @@ customBackBtnSubscription: Subscription;
   }
 
   ngOnInit(){
+   
     
-    
+  }
+
+  ChosenCanteen(data){
+    console.log(data);
   }
 
   ngOnDestroy(){
