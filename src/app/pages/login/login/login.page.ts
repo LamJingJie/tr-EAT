@@ -105,23 +105,16 @@ export class LoginPage implements OnInit {
      
      this.gettingRoleSubscription = await this.userService.getOne(this.login_form.value['email']).subscribe(async (data) =>{
       //console.log("AHH: " + roles['role']);
-      if(data['listed'] === true){
-        await this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], data['role']).then((res) => {
+        await this.authService.SignIn(this.login_form.value['email'], this.login_form.value['password'], data['role'], data['listed']).then((res) => {
 
+          console.log("Successful!")
           this.loading.dismiss(null,null,'loginUser');
+ 
+        }).catch((error) => {
+          this.loading.dismiss(null,null,'loginUser');
+          this.showError("Error: " + error.message);
+        });
           
-
-          }).catch((error) => {
-            this.loading.dismiss(null,null,'loginUser');
-            this.showError("Error: " + error.message);
-          });
-          
-      }else{
-        console.log("Unlisted");
-        this.loading.dismiss(null,null,'loginUser');
-        this.notlisted();
-        
-      }
      
       this.gettingRoleSubscription.unsubscribe();
     });
@@ -138,10 +131,7 @@ export class LoginPage implements OnInit {
     toast.present();
   }
 
-  async notlisted(){
-    const toast = await this.toast.create({message: "Account has been unlisted", position: 'bottom', duration: 5000,buttons: [ { text: 'ok' } ]});
-    toast.present();
-  }
+
 
   //Code will be executed just before the instance of the component is finally destroyed, perfect place to clean the component
   //Example: to cancel background tasks

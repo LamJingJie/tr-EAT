@@ -45,7 +45,7 @@ export class AuthenticationService {
 
 
 
-    SignIn(email, password,role){
+    SignIn(email, password,role,listed){
 
 
     return new Promise(async (resolve, reject)=>{
@@ -56,17 +56,23 @@ export class AuthenticationService {
        
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
         if((await this.ngFireAuth.currentUser).emailVerified == true){
-           
+          if(listed === true){
             console.log("Successfully login!");
             resolve(res);
+          }else{
+            this.notlisted();
+            console.log("Unlisted");
+            await this.storage.remove('role');
+            await this.storage.remove('email');  
+            resolve(res);
+          }  
          
         }else{
           this.SendVerificationMail();
           this.emailNotVerified();
           await this.storage.remove('role');
           await this.storage.remove('email');
-          console.log("Email Not Yet Verified");
-          
+          console.log("Email Not Yet Verified");    
           resolve(res);
         }
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
@@ -91,6 +97,11 @@ export class AuthenticationService {
 
    async emailNotVerified(){
     const toast = await this.toast.create({message: "Email Not Verified. Verification has been sent again. Do check your indox or spam folders", position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('cancel')} } ]});
+    toast.present();
+  }
+
+  async notlisted(){
+    const toast = await this.toast.create({message: "Account has been unlisted", position: 'bottom', duration: 5000,buttons: [ { text: 'ok' } ]});
     toast.present();
   }
 
@@ -191,7 +202,6 @@ export class AuthenticationService {
       await this.presentLoading();
  
        if(e){
-  
         // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
         ///Prevent error with "this.loading.dismiss()"
         //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
@@ -211,9 +221,17 @@ export class AuthenticationService {
                   await this.SignOut();
                   this.loading.dismiss(null, null, 'presentLoad');
                 }else{
-                  await this.router.navigateByUrl("tabs");
-                  console.log("Admin deleted verified account")
-                  this.loading.dismiss(null, null, 'presentLoad');
+                  await this.storage.get('deleteAcc').then(async res=>{
+                    if(res===null){
+                      console.log("You have been unlisted by the admin");
+                      await this.SignOut();
+                      this.loading.dismiss(null, null, 'presentLoad');
+                    }else{
+                      await this.router.navigateByUrl("tabs");
+                      console.log("Admin deleted verified account")
+                      this.loading.dismiss(null, null, 'presentLoad');
+                    }
+                  })
                 }
               })
               }
@@ -257,11 +275,19 @@ export class AuthenticationService {
             console.log("Logged Out");  
             this.loading.dismiss(null, null, 'presentLoad');
           }else{
-            await this.router.navigateByUrl("tabs");
-            
-            //await this.navCtrl.navigateRoot("tabs");
-            console.log("Admin deleted accounts")
-            this.loading.dismiss(null, null, 'presentLoad');
+            await this.storage.get('deleteAcc').then(async res=>{
+              if(res === null){
+                this.router.navigateByUrl("login");
+                //await this.navCtrl.navigateRoot("login");
+                console.log("Logged Out");  
+                this.loading.dismiss(null, null, 'presentLoad');
+              }else{
+                await this.router.navigateByUrl("tabs");
+                //await this.navCtrl.navigateRoot("tabs");
+                console.log("Admin deleted accounts")
+                this.loading.dismiss(null, null, 'presentLoad');
+              }
+            })  
           }
         })
        
