@@ -24,6 +24,27 @@ export class FoodService {
     return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
   }
 
+  getFoodBasedOnStall(vendor){
+    return this.firestore.collection('food', ref => ref.where('userid', '==', vendor)).valueChanges({idField: 'id'});
+  }
+
+  //When user wants to filter
+  getFoodBasedOnStallNFilter(vendor, filter){
+    //console.log(vendor);
+   // console.log(filter);
+    if(filter === 'all'){
+      console.log("Test");
+      return this.getFoodBasedOnStall(vendor);
+    }
+    if(filter === 'halal'){
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('halal','==',true)).valueChanges({idField:'id'});
+    }
+    if(filter === 'vegetarian'){
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('vegetarian','==',true)).valueChanges({idField:'id'});
+    }
+    
+  }
+
   async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
     //console.log(image);
     var storageURL = 'Food Images/';

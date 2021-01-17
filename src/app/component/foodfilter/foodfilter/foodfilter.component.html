@@ -1,0 +1,22 @@
+<p>
+  <ion-card *ngIf="filter === 'all'" (click)="selectFilter('all')">
+    Selected ALL
+  </ion-card>
+  <ion-card  *ngIf="filter !== 'all'" (click)="selectFilter('all')">
+    ALL
+  </ion-card>
+
+  <ion-card *ngIf="filter === 'vegetarian'" (click)="selectFilter('vegetarian')">
+    Selected Vegetarian
+  </ion-card>
+  <ion-card  *ngIf="filter !== 'vegetarian'" (click)="selectFilter('vegetarian')">
+    Vegetarian
+  </ion-card>
+
+  <ion-card  *ngIf="filter === 'halal'" (click)="selectFilter('halal')">
+    Selected Halal
+  </ion-card>
+  <ion-card *ngIf="filter !== 'halal'" (click)="selectFilter('halal')">
+    Halal
+  </ion-card>
+</p>

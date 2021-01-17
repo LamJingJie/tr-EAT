@@ -39,6 +39,10 @@ export class UserService {
   getOnlyVendor(){
     return this.firestore.collection('users', ref => ref.where('role', '==',"vendor")).valueChanges({idField: 'id'});
   }
+
+  getVendorBasedOnCanteen(canteen){
+    return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen)).valueChanges({idField: 'id'});
+  }
   
 
   deleteUser(id){

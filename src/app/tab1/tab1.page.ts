@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController, Platform } from '@ionic/angular'; 
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import {CanteenService} from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -61,8 +61,10 @@ data: boolean;
     
   }
 
-  ChosenCanteen(data){
-    console.log(data);
+  ChosenCanteen(canteenid){
+    //console.log(canteenid);
+    let navigationExtras: NavigationExtras = { queryParams: {canteenid: canteenid } };    
+    this.router.navigate(['vendors'], navigationExtras);
   }
 
   ngOnDestroy(){

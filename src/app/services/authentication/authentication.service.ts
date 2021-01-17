@@ -361,7 +361,6 @@ export class AuthenticationService {
           this.userService.deleteUser(email);
          
           if(role === "vendor"){   
-           // console.log(role)
             try {
               this.foodService.deleteFoodVendorEmail(email);
              
@@ -371,11 +370,11 @@ export class AuthenticationService {
             
           }
           if(role === "student"){
-            //console.log(role)
+          
            
           }
           if(role === "sponsor"){
-            //console.log(role)
+  
             //Delete "history" collection (maybe)
   
             //Delete Cart

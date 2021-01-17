@@ -33,8 +33,6 @@ export class AdminordersPage implements OnInit {
   newOrderArray: any[] = [];
   EachVendorTotal: any[] = [];
 
-  tmr: Date = new Date();
-
   today: Date = new Date();
   today2: Date = new Date();
   today3: string = new Date().toISOString();
@@ -110,9 +108,6 @@ export class AdminordersPage implements OnInit {
       this.ytdMinus5_2.setDate(this.ytdMinus5.getDate());
       this.ytdMinus5_2.setHours(23,59,59,999); //End
 
-      //Tomorrow
-      this.tmr.setDate(this.tmr.getDate() + 1);
-
       
       
      }
@@ -120,8 +115,6 @@ export class AdminordersPage implements OnInit {
   ngOnInit() {
    
   }
-
-
 
   ionViewWillEnter(){
    

@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Stalls</ion-title>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!--Show all the stores-->
+  <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname)" >
+    <img src= "assets/shapes.svg" alt='image'/>
+    <ion-card-header>
+      <ion-card-title>
+        {{vendor.stallname}}
+      </ion-card-title>
+      
+    </ion-card-header>
+  </ion-card>
+
+
+
+
+</ion-content>

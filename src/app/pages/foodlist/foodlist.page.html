@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>foodlist</ion-title>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h6>Vendor: {{stall}}</h6>
+
+  <!----Filter button---->
+  <ion-button (click)="filter($event)">
+    <ion-icon name="funnel-outline"></ion-icon>Filter
+  </ion-button>
+  
+  <!--Food data-->
+  <ion-card *ngFor = "let food of foodlistArray">
+    <ion-item>
+      <div>
+        <img width="50%" height="50%" src = {{food.image}} alt="image"/>
+      </div>
+      <div>
+        {{food.foodname}} -  ${{food.foodprice}}
+      </div>
+    </ion-item>  
+  </ion-card>
+
+  <p *ngIf="foodlistArray.length == 0">No Food Retrieved</p>
+
+</ion-content>
