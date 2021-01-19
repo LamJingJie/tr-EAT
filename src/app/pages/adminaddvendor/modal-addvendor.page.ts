@@ -4,6 +4,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-modal-addvendor',
@@ -21,7 +22,8 @@ export class ModalAddvendorPage implements OnInit {
   canteenSubscription: Subscription
 
   constructor(private modalCtrl: ModalController,  private fb: FormBuilder,private authService: AuthenticationService,
-    private toast: ToastController, private canteenService: CanteenService, private navCtrl: NavController, private loading: LoadingController) { 
+    private toast: ToastController, private canteenService: CanteenService, private navCtrl: NavController, private loading: LoadingController,
+    private storage: Storage) { 
 
 
       this.currentRole = 'vendor';
@@ -127,14 +129,18 @@ export class ModalAddvendorPage implements OnInit {
       //console.log(this.adduser_form.value['stamp']);
 
       await this.presentLoadingSignUpAdmin();
-  
+
       await this.authService.SignUpVendor(this.adduser_form.value['email'], this.adduser_form.value['password'], this.adduser_form.value['canteen'], this.adduser_form.value['stallname'], this.currentRole).then(async (res)=>{
       await this.adduser_form.reset();
       //console.log(res);
+ 
+      console.log("Done!");
       this.loading.dismiss(null, null, 'adminSignUp');
+      this.dismiss();
       await this.showToast();
       
       }).catch(async (error)=>{
+
       this.loading.dismiss(null, null, 'adminSignUp');
       this.showError("Error: " + error.message);
     });
@@ -151,15 +157,19 @@ export class ModalAddvendorPage implements OnInit {
     // console.log(this.addstudent_form.value['stamp']);
     // console.log(this.currentRole);
     await this.presentLoadingSignUpAdmin();
-
+    
     await this.authService.SignUpStudent(this.addstudent_form.value['email1'], this.addstudent_form.value['password1'],this.addstudent_form.value['stamp'] , this.currentRole).then(async (res)=>{
       await this.addstudent_form.reset();
-
+     
       this.loading.dismiss(null, null, 'adminSignUp');
+      this.dismiss();
       await this.showToast();
+
     }).catch(async (error)=>{
+      
       this.loading.dismiss(null, null, 'adminSignUp');
       this.showError("Error: " + error.message);
+
    });
    
   }else{

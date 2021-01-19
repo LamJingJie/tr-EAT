@@ -98,14 +98,8 @@ export class FoodService {
     halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
   }
 
-  redeemFood(id, quantity){
-
-    return new Promise(async (resolve, reject)=>{
-      this.firestore.collection('food').doc(id).update({availquantity: quantity});
-
-      //Add into orders database
-      
-    });
+  decreaseAvailQuantity(id, quantity: number){
+    return this.firestore.collection('food').doc(id).update({availquantity: quantity});
 
   }
 

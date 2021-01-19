@@ -9,6 +9,7 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from "@angular/fire/auth";
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-admin-account-details',
@@ -31,7 +32,7 @@ export class AdminAccountDetailsPage implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private navCtrl:NavController, private userService: UserService,
     private router:Router, private alertCtrl: AlertController,public ngFireAuth: AngularFireAuth,
     private authService: AuthenticationService, private toast: ToastController, private loading: LoadingController,
-    private canteenService: CanteenService, private fb: FormBuilder) {
+    private canteenService: CanteenService, private fb: FormBuilder, private storage: Storage) {
 
       this.editedStall = false;
       
@@ -136,12 +137,15 @@ export class AdminAccountDetailsPage implements OnInit {
               //console.log(this.currentAccount);
               if(password.password != ""){
                 await this.presentDelAccLoad();
-                await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole).then(res =>{
+              
+                await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole).then(async res =>{
                 //  console.log(res);
+                
                 this.loading.dismiss(null,null,'deleteAccount');
                 this.dismiss();
                 this.DeleteshowSuccess_account();
-              }).catch((err)=>{
+              }).catch(async (err)=>{
+                
                 this.loading.dismiss(null,null,'deleteAccount');
                 this.showError(err);
               });

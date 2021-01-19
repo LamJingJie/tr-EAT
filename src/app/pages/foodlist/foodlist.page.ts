@@ -121,20 +121,42 @@ foodM = new Map();
   //Student
   async RedeemFood(id, quantity, foodname, foodprice, image, vendorid){
     //Show alert box
+    var food_name = foodname;
     const alert1 = await this.alertCtrl.create({
       header: 'Confirmation of Redemption',
       message: 'Are you sure you would like to redeem the following item' + '<br><br><br><br>' + '1x ' + foodname + "  $"+foodprice,
       buttons:[
         {
-          text: 'Yes',
+          text: 'Confirm',
           handler:()=>{
             //Use 'vendorid' param to retrieve respective canteenID from 'users' database
-            if(quantity < 1){
-              alert('"' + foodname + '"' + " is currently unavailable. Please redeem another food");
-            }else{
+            if(quantity > 0){
               quantity = quantity - 1; //Deduct per redeem
               console.log(quantity);
-               //this.foodService.redeemFood(id, quantity);
+
+              //Deduct overall value in firebase first
+              this.foodService.decreaseAvailQuantity(id, quantity).then((res =>{
+                let current_date: any = new Date();
+                var stamp = 1;
+
+                //Once completed, then add into orders for vendor to see
+                this.orderService.addOrders(this.canteen, current_date, foodname, foodprice, image, stamp, this.userEmail, vendorid)
+                .then((res=>{
+                  this.RedeemshowSuccess(food_name);
+
+                })).catch((err =>{
+                  this.showError(err);
+
+                }))
+
+              })).catch((err =>{
+                this.showError(err);
+
+              }))
+
+
+            }else{
+              alert('"' + foodname + '"' + " is currently unavailable. Please redeem another food");  
             }
           }
         },

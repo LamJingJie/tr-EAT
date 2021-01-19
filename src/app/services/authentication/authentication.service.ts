@@ -150,7 +150,7 @@ export class AuthenticationService {
    //For Vendor Accounts Only!
    async SignUpVendor(email, password, canteenID, stallname, role){
 
-
+    await this.storage.set('adminusage',true);
     return new Promise((resolve, reject) =>{
       this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
         
@@ -160,7 +160,7 @@ export class AuthenticationService {
        
       }).catch(async (error)=>{
         reject(error)
-
+        await this.storage.remove('adminusage');
         console.log("Error: " + error.message);
       })
     })
@@ -169,7 +169,7 @@ export class AuthenticationService {
     //For Student Accounts Only!
     async SignUpStudent(email, password, stamp, role){
   
-
+      await this.storage.set('adminusage',true);
       return new Promise((resolve, reject) =>{
         this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
           
@@ -179,7 +179,7 @@ export class AuthenticationService {
          
         }).catch(async (error)=>{
           reject(error)
-
+          await this.storage.remove('adminusage');
           console.log("Error: " + error.message);
         })
       })
@@ -200,98 +200,60 @@ export class AuthenticationService {
      this.ngFireAuth.onAuthStateChanged(async e =>{
       //console.log((await this.ngFireAuth.currentUser).emailVerified);
       await this.presentLoading();
- 
-       if(e){
-        // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
-        ///Prevent error with "this.loading.dismiss()"
-        //This acts as a sort of buffer during login, gives time for the system to add the values into the storage
-        if((await this.ngFireAuth.currentUser).emailVerified === true){
-          
-            this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
-              //console.log(res['listed']);
-              if(res['listed'] === true){
-                await this.router.navigateByUrl("tabs");
-                console.log("Logged In")
-                this.loading.dismiss(null, null, 'presentLoad');
-              }else{
-                 //Check if admin delete account that is verified
-                await this.storage.get('email').then(async res =>{
-                if(res === null){
-                  console.log("You have been unlisted by the admin");
-                  await this.SignOut();
-                  this.loading.dismiss(null, null, 'presentLoad');
-                }else{
-                  await this.storage.get('deleteAcc').then(async res=>{
-                    if(res===null){
-                      console.log("You have been unlisted by the admin");
-                      await this.SignOut();
-                      this.loading.dismiss(null, null, 'presentLoad');
-                    }else{
-                      await this.router.navigateByUrl("tabs");
-                      console.log("Admin deleted verified account")
-                      this.loading.dismiss(null, null, 'presentLoad');
-                    }
-                  })
-                }
-              })
-              }
-              this.userListed.unsubscribe();
-            })
-             
-                
-                
-        }else{
-    
-          //For admin users, prevent them from accessing login and signup pages after adding new accounts
-          await this.storage.get('email').then(async res =>{
-          //console.log(res);
-          if(res === null){
-            console.log("Admin nvr add new accounts")
-            await this.SignOut();
-            
-            this.loading.dismiss(null, null, 'presentLoad');
-          }else{
-            console.log("Admin added new accounts")
-            await this.router.navigateByUrl("tabs");
-            //await this.navCtrl.navigateRoot("tabs");
-            this.loading.dismiss(null, null, 'presentLoad');
-          }
-          });
-        }
+
+      this.storage.get('adminusage').then(async res =>{
+        //Check if admin user made any add or delete of other user accounts. Null if no.
+        console.log("admin: " + res);
+        if(res === null){
+          //No action made by admin
+          if(e){
+
+            if((await this.ngFireAuth.currentUser).emailVerified === true){
+              
+                this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
+                  //console.log(res['listed']);
+                  if(res['listed'] === true){
+                    await this.router.navigateByUrl("tabs");
+                    console.log("Logged In")
+                    this.loading.dismiss(null, null, 'presentLoad');
+                  }else{
+                    console.log("You have been unlisted by the admin");
+                    await this.SignOut();
+                    this.loading.dismiss(null, null, 'presentLoad');
+                  }
+                  this.userListed.unsubscribe();
+                })
         
+            }else{
+        
+              console.log("Admin nvr add new accounts")
+              await this.SignOut();
+                
+              this.loading.dismiss(null, null, 'presentLoad');
+            }
 
-
-      }else{
-
-        //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
-        //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
-        //Im not willing to spent another 5hrs of my life debugging
-
-        //For admin users, prevent them from being logged out after deleting accounts
-        await this.storage.get('email').then(async res =>{
-          if(res === null){
+          }else{
+    
+            //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
+            //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
+            //Im not willing to spent another 5hrs of my life debugging
+    
             this.router.navigateByUrl("login");
             //await this.navCtrl.navigateRoot("login");
             console.log("Logged Out");  
             this.loading.dismiss(null, null, 'presentLoad');
-          }else{
-            await this.storage.get('deleteAcc').then(async res=>{
-              if(res === null){
-                this.router.navigateByUrl("login");
-                //await this.navCtrl.navigateRoot("login");
-                console.log("Logged Out");  
-                this.loading.dismiss(null, null, 'presentLoad');
-              }else{
-                await this.router.navigateByUrl("tabs");
-                //await this.navCtrl.navigateRoot("tabs");
-                console.log("Admin deleted accounts")
-                this.loading.dismiss(null, null, 'presentLoad');
-              }
-            })  
+           
           }
-        })
+        }else{
+          //Did
+          console.log("Admin present")     
+          
+          await this.router.navigateByUrl("tabs");
+          await this.loading.dismiss(null, null, 'presentLoad');
+        }
+      });
+ 
        
-      }
     });
    }
 
@@ -319,6 +281,7 @@ export class AuthenticationService {
       console.log("Sign out")
       await this.storage.remove('role');
       await this.storage.remove('email');
+      await this.storage.remove('adminusage');
 
       //Since when admin delete an account, the ngFireAuth will think that we have already logged out. Since the 
       //ngFireAuth.delete() also causes a signout(). So this basically just checks if the admin has deleted any account
@@ -328,7 +291,7 @@ export class AuthenticationService {
         if(res === null){
           
           console.log("Normal users will get this")
-        
+          
           this.ngFireAuth.signOut();
           this.loading.dismiss(null, null, 'presentLoad2');
         }else{
@@ -337,6 +300,7 @@ export class AuthenticationService {
           console.log("Admin deleted account and want to log out")
           this.router.navigateByUrl("login");
           await this.storage.remove('deleteAcc');
+          
           this.loading.dismiss(null, null, 'presentLoad2');
         }
       }).catch(err=>{
@@ -350,6 +314,7 @@ export class AuthenticationService {
    //Delete user accounts for admin users only
    async deleteUserAdmin(email, password,role){ 
       await this.storage.set('deleteAcc',true);
+      await this.storage.set('adminusage',true);
 
       return new Promise((resolve, reject) =>{
         this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
@@ -390,6 +355,7 @@ export class AuthenticationService {
   
          }).catch(err=>{
            this.storage.remove('deleteAcc');
+           this.storage.remove('adminusage');
            console.log(err);
            reject(err);
          }) 

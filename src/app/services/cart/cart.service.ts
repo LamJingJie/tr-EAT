@@ -22,7 +22,7 @@ export class CartService {
     return this.firestore.collection('cart').doc(email).delete();
   }
 
-  addToCart(foodid, userid, canteenid, orderquantity, foodname){
+  addToCart(foodid, userid, canteenid, orderquantity: number, foodname){
 
    //this.userDetails = data;
    //this.listed = this.userDetails.listed;
