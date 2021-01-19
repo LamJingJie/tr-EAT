@@ -16,6 +16,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class AppComponent {
   //users: User[] = [];
   currentRole: any;
+ 
 
   constructor(
     private platform: Platform,
@@ -28,6 +29,7 @@ export class AppComponent {
     private userService: UserService,
     private authService: AuthenticationService,
   ) {
+  
     this.initializeApp();
   }
 

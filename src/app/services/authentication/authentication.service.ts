@@ -23,6 +23,10 @@ export class AuthenticationService {
   user_exists: string;
   userListed: Subscription;
   deleteAccount: boolean = false;
+
+  checkAdmin: boolean = false;
+  checkAdmin2: boolean = false;
+
  // user: User[] = []
 //  users: User[] = [];
  // newUser: User = <User>{}
@@ -40,7 +44,7 @@ export class AuthenticationService {
     private foodService: FoodService,
     private cartService: CartService
   ) {
- 
+    
    }
 
 
@@ -151,6 +155,7 @@ export class AuthenticationService {
    async SignUpVendor(email, password, canteenID, stallname, role){
 
     await this.storage.set('adminusage',true);
+    this.checkAdmin2 = true;
     return new Promise((resolve, reject) =>{
       this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
         
@@ -170,6 +175,7 @@ export class AuthenticationService {
     async SignUpStudent(email, password, stamp, role){
   
       await this.storage.set('adminusage',true);
+      this.checkAdmin2 = true;
       return new Promise((resolve, reject) =>{
         this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
           
@@ -199,6 +205,7 @@ export class AuthenticationService {
      async checkAuth(){
      this.ngFireAuth.onAuthStateChanged(async e =>{
       //console.log((await this.ngFireAuth.currentUser).emailVerified);
+
       await this.presentLoading();
 
       this.storage.get('adminusage').then(async res =>{
@@ -237,7 +244,7 @@ export class AuthenticationService {
             //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
             //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
             //Im not willing to spent another 5hrs of my life debugging
-    
+           
             this.router.navigateByUrl("login");
             //await this.navCtrl.navigateRoot("login");
             console.log("Logged Out");  
@@ -245,11 +252,25 @@ export class AuthenticationService {
            
           }
         }else{
-          //Did
-          console.log("Admin present")     
-          
-          await this.router.navigateByUrl("tabs");
-          await this.loading.dismiss(null, null, 'presentLoad');
+            //Check for admin users to prevent going back to tabs unnecessaryily.
+            if(this.checkAdmin === true){
+              //When admin delete account 
+              console.log("Admin present")     
+              await this.loading.dismiss(null, null, 'presentLoad');
+            }else{
+              if(this.checkAdmin2 === true){
+                //When admin adds vendors or students accounts
+                console.log("Admin present2")     
+                await this.loading.dismiss(null, null, 'presentLoad');
+              }else{
+                //To be run when app is booted up for admin users
+                await this.loading.dismiss(null, null, 'presentLoad');
+                await this.router.navigateByUrl("tabs");
+                console.log("Add, Delete user account!");
+              }
+            
+            }
+        
         }
       });
  
@@ -316,9 +337,11 @@ export class AuthenticationService {
       await this.storage.set('deleteAcc',true);
       await this.storage.set('adminusage',true);
 
+      this.checkAdmin = true;
+
       return new Promise((resolve, reject) =>{
         this.ngFireAuth.signInWithEmailAndPassword(email, password).then(async res =>{
-       
+
           //Delete account from firebase auth
           (await this.ngFireAuth.currentUser).delete();
 
