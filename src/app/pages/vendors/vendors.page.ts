@@ -49,9 +49,9 @@ export class VendorsPage implements OnInit {
     });
   }
 
-  selectedStall(vendor, stall){
+  selectedStall(vendor, stall, canteenid){
     //console.log(stall);
-    let navigationExtras: NavigationExtras = { queryParams: {vendor: vendor , stall: stall} };   
+    let navigationExtras: NavigationExtras = { queryParams: {vendor: vendor , stall: stall, canteenid: canteenid} };   
     this.router.navigate(['foodlist'], navigationExtras);
   }
 

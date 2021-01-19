@@ -28,33 +28,44 @@ export class AdminordersPage implements OnInit {
   vendorM = new Map();
   vendorM2= new Map();
 
+  todayDate: Date = new Date();
+
   count: number;
   currentindex: any = [];
   newOrderArray: any[] = [];
   EachVendorTotal: any[] = [];
 
+  test: any = new Date();
+
   today: Date = new Date();
   today2: Date = new Date();
+  todayVar: any = new Date();
+
   today3: string = new Date().toISOString();
-  today4: Date;
 
   ytd: Date = new Date();
   ytd2: Date = new Date();
+  ytdVar: any = new Date();
 
   ytdMinus1: Date = new Date();
   ytdMinus1_2: Date = new Date();
+  ytdMinus1Var: any = new Date();
 
   ytdMinus2: Date = new Date();
   ytdMinus2_2: Date = new Date();
+  ytdMinus2Var: any = new Date();
 
   ytdMinus3: Date = new Date();
   ytdMinus3_2: Date = new Date();
+  ytdMinus3Var: any = new Date();
 
   ytdMinus4: Date = new Date();
   ytdMinus4_2: Date = new Date();
+  ytdMinus4Var: any = new Date();
 
   ytdMinus5: Date = new Date();
   ytdMinus5_2: Date = new Date();
+  ytdMinus5Var: any = new Date();
 
   orderSubscription: Subscription;
   vendorSubscription: Subscription;
@@ -65,52 +76,62 @@ export class AdminordersPage implements OnInit {
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController) {
-
-      
-
-      //Today Date
-      this.today.setHours(0,0,0,0);
-      this.today2.setHours(23,59,59,999);
-
-      //Yesterday date
-      this.ytd.setDate(this.ytd.getDate() -1);
-      this.ytd.setHours(0,0,0,0); //Start
-      this.ytd2.setDate(this.ytd.getDate());
-      this.ytd2.setHours(23,59,59,999); //End
-
-      //Yesterday -1 Date
-      this.ytdMinus1.setDate(this.ytdMinus1.getDate() -2);
-      this.ytdMinus1.setHours(0,0,0,0); //Start
-      this.ytdMinus1_2.setDate(this.ytdMinus1.getDate());
-      this.ytdMinus1_2.setHours(23,59,59,999); //End
-
-      //Yesterday -2 Date
-      this.ytdMinus2.setDate(this.ytdMinus2.getDate() -3);
-      this.ytdMinus2.setHours(0,0,0,0); //Start
-      this.ytdMinus2_2.setDate(this.ytdMinus2.getDate());
-      this.ytdMinus2_2.setHours(23,59,59,999); //End
-
-      //Yesterday -3 Date
-      this.ytdMinus3.setDate(this.ytdMinus3.getDate() -4);
-      this.ytdMinus3.setHours(0,0,0,0); //Start
-      this.ytdMinus3_2.setDate(this.ytdMinus3.getDate());
-      this.ytdMinus3_2.setHours(23,59,59,999); //End
-
-      //Yesterday -4 Date
-      this.ytdMinus4.setDate(this.ytdMinus4.getDate() -5);
-      this.ytdMinus4.setHours(0,0,0,0); //Start
-      this.ytdMinus4_2.setDate(this.ytdMinus4.getDate());
-      this.ytdMinus4_2.setHours(23,59,59,999); //End
-
-      //Yesterday -5 Date
-      this.ytdMinus5.setDate(this.ytdMinus5.getDate() -6);
-      this.ytdMinus5.setHours(0,0,0,0); //Start
-      this.ytdMinus5_2.setDate(this.ytdMinus5.getDate());
-      this.ytdMinus5_2.setHours(23,59,59,999); //End
-
-      
+   
+      this.get7Days(this.today);
       
      }
+
+  get7Days(date){
+   
+     //Today Date
+     this.todayVar = this.today.setDate(date.getDate());
+     this.today.setHours(0,0,0,0); //Start
+     //console.log("tday: " + this.todayVar);
+     this.today2.setDate(this.today.getDate());
+     this.today2.setHours(23,59,59,999); //End
+
+     //Yesterday date
+     this.ytdVar = this.ytd.setDate(date.getDate() -1);
+     this.ytd.setHours(0,0,0,0); //Start 
+     //console.log("ytd: " + this.ytdVar);
+     this.ytd2.setDate(this.ytd.getDate());
+     this.ytd2.setHours(23,59,59,999); //End
+
+     //Yesterday -1 Date
+     this.ytdMinus1Var =this.ytdMinus1.setDate(date.getDate() -2);
+     this.ytdMinus1.setHours(0,0,0,0); //Start
+     //console.log("ytd -1: " + this.ytdMinus1Var);
+     this.ytdMinus1_2.setDate(this.ytdMinus1.getDate());
+     this.ytdMinus1_2.setHours(23,59,59,999); //End
+
+     //Yesterday -2 Date
+     this.ytdMinus2Var = this.ytdMinus2.setDate(date.getDate() -3);
+     this.ytdMinus2.setHours(0,0,0,0); //Start
+     //console.log("ytd -2: " +this.ytdMinus2Var);
+     this.ytdMinus2_2.setDate(this.ytdMinus2.getDate());
+     this.ytdMinus2_2.setHours(23,59,59,999); //End
+
+     //Yesterday -3 Date
+     this.ytdMinus3Var =this.ytdMinus3.setDate(date.getDate() -4);
+     this.ytdMinus3.setHours(0,0,0,0); //Start
+     //console.log("ytd -3: " +this.ytdMinus3Var);
+     this.ytdMinus3_2.setDate(this.ytdMinus3.getDate());
+     this.ytdMinus3_2.setHours(23,59,59,999); //End
+
+     //Yesterday -4 Date
+     this.ytdMinus4Var = this.ytdMinus4.setDate(date.getDate() -5);
+     this.ytdMinus4.setHours(0,0,0,0); //Start
+     //console.log("ytd -4: " +this.ytdMinus4Var);
+     this.ytdMinus4_2.setDate(this.ytdMinus4.getDate());
+     this.ytdMinus4_2.setHours(23,59,59,999); //End
+
+     //Yesterday -5 Date
+     this.ytdMinus5Var =this.ytdMinus5.setDate(date.getDate() -6);
+     this.ytdMinus5.setHours(0,0,0,0); //Start
+     //console.log("ytd -5: " +this.ytdMinus5Var);
+     this.ytdMinus5_2.setDate(this.ytdMinus5.getDate());
+     this.ytdMinus5_2.setHours(23,59,59,999); //End
+  }
 
   ngOnInit() {
    
@@ -134,15 +155,6 @@ export class AdminordersPage implements OnInit {
 
     this.getOrders(this.today, this.today2);
 
-  }
-
-  async test(){
-    const modal = await this.modalCtrl.create({
-      cssClass:'calendar-modal',
-      component: CalendarModalPage
-    });
-    return await modal.present();
-    
   }
 
   dismiss(){
@@ -262,31 +274,31 @@ export class AdminordersPage implements OnInit {
 
   dateChanged(event){
     //console.log(event)
-    if(event.detail.value == this.today){
+    if(event.detail.value == this.todayVar){
       console.log("Today");
       this.getOrders(this.today, this.today2);
     }
-    if(event.detail.value == this.ytd){
+    if(event.detail.value == this.ytdVar){
       console.log("Yesterday");
       this.getOrders(this.ytd, this.ytd2);
     }
-    if(event.detail.value == this.ytdMinus1){
+    if(event.detail.value == this.ytdMinus1Var){
       console.log("Yesterday -1");
       this.getOrders(this.ytdMinus1, this.ytdMinus1_2);
     }
-    if(event.detail.value == this.ytdMinus2){
+    if(event.detail.value == this.ytdMinus2Var){
       console.log("Yesterday -2");
       this.getOrders(this.ytdMinus2, this.ytdMinus2_2);
     }
-    if(event.detail.value == this.ytdMinus3){
+    if(event.detail.value == this.ytdMinus3Var){
       console.log("Yesterday -3");
       this.getOrders(this.ytdMinus3, this.ytdMinus3_2);
     }
-    if(event.detail.value == this.ytdMinus4){
+    if(event.detail.value == this.ytdMinus4Var){
       console.log("Yesterday -4");
       this.getOrders(this.ytdMinus4, this.ytdMinus4_2);
     }
-    if(event.detail.value == this.ytdMinus5){
+    if(event.detail.value == this.ytdMinus5Var){
       console.log("Yesterday -5");
       this.getOrders(this.ytdMinus5, this.ytdMinus5_2);
     }
@@ -302,10 +314,11 @@ export class AdminordersPage implements OnInit {
     let date2: Date = new Date(event.detail.value);
     date.setHours(0,0,0,0);
     date2.setHours(23,59,59,999);
-    //console.log(date);
+
+    //this.todayVar = date;
+
+    this.get7Days(date);
     //console.log(date2);
-    this.getOrders(date, date2);
-   // this.orderService.getAllOrders2(event.detail.value)
   }
 
 

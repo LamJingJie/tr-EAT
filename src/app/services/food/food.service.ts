@@ -10,6 +10,9 @@ import { Subscription } from 'rxjs';
 })
 export class FoodService {
   food: Subscription;
+
+  test1: Subscription;
+  test2: Subscription;
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
 
 
@@ -33,16 +36,10 @@ export class FoodService {
     //console.log(vendor);
    // console.log(filter);
     if(filter === 'all'){
-      console.log("Test");
       return this.getFoodBasedOnStall(vendor);
+    }else{
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true)).valueChanges({idField:'id'});
     }
-    if(filter === 'halal'){
-      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('halal','==',true)).valueChanges({idField:'id'});
-    }
-    if(filter === 'vegetarian'){
-      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('vegetarian','==',true)).valueChanges({idField:'id'});
-    }
-    
   }
 
   async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
@@ -99,6 +96,17 @@ export class FoodService {
 
     return this.firestore.collection('food').doc(id).update({availquantity: availquantity, foodname: foodname, foodprice: foodprice,
     halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
+  }
+
+  redeemFood(id, quantity){
+
+    return new Promise(async (resolve, reject)=>{
+      this.firestore.collection('food').doc(id).update({availquantity: quantity});
+
+      //Add into orders database
+      
+    });
+
   }
 
   

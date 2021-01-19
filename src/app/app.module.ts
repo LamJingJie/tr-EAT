@@ -24,6 +24,11 @@ import { IonicStorageModule } from '@ionic/storage';
 
 import { KeyValuePipe } from '@angular/common';
 import { CalendarModule } from 'ion2-calendar';
+import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
+import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
+import Pickr from '@simonwep/pickr';
+
 
 
 @NgModule({

@@ -9,29 +9,28 @@
 </ion-header>
 
 <ion-content>
-  
  
-  <ion-segment scrollable (ionChange)="dateChanged($event)" value={{today}}>
-    <ion-segment-button value ={{today}}>
-      <ion-label>{{today | date: 'dd MMM'}}</ion-label>
+  <ion-segment scrollable (ionChange)="dateChanged($event)" value={{todayVar}}>
+    <ion-segment-button value ={{todayVar}}>
+      <ion-label>{{todayVar | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value ={{ytd}}>
-      <ion-label>{{ytd | date: 'dd MMM'}}</ion-label>
+    <ion-segment-button value ={{ytdVar}}>
+      <ion-label>{{ytdVar | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value ={{ytdMinus1}}>
-      <ion-label>{{ytdMinus1 | date: 'dd MMM'}}</ion-label>
+    <ion-segment-button value ={{ytdMinus1Var}}>
+      <ion-label>{{ytdMinus1Var | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value ={{ytdMinus2}}>
-      <ion-label>{{ytdMinus2 | date: 'dd MMM'}}</ion-label>
+    <ion-segment-button value ={{ytdMinus2Var}}>
+      <ion-label>{{ytdMinus2Var | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value ={{ytdMinus3}}>
-      <ion-label>{{ytdMinus3 | date: 'dd MMM'}}</ion-label>
+    <ion-segment-button value ={{ytdMinus3Var}}>
+      <ion-label>{{ytdMinus3Var | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-    <ion-segment-button value ={{ytdMinus4}}>
-      <ion-label>{{ytdMinus4 | date: 'dd MMM'}}</ion-label>
+    <ion-segment-button value ={{ytdMinus4Var}}>
+      <ion-label>{{ytdMinus4Var | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
-     <ion-segment-button value ={{ytdMinus5}}>
-      <ion-label>{{ytdMinus5 | date: 'dd MMM'}}</ion-label>
+     <ion-segment-button value ={{ytdMinus5Var}}>
+      <ion-label>{{ytdMinus5Var | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
   </ion-segment>
 

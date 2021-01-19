@@ -12,6 +12,7 @@ import { rejects } from 'assert';
 import { KeyValuePipe } from '@angular/common';
 import { ModalController, PickerController } from '@ionic/angular';
 import { FoodService } from 'src/app/services/food/food.service';
+import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 
 @Component({
@@ -26,17 +27,33 @@ filterfoodSubscription: Subscription;
 
 vendor: any;
 stall: any;
+canteen: any;
 foodlistArray: any = [];
 
 chosenFilter: any;
+
+userRole : any;
+userEmail: any;
+
+count: any;
+currentAmt: any;
+keysArray: any[] = [];
+valueArray: any[] = [];
+combineArray: any[] = [];
+
+
+foodM = new Map();
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, private foodService: FoodService,
-    private popoverCtrl: PopoverController) {
+    private popoverCtrl: PopoverController, private storage: Storage, private cartService: CartService) {
 
       this.chosenFilter = 'all'
+      this.count = 1;
+      this.currentAmt = 1;
+      
      }
 
   ngOnInit() {
@@ -44,31 +61,130 @@ chosenFilter: any;
     this.foodSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.stall = params.stall;
       this.vendor = params.vendor;
+      this.canteen = params.canteenid;
       //console.log(this.stall);
       //console.log(this.vendor);
-      this.getfoodlist(this.vendor);
+      this.filterFood(this.chosenFilter);
      
     });
   }
 
-  //Get all food on page load
-  getfoodlist(vendor){
-    this.getfoodSubscription = this.foodService.getFoodBasedOnStall(vendor).subscribe((res =>{
-      this.foodlistArray = res;
+  ionViewWillEnter(){
+    this.storage.get('role').then(res=>{
+      //console.log("role: " + res);
+      this.userRole = res;
+      
+    });
+    this.storage.get('email').then(res=>{
+      //console.log("email: " + res);
+      this.userEmail = res;
+      
+    });
+  }
 
-      this.getfoodSubscription.unsubscribe();
+  addAmt(foodid){
+   // console.log(foodid);
+    var amt = this.foodM.get(foodid);
+    amt = amt + 1;
+    //console.log(this.currentAmt);
+    this.foodM.set(foodid, amt);
+    //console.log(this.foodM.entries());
+    this.getKeys();
+  }
+
+  deductAmt(foodid){
+    //console.log(foodid);
+    var amt = this.foodM.get(foodid);
+    if(amt > 1){
+      amt = amt - 1;
+      //console.log(this.currentAmt);
+      this.foodM.set(foodid, amt);
+      //console.log(this.foodM.entries());
+      this.getKeys();
+    }
+   
+  }
+
+  //Sponsor
+  CartFood(foodid, foodname){
+    //Add data into cart 
+    var foodname123 = foodname;
+    var amountOrdered = this.foodM.get(foodid);
+    //console.log(amountOrdered);
+    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname).then((res=>{
+      this.CartshowSuccess(foodname123);
+    })).catch((err=>{
+      this.showError(err);
     }))
+  }
+
+  //Student
+  async RedeemFood(id, quantity, foodname, foodprice, image, vendorid){
+    //Show alert box
+    const alert1 = await this.alertCtrl.create({
+      header: 'Confirmation of Redemption',
+      message: 'Are you sure you would like to redeem the following item' + '<br><br><br><br>' + '1x ' + foodname + "  $"+foodprice,
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            //Use 'vendorid' param to retrieve respective canteenID from 'users' database
+            if(quantity < 1){
+              alert('"' + foodname + '"' + " is currently unavailable. Please redeem another food");
+            }else{
+              quantity = quantity - 1; //Deduct per redeem
+              console.log(quantity);
+               //this.foodService.redeemFood(id, quantity);
+            }
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
+    
+
+  }
+
+
+  async CartshowSuccess(foodname){
+    const toast = await this.toast.create({message: '"' + foodname + '"' + ' has been added to cart.', position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async RedeemshowSuccess(foodname){
+    const toast = await this.toast.create({message: '"' + foodname + '"' + ' has been successfully redeemed! You have to collect it before you can make your next redeem.', position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 
   //Get food based on which filter user chose
   filterFood(filter){
-    console.log(filter);
+    //console.log(filter);
     this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
-      //console.log(res);
-      this.foodlistArray = res;
 
+      this.foodlistArray = res;
+     // console.log(this.foodlistArray);
+      res.forEach((res=>{
+        //console.log(res.id);
+        this.foodM.set(res.id, this.count); //Store each food with count = 1
+        
+      }))
+      this.getKeys();
+
+      //console.log(this.foodM.entries());
       this.filterfoodSubscription.unsubscribe();
     }))
+  }
+
+  getKeys(){
+    let keys = Array.from(this.foodM.keys());
+    let values = Array.from(this.foodM.values());
+    this.keysArray = keys;
+    this.valueArray = values;
   }
 
   //Filter button
@@ -96,6 +212,11 @@ chosenFilter: any;
 
     return await popover.present();
 
+  }
+  
+  async showError(error){
+    const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 
   dismiss(){

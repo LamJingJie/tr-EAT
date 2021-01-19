@@ -8,7 +8,7 @@
 <ion-content>
 
   <!--Show all the stores-->
-  <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname)" >
+  <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
     <img src= "assets/shapes.svg" alt='image'/>
     <ion-card-header>
       <ion-card-title>
@@ -17,6 +17,8 @@
       
     </ion-card-header>
   </ion-card>
+
+  <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
 
 
 
