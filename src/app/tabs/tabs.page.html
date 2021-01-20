@@ -8,18 +8,19 @@
         <ion-label>Home</ion-label>
       </ion-tab-button>
   
-      <!----For Student and Sponsors (so far)-->
-      <ion-tab-button tab="tab2" id="order" *ngIf="currentRole == 'sponsor' || currentRole == 'vendor' || currentRole == 'student'">
+      <!----For Student and Sponsors and vendors (so far)-->
+      <ion-tab-button tab="tab2" id="order" *ngIf="currentRole == 'sponsor' || currentRole == 'vendor' || currentRole == 'student' || currentRole == 'admin'">
         <ion-icon name="cart"></ion-icon> <!--For sponsors and vendor-->
         <ion-label>Cart</ion-label>
       </ion-tab-button>
   
-       <!----For Student and Sponsors (so far)-->
+       <!----For Student and vendor (so far)-->
       <ion-tab-button tab="tab3" id="history" *ngIf="currentRole == 'student' || currentRole == 'vendor'">
         <ion-icon name="receipt"></ion-icon> <!-- For students and vendors-->
        <ion-label>History</ion-label>
       </ion-tab-button>
 
+      <!--For sponsor-->
       <ion-tab-button tab="tab3" id="history" *ngIf="currentRole =='sponsor'">
        <!--<img src="assets/icon/charge-back.png" *ngIf="currentRole == 'sponsor'"/>-->  <!--Make it similar to the other icon such that when it is clicked, the icon color will change. Otherwise try find another way to do so.--->
        <ion-icon name="wallet" ></ion-icon> <!---For sponsors--->

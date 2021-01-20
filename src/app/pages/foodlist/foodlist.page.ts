@@ -92,7 +92,7 @@ number: number;
   }
 
   cartPage(){
-    this.router.navigate(['/tabs/tab1/vendors/foodlist/cart']);
+    this.router.navigate(['/tabs/tab2']);
   }
 
   ionViewWillEnter(){
@@ -161,7 +161,7 @@ number: number;
         //var int = parseInt(currElement.key);
         var int = Number(currElement.key);
         this.storefoodpriceArray[currElement.key].push(this.cartM2.get(int)); //[2]
-        console.log(this.storefoodpriceArray);
+        //console.log(this.storefoodpriceArray);
         
         //Calculation of total cost for each food
         this.storefoodpriceArray.forEach((res, index)=>{
@@ -182,7 +182,7 @@ number: number;
           this.totalPriceAll = this.totalPriceAll + res;
          
         }))
-        console.log(this.totalPriceAll);
+        //console.log(this.totalPriceAll);
       }))
     })
    

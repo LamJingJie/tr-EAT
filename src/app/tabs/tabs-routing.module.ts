@@ -23,23 +23,7 @@ const routes: Routes = [
               },
               {
                 path: 'foodlist',
-                children: [
-                  {
-                    path: '',
-                    loadChildren: () => import('../pages/foodlist/foodlist.module').then( m => m.FoodlistPageModule)
-                  },
-                  {
-                    path: 'cart',
-                    children: [
-                      {
-                        path: '',
-                        loadChildren: () => import('../pages/cart/cart.module').then( m => m.CartPageModule)
-                      }
-                    ]
-                   
-                  }
-                ]
-               
+                loadChildren: () => import('../pages/foodlist/foodlist.module').then( m => m.FoodlistPageModule)
               }
             ]
             
@@ -50,6 +34,7 @@ const routes: Routes = [
       {
         path: 'tab2',
         loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+
       },
       {
         path: 'tab3',

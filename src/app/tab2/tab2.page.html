@@ -7,11 +7,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Orders</ion-title>
-    </ion-toolbar>
-  </ion-header>
+
+  <h5>YOUR CART</h5>
+
+  <!---Cart here--->
+  <ion-card>
+    <ion-item  *ngFor="let cart of cartArray">
+      {{cart.id}}
+    </ion-item>
+  </ion-card>
 
   <!--<app-explore-container name="Tab 2 page"></app-explore-container>-->
 </ion-content>
