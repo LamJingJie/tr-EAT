@@ -8,6 +8,9 @@ import { FoodlistPageRoutingModule } from './foodlist-routing.module';
 
 import { FoodlistPage } from './foodlist.page';
 import { CartitemcountPipe } from './cartitemcount.pipe';
+import { CountItemsCartPipe } from './count-items-cart.pipe';
+import { CartTotalCostPipe } from './cart-total-cost.pipe';
+
 
 @NgModule({
   imports: [
@@ -16,6 +19,6 @@ import { CartitemcountPipe } from './cartitemcount.pipe';
     IonicModule,
     FoodlistPageRoutingModule
   ],
-  declarations: [FoodlistPage, CartitemcountPipe]
+  declarations: [FoodlistPage, CartitemcountPipe, CountItemsCartPipe, CartTotalCostPipe]
 })
 export class FoodlistPageModule {}

@@ -54,14 +54,10 @@ const routes: Routes = [
   {
     path: 'calendar-modal',
     loadChildren: () => import('./Modal/calendar-modal/calendar-modal.module').then( m => m.CalendarModalPageModule)
-  },
-  {
-    path: 'vendors',
-    loadChildren: () => import('./pages/vendors/vendors.module').then( m => m.VendorsPageModule)
-  },  {
-    path: 'foodlist',
-    loadChildren: () => import('./pages/foodlist/foodlist.module').then( m => m.FoodlistPageModule)
   }
+ 
+  
+  
 
 
 

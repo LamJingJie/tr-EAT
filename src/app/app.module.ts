@@ -23,6 +23,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
 
 import { KeyValuePipe } from '@angular/common';
+import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { CalendarModule } from 'ion2-calendar';
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
@@ -50,6 +51,7 @@ import Pickr from '@simonwep/pickr';
     SplashScreen,
     Storage,
     KeyValuePipe,
+    CartTotalCostPipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]

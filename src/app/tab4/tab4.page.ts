@@ -18,12 +18,44 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 })
 export class Tab4Page {
   customBackBtnSubscription: Subscription;
-  constructor(private platform: Platform, private router: Router) {}
+  constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController) {}
 
 
+  ionViewWillEnter(){
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
+  }
 
   ionViewWillLeave(){
-   
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
+  }
+
+  async leavePopup(){
+    
+    const alert1 = await this.alertCtrl.create({
+      message: 'Close the application?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            navigator['app'].exitApp();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
   }
   
  

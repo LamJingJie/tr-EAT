@@ -25,11 +25,7 @@ export class TabsPage {
   }
 
   ionViewWillEnter(){
-    if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
-        this.leavePopup();
-      });
-    }
+   
     this.storage.get('role').then(res =>{
       this.currentRole = res;
      // console.log("Role tabs: " + this.currentRole);
@@ -48,37 +44,14 @@ export class TabsPage {
   }
 
   ionViewWillLeave(){
-    if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
-        this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
+   
   }
 
   ngOnDestroy(){
    
   }
 
-  async leavePopup(){
-    
-    const alert1 = await this.alertCtrl.create({
-      message: 'Close the application?',
-      buttons:[
-        {
-          text: 'Yes',
-          handler:()=>{
-            navigator['app'].exitApp();
-          }
-        },
-        {
-          text: 'No',
-          role: 'cancel'
-        }
-      ]
-    });
-
-    await alert1.present();
-  }
+  
 
 
 }

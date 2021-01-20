@@ -51,9 +51,13 @@
     </ion-item>  
   </ion-card>
  </div>
+
+ <p *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</p>
+
+
+ <!---Cart to be shown at the bottom of the screen--->
+ <ion-button id="cart_bottom" (click)="cartPage()"><ion-icon name="cart"></ion-icon>Cart Total: ${{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount inside {{countCart}}</ion-badge></ion-button>
   
 
-
-  <p *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</p>
 
 </ion-content>

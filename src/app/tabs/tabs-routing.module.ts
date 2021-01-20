@@ -9,7 +9,43 @@ const routes: Routes = [
     children: [
       {
         path: 'tab1',
-        loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+          },
+          {
+            path: 'vendors',
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('../pages/vendors/vendors.module').then( m => m.VendorsPageModule)
+              },
+              {
+                path: 'foodlist',
+                children: [
+                  {
+                    path: '',
+                    loadChildren: () => import('../pages/foodlist/foodlist.module').then( m => m.FoodlistPageModule)
+                  },
+                  {
+                    path: 'cart',
+                    children: [
+                      {
+                        path: '',
+                        loadChildren: () => import('../pages/cart/cart.module').then( m => m.CartPageModule)
+                      }
+                    ]
+                   
+                  }
+                ]
+               
+              }
+            ]
+            
+          },
+        ]
+       
       },
       {
         path: 'tab2',
@@ -27,6 +63,7 @@ const routes: Routes = [
         path: 'tab5',
         loadChildren: () => import('../tab5/tab5.module').then(m => m.Tab5PageModule)
       },
+    
       {
         path: '',
         redirectTo: '/tabs/tab1',

@@ -54,7 +54,7 @@ colorLoop: any;
   }
 
 
-  constructor(private canteenService: CanteenService, private alertController: AlertController, private router: Router,
+  constructor(private canteenService: CanteenService, private alertCtrl: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
     public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient, private platform: Platform,
     private foodService: FoodService ) {
@@ -130,7 +130,8 @@ colorLoop: any;
   ChosenCanteen(canteenid){
     //console.log(canteenid);
     let navigationExtras: NavigationExtras = { queryParams: {canteenid: canteenid } };    
-    this.router.navigate(['vendors'], navigationExtras);
+    this.router.navigate(['/tabs/tab1/vendors'], navigationExtras);
+    
   }
 
   ngOnDestroy(){
@@ -141,6 +142,11 @@ colorLoop: any;
   }
 
   ionViewWillEnter(){
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
     this.storage.get('role').then(res=>{
       //console.log("email tab1: " + res);
       this.userRole = res;
@@ -148,8 +154,33 @@ colorLoop: any;
     });
   }
 
-  ionViewWillLeave(){
+  async leavePopup(){
     
+    const alert1 = await this.alertCtrl.create({
+      message: 'Close the application?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            navigator['app'].exitApp();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
+  }
+
+  ionViewWillLeave(){
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
   }
 
 

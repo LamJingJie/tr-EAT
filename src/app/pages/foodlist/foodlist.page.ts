@@ -10,10 +10,12 @@ import { Observable, Subscription } from 'rxjs';
 import {OrderService } from 'src/app/services/order/order.service';
 import { rejects } from 'assert';
 import { KeyValuePipe } from '@angular/common';
+import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { ModalController, PickerController } from '@ionic/angular';
 import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-foodlist',
@@ -23,12 +25,16 @@ import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foo
 export class FoodlistPage implements OnInit {
 foodSubscription: Subscription;
 getfoodSubscription: Subscription;
+
+getfoodSubscription2: Subscription;
 filterfoodSubscription: Subscription;
+cartSubscription: Subscription;
 
 vendor: any;
 stall: any;
 canteen: any;
 foodlistArray: any = [];
+cartArray: any = [];
 
 chosenFilter: any;
 
@@ -36,19 +42,35 @@ userRole : any;
 userEmail: any;
 
 count: any;
+countCart: any; //
+
 currentAmt: any;
 keysArray: any[] = [];
 valueArray: any[] = [];
 combineArray: any[] = [];
 
+CartkeysArray: any[] = [];
+CartvalueArray: any[] = [];
+
+cartnewArray: any[] = [];
+storefoodpriceArray: any[] = [];
+
+foodtotalprice: any[] = [];
+totalPriceAll: number;
+
 
 foodM = new Map();
+cartM = new Map();
+cartM2 = new Map();
+
+number: number;
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, private foodService: FoodService,
-    private popoverCtrl: PopoverController, private storage: Storage, private cartService: CartService) {
+    private popoverCtrl: PopoverController, private storage: Storage, private cartService: CartService, 
+    private carttotalcostpipe: CartTotalCostPipe) {
 
       this.chosenFilter = 'all'
       this.count = 1;
@@ -69,17 +91,115 @@ foodM = new Map();
     });
   }
 
+  cartPage(){
+    this.router.navigate(['/tabs/tab1/vendors/foodlist/cart']);
+  }
+
   ionViewWillEnter(){
+    this.storage.get('email').then(async res=>{
+      //console.log("email: " + res);
+      this.userEmail = res;
+      await this.userEmail;
+
+      //Set hashmap keys
+      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+        var count = 0;
+        this.countCart =0;
+        //console.log(res);
+        this.cartArray = res;
+        res.forEach((res=>{
+          this.cartM.set(res.id, count)
+          this.cartM2.set(count, res['orderquantity']);
+          count = count + 1;
+          this.countCart = this.countCart + 1;
+        }))
+        //console.log(this.cartM.entries());
+        
+        this.cartSubscription.unsubscribe();
+  
+        this.getKeysCart();
+       
+      }))
+      
+    });
     this.storage.get('role').then(res=>{
       //console.log("role: " + res);
       this.userRole = res;
       
     });
-    this.storage.get('email').then(res=>{
-      //console.log("email: " + res);
-      this.userEmail = res;
+   
+  }
+
+  ionViewDidLeave(){
+    
+   
+  }
+
+
+
+  //Do not touch. Because I have no idea how this even worked.
+  getFoodPrice(){
+    this.totalPriceAll = 0;
+    this.storefoodpriceArray = [];
+    var keysArray = this.keyvalue.transform(this.CartkeysArray);
+    //console.log(keysArray);
+
+    //console.log(keys);
+   
+    keysArray.map((currElement, index)=>{
+     
+      //[0] is the foodid
+      //[1] is the food price
+      //[2] is the order quantity
+      this.foodService.getFoodById(currElement.value).pipe(first()).subscribe((async res=>{
+        
+        
+        this.storefoodpriceArray[currElement.key] = this.storefoodpriceArray[currElement.value] || [];
+        this.storefoodpriceArray[currElement.key].push(currElement.value);  //[0]
+        this.storefoodpriceArray[currElement.key].push(res['foodprice']); //[1]
+        //console.log(this.cartM2.entries());
+        //var int = parseInt(currElement.key);
+        var int = Number(currElement.key);
+        this.storefoodpriceArray[currElement.key].push(this.cartM2.get(int)); //[2]
+        console.log(this.storefoodpriceArray);
+        
+        //Calculation of total cost for each food
+        this.storefoodpriceArray.forEach((res, index)=>{
       
-    });
+
+          this.foodtotalprice[index] = this.foodtotalprice[index] || [];
+          var totalcostperfood = res[1] * res[2];
+         
+          this.foodtotalprice[index] = totalcostperfood;
+          //console.log(this.foodtotalprice);
+        })
+
+        //Calculate total cost
+        this.totalPriceAll = 0;
+        this.foodtotalprice.forEach((res=>{
+          
+          //console.log(res);
+          this.totalPriceAll = this.totalPriceAll + res;
+         
+        }))
+        console.log(this.totalPriceAll);
+      }))
+    })
+   
+  }
+
+  ionViewDidEnter(){
+    
+  }
+
+  getKeysCart(){
+    let keys = Array.from(this.cartM.keys());
+    let values = Array.from(this.cartM.values());
+    this.CartkeysArray = keys;
+    this.CartvalueArray = values;
+    this.getFoodPrice();
+    //console.log(this.CartvalueArray);
+    //console.log(this.CartvalueArray);
   }
 
   addAmt(foodid){
@@ -113,6 +233,10 @@ foodM = new Map();
     //console.log(amountOrdered);
     this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname).then((res=>{
       this.CartshowSuccess(foodname123);
+      setTimeout(()=>{
+        this.ionViewWillEnter();
+      }, 1000)
+     
     })).catch((err=>{
       this.showError(err);
     }))
@@ -255,6 +379,12 @@ foodM = new Map();
     }
     if(this.getfoodSubscription){
       this.getfoodSubscription.unsubscribe();
+    }
+    if(this.cartSubscription){
+      this.cartSubscription.unsubscribe();
+    }
+    if(this.getfoodSubscription2){
+      this.getfoodSubscription2.unsubscribe();
     }
   }
 

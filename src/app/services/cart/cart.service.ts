@@ -17,6 +17,11 @@ export class CartService {
 
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
 
+  //Get all food stored in a cart for a specific user
+  getAllCart(email){
+    return this.firestore.collection('cart').doc(email).collection('data').valueChanges({idField: 'id'});
+  }
+
   //Delete cart respective to the user chosen
   deleteRespectiveCart(email){
     return this.firestore.collection('cart').doc(email).delete();

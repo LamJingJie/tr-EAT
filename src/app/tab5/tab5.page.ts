@@ -33,11 +33,19 @@ export class Tab5Page {
     }
 
   ionViewWillEnter(){
-  
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
   }
 
   ionViewWillLeave(){
-   
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
   }
 
   ngOnDestroy(){
@@ -77,6 +85,27 @@ export class Tab5Page {
 
   openOrders(){
     this.router.navigate(['/adminorders']);
+  }
+
+  async leavePopup(){
+    
+    const alert1 = await this.alertCtrl.create({
+      message: 'Close the application?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            navigator['app'].exitApp();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
   }
 
 
