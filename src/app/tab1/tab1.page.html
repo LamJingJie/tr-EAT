@@ -9,22 +9,31 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <img id="Logo" src="./assets/Logo.png" />
+  <img class="Footer" id="TYN" src="./assets/TYN.png"/>
+  <img id="RICE" src="./assets/RICE.png"/>
+
+  <div id = "intro">
+  <h1>Hello</h1>
+  <h4>Would you like a tr-EAT?</h4>
+</div>
 
   <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
-  <!---Canteen Carousel--->
-  <div style="padding:5px;">
-    <h6>Canteens</h6>
-    <div style="height: 100px;">
-      <ion-slides [options]="sliderConfig" id="slider">
+ 
+    <div class=section>
+    <div class=subtitle ><h6>Canteens</h6></div>
+    <!---Canteen Carousel--->
+    <div id = "ctncarousel">
+      <ion-slides [options]="sliderConfig" class="slider">
+      
         <ion-slide id="slide">
-          <ion-card class='canteen' (click)="ChosenCanteen('ALL')">
-            <div id="btnClick">
-              <div id="canteen_txt">
-                ALL
-              </div>
-            </div>
-          </ion-card>
+        <ion-card class='canteen'(click)="ChosenCanteen('ALL')">
+          <div id="btnClick">
+          <img class="img" src="./assets/All_logoimg.png"/>
+          </div>
+        </ion-card>
         </ion-slide>
+
         <ion-slide *ngFor = "let ct of canteen" id="slide">
           <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)">
             <div id="btnClick">
@@ -34,9 +43,10 @@
               
               </div>
             </div>
-            
-          </ion-card>
+          </div>
+        </ion-card>
         </ion-slide>
+
       </ion-slides>
     </div>
   </div>
@@ -48,13 +58,77 @@
   </div>
    
     
+    <ion-slides [options]="sliderConfigx" >
+      <ion-slide>
+      <ion-card class= 'listcard'>
+        <div>
+        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+        <img class="coverpic" src="./assets/FoodIMG.png" />
+        </div>
 
- 
+       <div id="txtlabelposition">
+        <ion-card-title id ="foodname">
+          Food Name
+        </ion-card-title>
+        <ion-card-subtitle id="locate">
+          Sch . Canteen
+        </ion-card-subtitle>
+      </div>
+    
+      </ion-card>
+      </ion-slide>
 
+      <ion-slide >
+        <ion-card  class= 'listcard'>
+         <div id ="coverimg">
+          <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+          <img class="coverpic" src="./assets/FoodIMG.png" />
+         </div>
+  
+         <div id="txtlabelposition">
+          <ion-card-title id ="foodname">
+            Food Name
+          </ion-card-title>
+          <ion-card-subtitle id="locate">
+            Sch . Canteen
+          </ion-card-subtitle>
+        </div>
+      
+        </ion-card>
+        </ion-slide>
+    </ion-slides>
+    </div>
+</div>
+
+<div class=subtitle ><h6>Popular Choice</h6></div><br>
+<!--Popular choice Carousel-->
+  <div id="popcarousel" >
+  <ion-slides [options]="sliderConfigx" >
+    <ion-slide >
+      <ion-card  class= 'listcard'>
+       <div id ="coverimg">
+        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+        <img class="coverpic" src="./assets/FoodIMG.png" />
+       </div>
+
+       <div id="txtlabelposition">
+        <ion-card-title id ="foodname">
+          Food Name
+        </ion-card-title>
+        <ion-card-subtitle id="locate">
+          Sch . Canteen
+        </ion-card-subtitle>
+      </div>
+    
+      </ion-card>
+      </ion-slide>
+  </ion-slides>
+  </div>
+
+  <!--
       <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
       <ng-template #pass> Loading...</ng-template>
-      <ng-template #fail> Loaded</ng-template>
-
+      <ng-template #fail> Loaded</ng-template>-->
 
     
      <ion-button class="color-picker">Color Picker</ion-button>

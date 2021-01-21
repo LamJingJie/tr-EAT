@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>signup for sponsors</ion-title>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <img id="Logo" src="./assets/Logo.png" />
+  <img id="TYN" src="./assets/TYN.png"/>
+  <img id="RICE" src="./assets/RICE.png"/>
 
    <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
       <ion-card>
@@ -33,8 +33,8 @@
       </ion-card>
 
       
-      <div>
-        <ion-button type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
+      <div id="signupbtn">
+        <ion-button fill="clear" class="buttons" type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
       </div>
     </form>
 

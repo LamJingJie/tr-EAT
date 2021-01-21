@@ -53,6 +53,14 @@ colorLoop: any;
     roundLengths: true
   }
 
+  sliderConfigx={
+    spaceBetween: 1,
+    setWrapperSize: true,
+    centeredSlides: false,
+    slidesPerView: 1.5,
+    roundLengths: true
+  }
+
 
   constructor(private canteenService: CanteenService, private alertCtrl: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,

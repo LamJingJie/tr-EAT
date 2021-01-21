@@ -1,31 +1,37 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>login</ion-title>
-  </ion-toolbar>
+  
 </ion-header>
 
-<ion-content>
-  <ion-button (click)="goSignUp()">Sign Up Testing</ion-button>
+<ion-content>  
+  <img id="Logo" src="./assets/Logo.png" />
+  <img id="TYN" src="./assets/TYN.png"/>
+  <img id="RICE" src="./assets/RICE.png"/>
 
+  
   <form [formGroup] = "login_form" (ngSubmit)="login(login_form.value)">
     <ion-card>
       <ion-item>
-        <ion-input required type="email" formControlName="email" placeholder="Enter your email"></ion-input>
+        <ion-input class="userinput" required type="email" formControlName="email" placeholder="Email"></ion-input>
         <ion-icon *ngIf="email.invalid && (email.dirty || email.touched)" name ="alert-circle" color="danger"></ion-icon>
       </ion-item>
     </ion-card>
 
     <ion-card>
       <ion-item >
-        <ion-input required #password1 type='password' formControlName="password" placeholder="Enter your password"></ion-input>
+        <ion-input class="userinput" required #password1 type='password' formControlName="password" placeholder="Password"></ion-input>
         <ion-icon *ngIf="password.invalid && (password.dirty || password.touched)" name="alert-circle" color="danger"></ion-icon>
         <ion-icon *ngIf="password1.type == 'text'" name="eye" (click)="showPassword1(password1)"></ion-icon>
         <ion-icon *ngIf="password1.type == 'password'"name ="eye-outline" (click)="showPassword1(password1)"></ion-icon>
       </ion-item>
     </ion-card>
+   
+   <div id= btn>
+    <ion-button fill=clear class= "buttons" type="submit" [disabled] = "!login_form.valid">LOGIN</ion-button>
+    <ion-button fill=clear class="buttons" (click)="goSignUp()">Sign Up[T]</ion-button>
+    <!--<ion-button fill=clear class= "input">SIGN-UP</ion-button>-->
+  </div>
 
-    <ion-button type="submit" [disabled] = "!login_form.valid">Proceed</ion-button>
-
+  
   </form>
 
  

@@ -1,0 +1,127 @@
+ //DEFAULTS
+ :root {
+    --ion-color-favorite: #512057;
+  }
+
+    //Background
+    #Logo{
+        position: relative;
+        z-index: 1;
+         display: block;
+         margin-left: auto;
+         margin-right: auto;;
+         margin-top: 0%;
+         max-width:40%;
+     
+     }
+     .Footer{
+         position:fixed;
+         right:0;
+         bottom:-15px;
+         margin:0;
+         padding:0;
+         width:75%;
+     }
+     #TYN{
+         right:-20px;
+         overflow: visible;
+         max-width: 55%;
+         opacity: .5;
+     }
+     #RICE{
+         position: absolute;
+         top: -30px;
+         left:-50px;
+         overflow: visible;
+         max-width: 52%;
+         opacity: .25;
+     }
+     .Font{
+         font-family: 'Segoe UI';
+         font-weight: bold;
+     }
+     .subtitle{
+        font-family: "Segoe UI";
+		font-style: normal;
+		font-weight: bold;
+        font-size: 18px;
+        color: black;
+        position: relative;
+        left: 8%;
+    }
+
+
+     .BGDrectangle{
+       height: 80%;   
+       width: 100%;
+       background-color: #F0E9E4;
+       position: absolute;
+       z-index: 1;
+       border-radius: 15px;
+       border: 2px;
+    }
+
+     .wrapbtnrectangle{
+         height: max-content;   
+         width: 100%;
+        background-color: #F0E9E4;
+        position: relative;;
+        z-index: 1;
+        border-radius: 15px;
+        border: 2px;
+     }
+
+     #userinfo{
+         text-align: center;
+     }
+     #btns{
+         text-align: center;
+     }
+
+
+     .image-cropper {
+        width: 110px;
+        height: 110px;
+        position: relative;
+        z-index: 2;
+        margin-left: auto;
+        margin-right: auto;;
+        overflow: hidden;
+        border-radius: 50%;     
+      }
+      
+      #profilepic {
+        display: inline;
+        margin: 0 auto;
+        height: 100%;
+        width: auto;
+      }
+
+      .box {
+        display: flex;
+        align-items:center;
+     }
+
+     #RecOdr{
+        left: 16%;
+     }
+
+    .coverpic{
+        height: 130px!important;
+        width: auto;
+    }
+
+    #txtlabelposition{
+        text-align: left;
+        margin: 10px;
+    }
+    #foodname{
+        font-size: 16px;
+        font-family: 'Segoe UI';
+    }
+    #locate{
+        font-size: 12px;
+        font-family: 'Segoe UI';
+        margin-top: 2px;
+    }
+
