@@ -44,10 +44,42 @@ const routes: Routes = [
         path: 'tab4',
         loadChildren: () => import('../tab4/tab4.module').then(m => m.Tab4PageModule)
       },
+
+      //Admin
       {
         path: 'tab5',
-        loadChildren: () => import('../tab5/tab5.module').then(m => m.Tab5PageModule)
+        children:[
+          {
+            path: '',
+            loadChildren: () => import('../tab5/tab5.module').then(m => m.Tab5PageModule)
+          },
+          {
+            path: 'adminorders',
+            loadChildren: () => import('../pages/adminorders/adminorders.module').then( m => m.AdminordersPageModule)
+          },
+          {
+            path: 'viewaccount',
+            children:[
+              {
+                path:'',
+                loadChildren: () => import('../pages/viewaccount/viewaccount.module').then( m => m.ViewaccountPageModule)
+              },
+              {
+                path: 'admin-account-details/:account',
+                loadChildren: () => import('../pages/admin-account-details/admin-account-details.module').then( m => m.AdminAccountDetailsPageModule)
+              },
+              {
+                path: 'adminfood/:account',
+                loadChildren: () => import('../pages/adminfood/adminfood.module').then( m => m.AdminfoodPageModule)
+              },
+              
+            ]
+          
+          },
+        ]
+        
       },
+      
     
       {
         path: '',

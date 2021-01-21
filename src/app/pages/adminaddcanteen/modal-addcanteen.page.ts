@@ -117,7 +117,7 @@ export class ModalAddcanteenPage{
     )
   }
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
   addImagetoDB(image: MyData) {

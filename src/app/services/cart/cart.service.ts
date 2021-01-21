@@ -22,9 +22,18 @@ export class CartService {
     return this.firestore.collection('cart').doc(email).collection('data').valueChanges({idField: 'id'});
   }
 
+  //Delete specific food in cart
+  deleteSpecificFoodInCart(email, foodid){
+    return this.firestore.collection('cart').doc(email).collection('data').doc(foodid).delete();
+  }
+
   //Delete cart respective to the user chosen
   deleteRespectiveCart(email){
     return this.firestore.collection('cart').doc(email).delete();
+  }
+
+  updateQuantity(email, quantity, foodid){
+    return this.firestore.collection('cart').doc(email).collection('data').doc(foodid).update({orderquantity: quantity});
   }
 
   addToCart(foodid, userid, canteenid, orderquantity: number, foodname){

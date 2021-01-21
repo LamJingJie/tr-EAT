@@ -13,9 +13,29 @@
   <!---Cart here--->
   <ion-card>
     <ion-item  *ngFor="let cart of cartArray">
-      {{cart.id}}
+
+      <!--Quantity-->
+      <div>
+        <ion-icon name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+        {{cart.orderquantity}}
+        <ion-icon name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+      </div>
+
+      <!--Food name-->
+      <div>
+        {{cart.id | foodname | async}}
+      </div>
+
+      <!--Price-->
+      <div>
+        Price:  ${{cart.id | foodprice: cart.orderquantity | async | currency: 'SGD'}}
+      </div>
+     
     </ion-item>
   </ion-card>
 
-  <!--<app-explore-container name="Tab 2 page"></app-explore-container>-->
+  <!--Payment here-->
+
+
+ 
 </ion-content>

@@ -81,7 +81,7 @@ export class VendorsPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
 }

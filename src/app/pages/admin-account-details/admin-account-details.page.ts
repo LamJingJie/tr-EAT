@@ -103,7 +103,7 @@ export class AdminAccountDetailsPage implements OnInit {
 
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
   ngOnDestroy(){

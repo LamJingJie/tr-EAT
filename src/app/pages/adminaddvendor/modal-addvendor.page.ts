@@ -116,7 +116,7 @@ export class ModalAddvendorPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.modalCtrl.dismiss();
   }
 
   async addVendor(){

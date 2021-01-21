@@ -18,7 +18,7 @@
 
   <ion-card *ngFor="let user of userData" >
     <ion-item id="account">
-      <div id="users" [routerLink]="['/admin-account-details', user.id]">
+      <div id="users" [routerLink]="['/tabs/tab5/viewaccount/admin-account-details', user.id]">
         <ion-badge color="danger" *ngIf="user.listed === false"><ion-icon name="alert-outline"></ion-icon></ion-badge> 
         <ion-badge color="success" *ngIf="user.listed === true"><ion-icon name="checkmark-outline"></ion-icon></ion-badge>
         {{user.id}}
@@ -47,7 +47,7 @@
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="currentRole != null">
     <ion-fab-button>
-      <ion-icon name="add"  [routerLink]="['/adminaddvendor']">Add Accounts</ion-icon>
+      <ion-icon name="add"  (click)="addAccount()">Add Accounts</ion-icon>
     </ion-fab-button>
   </ion-fab>
 

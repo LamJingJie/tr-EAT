@@ -158,7 +158,7 @@ export class AdminordersPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
   //create array based on vendor

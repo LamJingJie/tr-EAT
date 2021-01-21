@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular'; 
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -17,6 +17,8 @@ import { AngularFireAuth } from "@angular/fire/auth";
 })
 export class ModalEditdelfoodPage implements OnInit {
 
+@Input() foodid: string;
+
 image: string;
 id: string;
 foodData: any = [];
@@ -32,7 +34,8 @@ files: any;
 editfood_form: FormGroup; 
 foodSubscription: Subscription;
   constructor(private activatedRoute: ActivatedRoute, private fb:FormBuilder, private navCtrl:NavController, private loading: LoadingController
-    , private foodService: FoodService, private toast: ToastController, public ngFireAuth: AngularFireAuth,) { 
+    , private foodService: FoodService, private toast: ToastController, public ngFireAuth: AngularFireAuth,
+    private modalCtrl: ModalController) { 
 
        //Edit Vendor Food Form
        this.editfood_form = this.fb.group({
@@ -69,10 +72,9 @@ foodSubscription: Subscription;
 
   ngOnInit() {
      //Get data passed from url
-    let id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.id = id;
+    //console.log(this.foodid);
 
-    this.foodSubscription = this.foodService.getFoodById(id).subscribe(res =>{
+    this.foodSubscription = this.foodService.getFoodById(this.foodid).subscribe(res =>{
       this.foodData = res;
       this.currentHalal = this.foodData.halal;
       this.currentVeg = this.foodData.vegetarian;
@@ -81,7 +83,7 @@ foodSubscription: Subscription;
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.modalCtrl.dismiss();
   }
 
   async editFood(){
@@ -96,7 +98,7 @@ foodSubscription: Subscription;
     //  console.log(this.id);
     console.log("EMPTY IMAGE");
       this.foodService.editFoodNoImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
-      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.id)
+      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid)
       .then(res=>{
         this.loading.dismiss(null, null, 'editFoodAdmin');
         this.dismiss();
@@ -115,7 +117,7 @@ foodSubscription: Subscription;
     //  console.log(this.foodData.userid);
      // console.log(this.id);
       this.foodService.editFoodWithImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
-      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.id, this.image, this.filename, this.editfood_form.value['mergedName'])
+      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid, this.image, this.filename, this.editfood_form.value['mergedName'])
       .then(res=>{
         this.loading.dismiss(null, null, 'editFoodAdmin');
         this.dismiss();

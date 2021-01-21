@@ -16,7 +16,6 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
-import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-tab2',
@@ -32,6 +31,8 @@ export class Tab2Page {
   cartArray: any[] = [];
 
   foodArray: any[] = [];
+  cartM = new Map();
+
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
@@ -45,18 +46,16 @@ export class Tab2Page {
       this.userEmail = res;
       
       this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+        var count = 0;
 
         this.cartArray = res;
+
         res.forEach((res=>{
-
-          this.foodService.getFoodById(res.id).subscribe((res=>{
-            console.log(this.foodArray);
-            this.foodArray.push(res);
-
-          }))
-
+          this.cartM.set(res.id, count)
+          count = count + 1;
         }))
 
+        
       }))
       
     });
@@ -68,12 +67,54 @@ export class Tab2Page {
     });
   }
 
+  increaseAmt(quantity, cartid){
+    //console.log(quantity);
+    quantity = quantity + 1;
+    this.cartService.updateQuantity(this.userEmail, quantity, cartid);
+  }
+
+  decreaseAmt(quantity, cartid){
+    console.log(quantity);
+    if(quantity > 1){
+      //console.log(">1");
+      quantity = quantity -1;
+      this.cartService.updateQuantity(this.userEmail, quantity, cartid);
+    }else{
+      //console.log("<1");
+      this.quantityRemove(cartid);
+    }
+  }
+
+
   ionViewWillEnter(){
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
+  }
+
+  async quantityRemove(cartid){
+    
+    const alert2 = await this.alertCtrl.create({
+      message: 'Remove this food from cart?',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+           this.cartService.deleteSpecificFoodInCart(this.userEmail, cartid).then((res=>{
+             console.log("Food Removed!");
+           }))
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert2.present();
   }
 
   async leavePopup(){
@@ -108,6 +149,11 @@ export class Tab2Page {
     if(this.cartSubscription){
       this.cartSubscription.unsubscribe();
     }
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
   }
 
   

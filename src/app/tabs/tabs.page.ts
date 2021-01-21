@@ -44,11 +44,15 @@ export class TabsPage {
   }
 
   ionViewWillLeave(){
-   
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
   }
 
   ngOnDestroy(){
-   
+    
   }
 
   

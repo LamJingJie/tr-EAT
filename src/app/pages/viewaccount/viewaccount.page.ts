@@ -8,6 +8,8 @@ import { Storage } from '@ionic/storage';
 import { PopoverController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { AdminDropdownComponent } from 'src/app/component/admin-dropdown/admin-dropdown.component';
+import { ModalController } from '@ionic/angular';
+import { ModalAddvendorPage } from 'src/app/pages/adminaddvendor/modal-addvendor.page';
 
 
 @Component({
@@ -24,13 +26,22 @@ export class ViewaccountPage implements OnInit {
   editStamp: boolean;
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
-    private popoverCtrl: PopoverController, private fb: FormBuilder) {
+    private popoverCtrl: PopoverController, private fb: FormBuilder, private modalCtrl: ModalController) {
       this.currentRole = 'vendor';
 
       
 
 
     this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {this.userData = data;});
+   }
+
+   async addAccount(){
+    const modal = await this.modalCtrl.create({
+      component: ModalAddvendorPage,
+      cssClass: 'modal_addaccount_class'
+    });
+    return await modal.present();
+
    }
 
   ngOnInit() {
@@ -59,7 +70,7 @@ export class ViewaccountPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
   ngOnDestroy(){

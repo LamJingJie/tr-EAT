@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, ToastController, NavController, LoadingController } from '@ionic/angular'; 
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -15,7 +15,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
   styleUrls: ['./modal-addfood.page.scss'],
 })
 export class ModalAddfoodPage implements OnInit {
-  currentAccount: string;
+  @Input() currentAccount: string;
+
   addfood_form: FormGroup; 
  
   selectedFile: any;
@@ -55,15 +56,12 @@ export class ModalAddfoodPage implements OnInit {
   }
 
   ngOnInit() {
-    //Get data passed from url
-    let account = this.activatedRoute.snapshot.paramMap.get('account');
-    this.currentAccount = account;
-    //console.log(account);
+   
   }
 
 
   dismiss(){
-    this.navCtrl.back();
+    this.modalCtrl.dismiss();
   }
   changeHalal(halal){
     console.log(halal.detail.value);

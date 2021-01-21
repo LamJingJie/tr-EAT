@@ -24,7 +24,7 @@ export class Tab5Page {
   constructor(private authService: AuthenticationService, private modalCtrl: ModalController, private alertCtrl: AlertController,
     private router: Router, private platform: Platform, private navCtrl: NavController) {
      
-     
+    
       
     }
 
@@ -33,6 +33,7 @@ export class Tab5Page {
     }
 
   ionViewWillEnter(){
+    
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
@@ -41,11 +42,18 @@ export class Tab5Page {
   }
 
   ionViewWillLeave(){
+   
+   console.log("Leave");
     if (this.platform.is('android')) {
+     
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
+  }
+
+  ionViewDidLeave(){
+  
   }
 
   ngOnDestroy(){
@@ -76,15 +84,18 @@ export class Tab5Page {
     
   
   async addCanteenPopUp(){
+
      this.router.navigate(['/adminaddcanteen']);
   }
 
   ViewAccount(){
-    this.router.navigate(['/viewaccount']);
+
+    this.router.navigate(['/tabs/tab5/viewaccount']);
   }
 
   openOrders(){
-    this.router.navigate(['/adminorders']);
+
+    this.router.navigate(['/tabs/tab5/adminorders']);
   }
 
   async leavePopup(){

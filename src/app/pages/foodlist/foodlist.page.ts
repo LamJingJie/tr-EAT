@@ -79,6 +79,7 @@ number: number;
      }
 
   ngOnInit() {
+    //console.log("ngOnInit");
 
     this.foodSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.stall = params.stall;
@@ -96,6 +97,13 @@ number: number;
   }
 
   ionViewWillEnter(){
+
+    //Reset arrays everytime page is opened. This is to prevent any consistency issues relating to the data inside each array
+    this.totalPriceAll = 0;
+    this.storefoodpriceArray = [];
+    this.foodtotalprice = [];
+    
+    //console.log(this.canteen);
     this.storage.get('email').then(async res=>{
       //console.log("email: " + res);
       this.userEmail = res;
@@ -103,17 +111,21 @@ number: number;
 
       //Set hashmap keys
       this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+        this.cartM.clear();
+        this.cartM2.clear();
         var count = 0;
         this.countCart =0;
         //console.log(res);
         this.cartArray = res;
         res.forEach((res=>{
-          this.cartM.set(res.id, count)
+          //console.log(res);
+          this.cartM.set(res.id, count);
+          //console.log(this.cartM.entries());
           this.cartM2.set(count, res['orderquantity']);
           count = count + 1;
           this.countCart = this.countCart + 1;
         }))
-        //console.log(this.cartM.entries());
+        
         
         this.cartSubscription.unsubscribe();
   
@@ -139,8 +151,7 @@ number: number;
 
   //Do not touch. Because I have no idea how this even worked.
   getFoodPrice(){
-    this.totalPriceAll = 0;
-    this.storefoodpriceArray = [];
+    
     var keysArray = this.keyvalue.transform(this.CartkeysArray);
     //console.log(keysArray);
 
@@ -151,7 +162,7 @@ number: number;
       //[0] is the foodid
       //[1] is the food price
       //[2] is the order quantity
-      this.foodService.getFoodById(currElement.value).pipe(first()).subscribe((async res=>{
+      this.foodService.getFoodById(currElement.value).pipe(first()).subscribe((res=>{
         
         
         this.storefoodpriceArray[currElement.key] = this.storefoodpriceArray[currElement.value] || [];
@@ -161,7 +172,7 @@ number: number;
         //var int = parseInt(currElement.key);
         var int = Number(currElement.key);
         this.storefoodpriceArray[currElement.key].push(this.cartM2.get(int)); //[2]
-        //console.log(this.storefoodpriceArray);
+        console.log(this.storefoodpriceArray);
         
         //Calculation of total cost for each food
         this.storefoodpriceArray.forEach((res, index)=>{
@@ -366,7 +377,7 @@ number: number;
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
 

@@ -9,6 +9,8 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { ModalAddfoodPage } from 'src/app/Modal/modal-addfood/modal-addfood.page';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
 
+import { ModalEditdelfoodPage } from 'src/app/Modal/modal-editdelfood/modal-editdelfood.page';
+
 @Component({
   selector: 'app-adminfood',
   templateUrl: './adminfood.page.html',
@@ -43,6 +45,31 @@ export class AdminfoodPage implements OnInit {
 
    ionViewDidEnter(){
    
+   }
+
+   async editFood(foodid){
+     //[routerLink]="['/modal-editdelfood', food.id]"
+     const modal = await this.modalCtrl.create({
+      component: ModalEditdelfoodPage,
+      componentProps:{
+        'foodid': foodid,
+      },
+      cssClass: 'modal_editfood_class'
+    });
+    return await modal.present();
+  
+   }
+
+   async addFood(){
+     //[routerLink]="['/modal-addfood', currentAcc]"
+     const modal = await this.modalCtrl.create({
+      component: ModalAddfoodPage,
+      componentProps:{
+        'currentAcc': this.currentAcc,
+      },
+      cssClass: 'modal_addfood_class'
+    });
+    return await modal.present();
    }
 
   
@@ -82,7 +109,7 @@ export class AdminfoodPage implements OnInit {
   }
 
   dismiss(){
-    this.navCtrl.back();
+    this.navCtrl.pop();
   }
 
   async presentDelFood(){

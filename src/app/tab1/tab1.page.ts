@@ -138,6 +138,12 @@ colorLoop: any;
     if(this.canteenSub){
       this.canteenSub.unsubscribe();
     }
+
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    } 
     
   }
 
@@ -147,6 +153,7 @@ colorLoop: any;
         this.leavePopup();
       });
     }
+    
     this.storage.get('role').then(res=>{
       //console.log("email tab1: " + res);
       this.userRole = res;
@@ -181,6 +188,7 @@ colorLoop: any;
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
+   
   }
 
 

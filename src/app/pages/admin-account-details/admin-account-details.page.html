@@ -37,7 +37,7 @@
       Listed: {{userDetails.listed}}
     </ion-item>
     
-    <ion-button [routerLink]="['/adminfood', currentAccount]">View Food</ion-button>
+    <ion-button [routerLink]="['/tabs/tab5/viewaccount/adminfood', currentAccount]">View Food</ion-button>
   </ion-card>
 
   <ion-card *ngIf = "userDetails.role == 'student'">
