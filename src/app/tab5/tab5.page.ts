@@ -84,8 +84,7 @@ export class Tab5Page {
     
   
   async addCanteenPopUp(){
-
-     this.router.navigate(['/adminaddcanteen']);
+     this.router.navigate(['/canteen']);
   }
 
   ViewAccount(){

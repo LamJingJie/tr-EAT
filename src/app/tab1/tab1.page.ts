@@ -70,7 +70,6 @@ colorLoop: any;
     
     this.canteenSub = canteenService.getAll().subscribe((data) => {
       this.canteen = data;
-    
     });
 
 

@@ -8,8 +8,7 @@
 <ion-content>
 
   <form [formGroup] = "addfood_form" (ngSubmit)="addFood(addfood_form.value)">
-
-    <ion-card >
+    <ion-card>
       <ion-item>
         <ion-input type="text" formControlName="foodname" placeholder="Enter food name"></ion-input>
         <ion-icon *ngIf="foodname.invalid && (foodname.dirty || foodname.touched)" name ="alert-circle" color="danger"></ion-icon>
