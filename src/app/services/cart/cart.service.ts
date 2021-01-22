@@ -15,6 +15,8 @@ export class CartService {
 
   foodExistSubscription: Subscription;
 
+  deleteCartSub: Subscription;
+
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
 
   //Get all food stored in a cart for a specific user
@@ -36,7 +38,7 @@ export class CartService {
     return this.firestore.collection('cart').doc(email).collection('data').doc(foodid).update({orderquantity: quantity});
   }
 
-  addToCart(foodid, userid, canteenid, orderquantity: number, foodname){
+  addToCart(foodid, userid, canteenid, orderquantity: number, foodname, vendorid){
 
    //this.userDetails = data;
    //this.listed = this.userDetails.listed;
@@ -47,7 +49,7 @@ export class CartService {
       cartDoc.get().toPromise().then(doc =>{
         if(!doc.exists){
           //console.log("Doesn't Exists")
-          this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).set({userid: userid, canteenid: canteenid, orderquantity: orderquantity}).then((res=>{
+          this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).set({userid: vendorid, canteenid: canteenid, orderquantity: orderquantity}).then((res=>{
             resolve(res);
           }));
         }else{
@@ -70,11 +72,20 @@ export class CartService {
        
       
     })
+  }
 
-    //console.log(foodid);
-    //console.log(userid);
-    //console.log(canteenid);
-    //console.log(orderquantity);
-    
+  deleteCart(userid){
+    console.log(userid);
+    return new Promise((resolve, reject) =>{
+      this.deleteCartSub = this.firestore.collection('cart').doc(userid).collection('data').get().subscribe((async res=>{
+        res.forEach((doc=>{
+          doc.ref.delete(); //Delete every data in cart
+        }))
+        await this.firestore.collection('cart').doc(userid).delete();//Then delete the parent document
+        resolve(null);
+        this.deleteCartSub.unsubscribe();
+      }));
+    })
+ 
   }
 }

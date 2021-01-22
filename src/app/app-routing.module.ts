@@ -41,9 +41,18 @@ const routes: Routes = [
   {
     path: 'calendar-modal',
     loadChildren: () => import('./Modal/calendar-modal/calendar-modal.module').then( m => m.CalendarModalPageModule)
-  },  {
+  },
+  {
     path: 'modal-verifychckout',
     loadChildren: () => import('./Modal/modal-verifychckout/modal-verifychckout.module').then( m => m.ModalVerifychckoutPageModule)
+  },
+  {
+    path: 'modal-addcanteen',
+    loadChildren: () => import('./Modal/modal-addcanteen/modal-addcanteen.module').then( m => m.ModalAddcanteenPageModule)
+  },
+  {
+    path: 'modal-editdelcanteen/:id',
+    loadChildren: () => import('./Modal/modal-editdelcanteen/modal-editdelcanteen.module').then( m => m.ModalEditdelcanteenPageModule)
   },
 
 

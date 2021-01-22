@@ -81,8 +81,8 @@ export class Tab5Page {
      
     
   
-  async addCanteenPopUp(){
-     this.router.navigate(['/canteen']);
+  addCanteenPopUp(){
+     this.router.navigate(['/tabs/tab5/canteen']);
   }
 
   ViewAccount(){

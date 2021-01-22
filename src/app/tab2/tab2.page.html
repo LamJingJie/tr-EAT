@@ -8,7 +8,9 @@
 
 <ion-content [fullscreen]="true">
 
-  <h5>YOUR CART</h5>
+  <!--Only sponsors will see this-->
+  <div *ngIf="userRole ==='sponsor'">
+    <h5>YOUR CART</h5>
 
   <!---Cart here--->
   <ion-card>
@@ -50,7 +52,10 @@
   </ion-select>
 
   <!--Payment here-->
-  <ion-button [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
+  <ion-button *ngIf="totalPriceAll !== 0" [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
+  </div>
+  
 
+ 
  
 </ion-content>

@@ -14,6 +14,7 @@ import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { ModalController, PickerController } from '@ionic/angular';
 import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
+import { HistoryService } from 'src/app/services/history/history.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
 import { ModalVerifychckoutPage } from 'src/app/Modal/modal-verifychckout/modal-verifychckout.page';
@@ -45,21 +46,18 @@ export class Tab2Page {
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
-    private cartService: CartService, ) {
+    private cartService: CartService, private historyService: HistoryService ) {
       this.paymentMethod = 'PAYNOW';
     }
 
   ngOnInit(){
     
 
-    this.storage.get('role').then(res=>{
-      //console.log("role: " + res);
-      this.userRole = res;
-      
-    });
+   console.log("Ngoninit")
     
 
   }
+
 
   async proceedPayment(){
     const modal = await this.modalCtrl.create({
@@ -68,10 +66,17 @@ export class Tab2Page {
       componentProps:{
         cart: this.cartArray,
         total: this.totalPriceAll,
-        paymentmethod: this.paymentMethod
+        paymentmethod: this.paymentMethod,
+        user: this.userEmail
       }
     });
-    return await modal.present();
+    await modal.present();
+
+    await modal.onWillDismiss().then((res=>{
+      this.run_everytime();
+    }));
+    
+  
 
   }
 
@@ -103,6 +108,8 @@ export class Tab2Page {
 
 
   ionViewWillEnter(){
+   
+
     this.disabled = true; //Disable the purchase btn to give time to load total cost
     setTimeout(()=>{
       this.disabled = false; //Enable the purchase btn
@@ -114,7 +121,12 @@ export class Tab2Page {
         this.leavePopup();
       });
     }
-    
+    this.run_everytime();
+   
+
+  }
+
+  run_everytime(){
     this.storage.get('email').then(res=>{
       //console.log("role: " + res);
       this.userEmail = res;
@@ -122,6 +134,12 @@ export class Tab2Page {
 
     });
 
+    console.log("will enter")
+    this.storage.get('role').then(res=>{
+      //console.log("role: " + res);
+      this.userRole = res;
+      
+    });
   }
 
   calculate_total_price(){
@@ -160,7 +178,7 @@ export class Tab2Page {
           text: 'Yes',
           handler:()=>{
            this.cartService.deleteSpecificFoodInCart(this.userEmail, cartid).then((res=>{
-             console.log("Food Removed!");
+             //console.log("Food Removed!");
              this.calculate_total_price();
              
            }))

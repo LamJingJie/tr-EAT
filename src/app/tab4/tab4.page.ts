@@ -32,7 +32,13 @@ export class Tab4Page {
     private authService: AuthenticationService, private storage: Storage, private userService: UserService) {}
 
   ngOnInit(){
+  
+  }
+
+
+  ionViewWillEnter(){
     this.storage.get('email').then(res =>{
+
       this.currentAccount = res;
       // console.log("Email tabs: " + res);
       //alert("Email tabs: " + res);
@@ -43,17 +49,15 @@ export class Tab4Page {
       // console.log("Email tabs: " + res);
       //alert("Email tabs: " + res);
       if(this.currentRole === 'student'){
-        this.userSub = this.userService.getOne(this.currentRole).subscribe((res=>{
+        this.userSub = this.userService.getOne(this.currentAccount).subscribe((res=>{
           this.stamps = res['stampLeft'];
+          //console.log(res);
 
           this.userSub.unsubscribe();
         }))
       }
     });
-  }
 
-
-  ionViewWillEnter(){
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();

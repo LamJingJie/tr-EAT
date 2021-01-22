@@ -41,7 +41,16 @@ export class FoodService {
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true)).valueChanges({idField:'id'});
     }
   }
-h
+
+  //Get food that has availquantity in it to be shown for students to redeem
+  getRedeemableFoodNFilter(vendor, filter){
+    if(filter === 'all'){
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('availquantity', '>', 0)).valueChanges({idField: 'id'});
+    }else{
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true).where('availquantity', '>', 0)).valueChanges({idField:'id'});
+    }
+  }
+
   async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
     //console.log(image);
     var storageURL = 'Food Images/';
@@ -53,7 +62,7 @@ h
     //console.log(downloadURL); 
     
     return this.firestore.collection('food').add({availquantity: 0, foodname: foodname, foodprice: foodprice, halal: halal, 
-    userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName});
+    userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, popularity: 0});
   }
 
   deleteFood(id, mergedName){
@@ -98,9 +107,14 @@ h
     halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
   }
 
+  //When student redeem any food
   decreaseAvailQuantity(id, quantity: number){
     return this.firestore.collection('food').doc(id).update({availquantity: quantity});
+  }
 
+  //When sponsor pay
+  updateAvailQuantity(id, quantity: number){
+    return this.firestore.collection('food').doc(id).update({availquantity: quantity})
   }
 
   

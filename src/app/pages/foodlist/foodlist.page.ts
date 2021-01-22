@@ -29,11 +29,14 @@ getfoodSubscription: Subscription;
 getfoodSubscription2: Subscription;
 filterfoodSubscription: Subscription;
 cartSubscription: Subscription;
+foodRedemSub: Subscription;
 
 vendor: any;
 stall: any;
 canteen: any;
 foodlistArray: any = [];
+redeemfoodArray: any = [];
+
 cartArray: any = [];
 
 chosenFilter: any;
@@ -80,6 +83,7 @@ number: number;
 
   ngOnInit() {
     //console.log("ngOnInit");
+   
 
     this.getfoodSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.stall = params.stall;
@@ -87,16 +91,17 @@ number: number;
       this.canteen = params.canteenid;
       //console.log(this.stall);
       //console.log(this.vendor);
-      this.filterFood(this.chosenFilter);
+      this.storage.get('role').then(res=>{
+        console.log("role: " + res);
+        this.userRole = res;
+        this.filterFood(this.chosenFilter);
+      });
+     
      
     });
 
    
-    this.storage.get('role').then(res=>{
-      //console.log("role: " + res);
-      this.userRole = res;
-      
-    });
+   
 
 
   }
@@ -119,6 +124,8 @@ number: number;
    
   }
 
+
+
   calculateTotalCost(){
      //Set hashmap keys
      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
@@ -126,7 +133,7 @@ number: number;
       //this.cartM2.clear();
       //var count = 0;
       this.countCart =0;
-      console.log(res);
+      //console.log(res);
       this.cartArray = res;
       
       //Reset everytime page is opened. This is to prevent any consistency issues relating to the data inside
@@ -179,6 +186,9 @@ number: number;
     }
     if(this.getfoodSubscription2){
       this.getfoodSubscription2.unsubscribe();
+    }
+    if( this.foodRedemSub){
+      this.foodRedemSub.unsubscribe();
     }
    
   }
@@ -275,13 +285,13 @@ number: number;
    
   }
 
-  //Sponsor
-  CartFood(foodid, foodname){
+  //Sponsors
+  CartFood(foodid, foodname, vendorid){
     //Add data into cart 
     var foodname123 = foodname;
     var amountOrdered = this.foodM.get(foodid);
     //console.log(amountOrdered);
-    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname).then((res=>{
+    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname, vendorid).then((res=>{
       this.CartshowSuccess(foodname123);
       this.calculateTotalCost();
      
@@ -359,20 +369,38 @@ number: number;
   //Get food based on which filter user chose
   filterFood(filter){
     //console.log(filter);
-    this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
+    //console.log(this.userRole);
 
-      this.foodlistArray = res;
-     // console.log(this.foodlistArray);
-      res.forEach((res=>{
-        //console.log(res.id);
-        this.foodM.set(res.id, this.count); //Store each food with count = 1
-        
+    //For sponsors
+    if(this.userRole === 'sponsor' || this.userRole === 'admin' ){
+      this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
+
+        this.foodlistArray = res;
+        //console.log(this.foodlistArray);
+        res.forEach((res=>{
+          //console.log(res.id);
+          this.foodM.set(res.id, this.count); //Store each food with count = 1
+          
+        }))
+        this.getKeys();
+        //console.log(this.foodM.entries());
+        this.filterfoodSubscription.unsubscribe();
       }))
-      this.getKeys();
+    }
 
-      //console.log(this.foodM.entries());
-      this.filterfoodSubscription.unsubscribe();
-    }))
+
+    //For students
+    if(this.userRole === 'student' || this.userRole === 'admin'){
+        //For students
+        this.foodRedemSub = this.foodService.getRedeemableFoodNFilter(this.vendor, filter).subscribe((res =>{
+        this.redeemfoodArray = res;
+          //console.log(this.redeemfoodArray);
+        this.foodRedemSub.unsubscribe();
+      }))
+    }
+    
+
+  
   }
 
   getKeys(){

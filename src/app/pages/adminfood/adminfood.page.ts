@@ -37,6 +37,7 @@ export class AdminfoodPage implements OnInit {
    }
     ionViewWillEnter(){
     
+     // console.log(this.currentAcc)
     this.foodSubscription = this.foodService.getRespectiveFood(this.currentAcc).subscribe((res)=>{
       //console.log(res);
       this.foodData = res;

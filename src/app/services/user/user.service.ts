@@ -48,7 +48,7 @@ export class UserService {
 
    addStudent(email, stamp:number, role){
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true});
+      return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true, orderid: ''});
   }
 
   getAll(role){

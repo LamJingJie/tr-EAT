@@ -83,6 +83,10 @@ const routes: Routes = [
             ]
           
           },
+          {
+            path:'canteen',
+            loadChildren: () => import('../pages/adminaddcanteen/addcanteen.module').then( m => m.AdminaddcanteenPageModule)
+          }
         ]
         
       },

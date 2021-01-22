@@ -15,7 +15,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
   styleUrls: ['./modal-addfood.page.scss'],
 })
 export class ModalAddfoodPage implements OnInit {
-  @Input() currentAccount: string;
+  @Input() currentAcc: string;
 
   addfood_form: FormGroup; 
  
@@ -76,8 +76,9 @@ export class ModalAddfoodPage implements OnInit {
   //Upload Food Data into cloud firebase and storage
   async addFood(){
     await this.presentAddFoodLoading();
+   // console.log(this.currentAcc)
    this.foodService.addFood(this.addfood_form.value['foodname'], this.addfood_form.value['foodprice'], this.currentHalal,
-    this.currentAccount, this.currentVeg,this.selectedFile, this.filename).then(res=>{
+    this.currentAcc, this.currentVeg,this.selectedFile, this.filename).then(res=>{
       this.loading.dismiss(null,null,'addFoodAdmin');
       this.showSuccess();
       this.dismiss();
