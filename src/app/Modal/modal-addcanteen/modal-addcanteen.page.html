@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Add Canteen</ion-title>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content class="ion-padding">
+  <form [formGroup]="canteenForm" (ngSubmit)="submitCanteen(canteenForm)">
+    <!-- enter canteen name -->
+    <ion-card>
+      <ion-item>
+        <ion-label position="floating"> Enter Canteen Name: </ion-label>
+        <ion-input type="text" formControlName="canteenname"></ion-input>
+        <!-- <ion-icon *ngIf="canteenname.invalid && (canteenname.dirty || canteenname.touched)" name="alert-circle"
+          color="danger"></ion-icon> -->
+      </ion-item>
+    </ion-card>
+    <!-- upload image -->
+    <ion-card>
+      <ion-item>
+        <div id="center">
+          <img src="{{canteen.image}}" alt='image' width="50%;" *ngIf="files == null" />
+          <img src="{{files}}" alt='image' width='50%' *ngIf="files != null" />
+        </div>
+      </ion-item>
+      <ion-item>
+        <div id="centerv2">
+          <ion-button color="success" shape="round" size="small">
+            <span>Select Image</span>
+            <input id="files" type="file" formControlName="canteenimage" (change)="onFileSelected($event)" />
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-card>
+    <!-- submit form -->
+    <ion-button type="submit">Proceed</ion-button>
+  </form>
+</ion-content>

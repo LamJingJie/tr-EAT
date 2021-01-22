@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Edit Canteen</ion-title>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
+    </ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+
+  <form [formGroup]="editcanteen_form" (ngSubmit)="editCanteen(editcanteen_form.value)">
+    <ion-card>
+      <ion-item>
+        <ion-label position="floating"> Enter Canteen Name: </ion-label>
+        <ion-input type="text" formControlName="canteenname" [(ngModel)]="canteen.canteenname"></ion-input>
+      </ion-item>
+    </ion-card>
+
+    <ion-card>
+      <ion-item>
+        <div id="center">
+          <img src="{{canteen.image}}" alt='image' width="50%;" *ngIf="files == null" />
+          <img src="{{files}}" alt='image' width='50%' *ngIf="files != null" />
+        </div>
+
+      </ion-item>
+      <ion-item>
+        <div id="centerv2">
+          <ion-button color="success" shape="round" size="small">
+            <span>Change Image</span>
+            <input id="files" type="file" (change)="onFileSelected($event)" />
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-card>
+    <ion-input hidden formControlName="mergedName" value={{canteen.mergedName}}>{{canteen.mergedName}}</ion-input>
+    <ion-button type="submit">Confirm</ion-button>
+  </form>
+
+
+</ion-content>
