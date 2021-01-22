@@ -92,7 +92,7 @@ colorLoop: any;
 
   ngOnInit(){
 
-    const pickr = Pickr.create({
+   /* const pickr = Pickr.create({
       el: '.color-picker',
       theme: 'classic', // or 'monolith', or 'nano'
   
@@ -127,7 +127,7 @@ colorLoop: any;
     console.log(this.colorChose);
     (<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
     pickr.hide();
-  });
+  });*/
     
   }
 
@@ -196,13 +196,6 @@ colorLoop: any;
       }   
     } 
    
-  }
-
-
-
-
-  SignOut(){
-    this.authService.SignOut();
   }
 
 

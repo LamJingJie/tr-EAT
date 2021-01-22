@@ -43,9 +43,7 @@ export class Tab5Page {
 
   ionViewWillLeave(){
    
-   console.log("Leave");
     if (this.platform.is('android')) {
-     
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   

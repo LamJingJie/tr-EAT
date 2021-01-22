@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 export interface User{
   email: string,
@@ -14,17 +15,35 @@ export interface User{
 export class UserService {
   user: any;
 
-  constructor(private firestore: AngularFirestore, public storage: Storage) { }
+  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage) { }
 
-    addSponsor(email, role){
+  addSponsor(email, role){
     // console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, listed: true});
+    return  this.firestore.collection('users').doc(email).set({role: role, listed: true});
 
   }
 
-   addVendor(email, canteenid, stallname, role){
+   async addVendor(email, canteenid, stallname, role, image, filename){
+
+    var storageURL = 'Stall Images/';
+    var mergedName = filename + email + canteenid + stallname;
+
+    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
+    //console.log(storageRef);
+    var downloadURL = await this.storage.ref('Stall Images/' + mergedName).getDownloadURL().toPromise();
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true});
+      return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true, stallimage: downloadURL, mergedName: mergedName});
+  }
+
+  async updateStallImg(email, image, filename, mergedName1, canteenid, stallname){
+    this.storage.ref('Stall Images/' + mergedName1).delete(); //Delete previous food image
+    
+    var storageURL = 'Stall Images/';
+    var mergedName = filename + email + canteenid + stallname;
+
+    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
+    var downloadURL = await this.storage.ref('Stall Images/' + mergedName).getDownloadURL().toPromise();
+    return this.firestore.collection('users').doc(email).update({stallimage: downloadURL, mergedName: mergedName})
   }
 
    addStudent(email, stamp:number, role){
@@ -54,6 +73,7 @@ export class UserService {
     //return this.firestore.collection('users').doc(email).get();
     return this.firestore.collection('users').doc(email).valueChanges({idField: 'id'});
   }
+
 
   //Change listing status
   updateListing(email, listed:boolean){

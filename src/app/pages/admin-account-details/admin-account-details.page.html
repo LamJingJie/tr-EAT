@@ -18,8 +18,21 @@
             <ion-icon name="checkmark-outline"></ion-icon>
           </ion-button>
         </ion-item>
+
+      
       </form>
  
+    <ion-item>
+      <ion-item>
+        <img  src={{userDetails.stallimage}} alt = "image"/>
+      </ion-item>
+     
+      <ion-button color="success" shape="round" size="small" >
+        <span>Change Stall Image</span>
+        <input id="files"type="file"(change)="changeImage($event, userDetails.canteenID, userDetails.stallname)" />
+      </ion-button>
+     
+    </ion-item>
     <ion-item>
       Role: {{userDetails.role}}
     </ion-item>

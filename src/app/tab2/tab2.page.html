@@ -28,14 +28,29 @@
 
       <!--Price-->
       <div>
-        Price:  ${{cart.id | foodprice: cart.orderquantity | async | currency: 'SGD'}}
+        Price:  {{cart.id | foodprice: cart.orderquantity | async | currency}}
       </div>
+
+      
      
+    </ion-item>
+
+     <!--Total Price-->
+    <ion-item>
+      <div>
+        Total {{totalPriceAll | currency}}
+      </div>
     </ion-item>
   </ion-card>
 
-  <!--Payment here-->
+  <!--Payment selection-->
+  <ion-select value="PAYNOW" (ionChange)="changePaymentMtd($event.detail.value)">
+    <ion-select-option value="PAYNOW">PAYNOW</ion-select-option>
+    <ion-select-option value="PAYLAH">PAYLAH</ion-select-option>
+  </ion-select>
 
+  <!--Payment here-->
+  <ion-button [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
 
  
 </ion-content>

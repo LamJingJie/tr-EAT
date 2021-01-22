@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>modal-verifychckout</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <h4>Confirmation of Payment</h4>
+
+  <ion-item *ngFor="let c of cart">
+    <div>
+      {{c.orderquantity}}x
+    </div>
+    <div>
+      {{c.foodname}}
+    </div>
+    <div>
+      {{c.individualfoodPrice | currency}}
+    </div>
+  </ion-item>
+
+  <div>
+    Total: {{total | currency}}
+  </div>
+  <div>
+    Payment Method: {{paymentmethod}}
+  </div>
+
+  <ion-button (click)="pay()">
+    CONFIRM
+  </ion-button>
+ 
+
+</ion-content>

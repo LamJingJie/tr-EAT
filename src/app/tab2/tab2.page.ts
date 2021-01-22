@@ -16,6 +16,7 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
+import { ModalVerifychckoutPage } from 'src/app/Modal/modal-verifychckout/modal-verifychckout.page';
 
 @Component({
   selector: 'app-tab2',
@@ -25,60 +26,75 @@ import { first } from 'rxjs/operators';
 export class Tab2Page {
   customBackBtnSubscription: Subscription;
   cartSubscription: Subscription;
+  foodSub: Subscription;
   userRole: any;
   userEmail: any;
 
   cartArray: any[] = [];
 
   foodArray: any[] = [];
-  cartM = new Map();
+
+  totalPriceAll: number;
+
+  paymentMethod: any;
+
+  disabled:boolean;
 
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
-    private cartService: CartService, ) {}
+    private cartService: CartService, ) {
+      this.paymentMethod = 'PAYNOW';
+    }
 
   ngOnInit(){
-    this.storage.get('email').then(res=>{
-      //console.log("role: " + res);
-      this.userEmail = res;
-      
-      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
-        var count = 0;
-
-        this.cartArray = res;
-
-        res.forEach((res=>{
-          this.cartM.set(res.id, count)
-          count = count + 1;
-        }))
-
-        
-      }))
-      
-    });
+    
 
     this.storage.get('role').then(res=>{
       //console.log("role: " + res);
       this.userRole = res;
       
     });
+    
+
+  }
+
+  async proceedPayment(){
+    const modal = await this.modalCtrl.create({
+      component: ModalVerifychckoutPage,
+      cssClass: 'modal_verifychckout_class',
+      componentProps:{
+        cart: this.cartArray,
+        total: this.totalPriceAll,
+        paymentmethod: this.paymentMethod
+      }
+    });
+    return await modal.present();
+
+  }
+
+  changePaymentMtd(event){
+    this.paymentMethod = event;
   }
 
   increaseAmt(quantity, cartid){
     //console.log(quantity);
     quantity = quantity + 1;
-    this.cartService.updateQuantity(this.userEmail, quantity, cartid);
+    this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+      this.calculate_total_price();
+    }));
   }
 
   decreaseAmt(quantity, cartid){
-    console.log(quantity);
+    //console.log(quantity);
     if(quantity > 1){
       //console.log(">1");
       quantity = quantity -1;
-      this.cartService.updateQuantity(this.userEmail, quantity, cartid);
+      this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+        this.calculate_total_price();
+      }));
     }else{
       //console.log("<1");
       this.quantityRemove(cartid);
@@ -87,11 +103,52 @@ export class Tab2Page {
 
 
   ionViewWillEnter(){
+    this.disabled = true; //Disable the purchase btn to give time to load total cost
+    setTimeout(()=>{
+      this.disabled = false; //Enable the purchase btn
+      
+    },1500)
+   
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
+    
+    this.storage.get('email').then(res=>{
+      //console.log("role: " + res);
+      this.userEmail = res;
+      this.calculate_total_price();
+
+    });
+
+  }
+
+  calculate_total_price(){
+   
+    this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+      this.totalPriceAll = 0;
+      this.cartArray = res;
+    
+      this.cartArray.forEach((resEach,index)=>{
+        
+        //Calculate total food price
+        this.foodSub = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
+          
+          this.cartArray[index].price = resFood['foodprice'];
+          this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
+          console.log(this.totalPriceAll);
+  
+          
+        }))
+      
+      })
+      
+      
+      this.cartSubscription.unsubscribe();
+      
+    }))
+    
   }
 
   async quantityRemove(cartid){
@@ -104,6 +161,8 @@ export class Tab2Page {
           handler:()=>{
            this.cartService.deleteSpecificFoodInCart(this.userEmail, cartid).then((res=>{
              console.log("Food Removed!");
+             this.calculate_total_price();
+             
            }))
           }
         },
@@ -139,21 +198,21 @@ export class Tab2Page {
   }
 
   ionViewWillLeave(){
-    if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
-        this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
-  }
-  ngOnDestroy(){
     if(this.cartSubscription){
       this.cartSubscription.unsubscribe();
+    }
+    if(this.foodSub){
+      this.foodSub.unsubscribe();
     }
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
+    
+  }
+  ngOnDestroy(){
+    console.log("Destroy");
   }
 
   

@@ -42,25 +42,33 @@ export class CartService {
    //this.listed = this.userDetails.listed;
 
     var cartDoc = this.firestore.collection('cart').doc(userid).collection('data').doc(foodid);
-    return cartDoc.get().toPromise().then(doc =>{
-      if(!doc.exists){
-        //console.log("Doesn't Exists")
-        this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).set({userid: userid, canteenid: canteenid, orderquantity: orderquantity});
-      }else{
-        //console.log("Exists");
-        //If exists, add onto existing quantity
-        this.foodExistSubscription = this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).valueChanges({idField: 'id'}).subscribe((res=>{
-          
-          this.quantity = res.orderquantity;
-          //console.log(this.quantity);
-          orderquantity = orderquantity + this.quantity;
-          //console.log(orderquantity); 
-          this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).update({orderquantity: orderquantity});
+    return new Promise((resolve, reject) =>{
 
-          this.foodExistSubscription.unsubscribe();
-        }))
+      cartDoc.get().toPromise().then(doc =>{
+        if(!doc.exists){
+          //console.log("Doesn't Exists")
+          this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).set({userid: userid, canteenid: canteenid, orderquantity: orderquantity}).then((res=>{
+            resolve(res);
+          }));
+        }else{
+          //console.log("Exists");
+          //If exists, add onto existing quantity
+          this.foodExistSubscription = this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).valueChanges({idField: 'id'}).subscribe((res=>{
+            
+            this.quantity = res.orderquantity;
+            //console.log(this.quantity);
+            orderquantity = orderquantity + this.quantity;
+            //console.log(orderquantity); 
+            this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).update({orderquantity: orderquantity}).then((res=>{
+              resolve(res);
+            }));
+  
+            this.foodExistSubscription.unsubscribe();
+          }))
+        }
+    })
        
-      }
+      
     })
 
     //console.log(foodid);

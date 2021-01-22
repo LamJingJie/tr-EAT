@@ -81,7 +81,7 @@ number: number;
   ngOnInit() {
     //console.log("ngOnInit");
 
-    this.foodSubscription = this.activatedRoute.queryParams.subscribe(params =>{
+    this.getfoodSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.stall = params.stall;
       this.vendor = params.vendor;
       this.canteen = params.canteenid;
@@ -90,6 +90,15 @@ number: number;
       this.filterFood(this.chosenFilter);
      
     });
+
+   
+    this.storage.get('role').then(res=>{
+      //console.log("role: " + res);
+      this.userRole = res;
+      
+    });
+
+
   }
 
   cartPage(){
@@ -97,60 +106,98 @@ number: number;
   }
 
   ionViewWillEnter(){
-
-    //Reset arrays everytime page is opened. This is to prevent any consistency issues relating to the data inside each array
-    this.totalPriceAll = 0;
-    this.storefoodpriceArray = [];
-    this.foodtotalprice = [];
+    //this.storefoodpriceArray = [];
+    //this.foodtotalprice = [];
     
     //console.log(this.canteen);
     this.storage.get('email').then(async res=>{
       //console.log("email: " + res);
       this.userEmail = res;
-      await this.userEmail;
+      this.calculateTotalCost();
+    });
+   
+   
+  }
 
-      //Set hashmap keys
-      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
-        this.cartM.clear();
-        this.cartM2.clear();
-        var count = 0;
-        this.countCart =0;
-        //console.log(res);
-        this.cartArray = res;
-        res.forEach((res=>{
-          //console.log(res);
-          this.cartM.set(res.id, count);
-          //console.log(this.cartM.entries());
-          this.cartM2.set(count, res['orderquantity']);
-          count = count + 1;
-          this.countCart = this.countCart + 1;
+  calculateTotalCost(){
+     //Set hashmap keys
+     this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+      //this.cartM.clear();
+      //this.cartM2.clear();
+      //var count = 0;
+      this.countCart =0;
+      console.log(res);
+      this.cartArray = res;
+      
+      //Reset everytime page is opened. This is to prevent any consistency issues relating to the data inside
+      this.totalPriceAll = 0;
+
+      this.cartArray.forEach((resEach,index)=>{
+
+        //Calculate total price
+        this.foodSubscription = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
+          this.cartArray[index].price = resFood['foodprice'];
+          this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
+          console.log(this.totalPriceAll);
+
+          
         }))
-        
-        
-        this.cartSubscription.unsubscribe();
-  
-        this.getKeysCart();
        
-      }))
+        this.countCart = this.countCart + 1;
+      })
+
+
+     /* res.forEach((res=>{
+        //console.log(res);
+        this.cartM.set(res.id, count); //Set the food.id
+        //console.log(this.cartM.entries());
+        this.cartM2.set(count, res['orderquantity']);
+        count = count + 1;
+        
+      }))*/
       
-    });
-    this.storage.get('role').then(res=>{
-      //console.log("role: " + res);
-      this.userRole = res;
       
-    });
+      this.cartSubscription.unsubscribe();
+
+      //this.getKeysCart();
+     
+    }))
+  }
+
+  ionViewWillLeave(){
+    if(this.foodSubscription){
+      this.foodSubscription.unsubscribe();
+    }
+    if(this.filterfoodSubscription){
+      this.filterfoodSubscription.unsubscribe();
+    }
+    if(this.getfoodSubscription){
+      this.getfoodSubscription.unsubscribe();
+    }
+    if(this.cartSubscription){
+      this.cartSubscription.unsubscribe();
+    }
+    if(this.getfoodSubscription2){
+      this.getfoodSubscription2.unsubscribe();
+    }
    
   }
 
-  ionViewDidLeave(){
-    
-   
-  }
+
+  /*getKeysCart(){
+    let keys = Array.from(this.cartM.keys());
+    let values = Array.from(this.cartM.values());
+    this.CartkeysArray = keys;
+    this.CartvalueArray = values;
+    //this.getFoodPrice();
+    //console.log(this.CartvalueArray);
+    //console.log(this.CartvalueArray);
+  }*/
 
 
 
   //Do not touch. Because I have no idea how this even worked.
-  getFoodPrice(){
+  /*getFoodPrice(){
     
     var keysArray = this.keyvalue.transform(this.CartkeysArray);
     //console.log(keysArray);
@@ -197,21 +244,13 @@ number: number;
       }))
     })
    
-  }
+  }*/
 
   ionViewDidEnter(){
     
   }
 
-  getKeysCart(){
-    let keys = Array.from(this.cartM.keys());
-    let values = Array.from(this.cartM.values());
-    this.CartkeysArray = keys;
-    this.CartvalueArray = values;
-    this.getFoodPrice();
-    //console.log(this.CartvalueArray);
-    //console.log(this.CartvalueArray);
-  }
+ 
 
   addAmt(foodid){
    // console.log(foodid);
@@ -244,9 +283,8 @@ number: number;
     //console.log(amountOrdered);
     this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname).then((res=>{
       this.CartshowSuccess(foodname123);
-      setTimeout(()=>{
-        this.ionViewWillEnter();
-      }, 1000)
+      this.calculateTotalCost();
+     
      
     })).catch((err=>{
       this.showError(err);
@@ -382,21 +420,7 @@ number: number;
 
 
   ngOnDestroy(){
-    if(this.foodSubscription){
-      this.foodSubscription.unsubscribe();
-    }
-    if(this.filterfoodSubscription){
-      this.filterfoodSubscription.unsubscribe();
-    }
-    if(this.getfoodSubscription){
-      this.getfoodSubscription.unsubscribe();
-    }
-    if(this.cartSubscription){
-      this.cartSubscription.unsubscribe();
-    }
-    if(this.getfoodSubscription2){
-      this.getfoodSubscription2.unsubscribe();
-    }
+   
   }
 
 }

@@ -53,12 +53,14 @@
     </div>
   
   
-    <div *ngFor = "let ct of canteen">
+   <!--- <div *ngFor = "let ct of canteen">
       {{ct.canteenname}} - {{ct.color}}
       <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>
-    </div>
+    </div>-->
      
-      
+     <!--Popular choice Carousel-->
+     <div id="popcarousel" >
+    <div class=subtitle ><h6>Popular Choice</h6></div><br>
       <ion-slides [options]="sliderConfigx" >
         <ion-slide>
         <ion-card class= 'listcard'>
@@ -98,12 +100,19 @@
           </ion-card>
           </ion-slide>
       </ion-slides>
-      
+    </div>
   
   
-  <div class=subtitle ><h6>Popular Choice</h6></div><br>
-  <!--Popular choice Carousel-->
-    <div id="popcarousel" >
+
+
+  <!--<div *ngFor = "let ct of canteen">
+    {{ct.id}} - {{ct.color}}
+    <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>
+  </div>-->
+
+  <!--Only show for students-->
+   <div *ngIf="userRole == 'student'">
+    <div class=subtitle ><h6>Your Recent Order</h6></div><br>
     <ion-slides [options]="sliderConfigx" >
       <ion-slide >
         <ion-card  class= 'listcard'>
@@ -124,20 +133,42 @@
         </ion-card>
         </ion-slide>
     </ion-slides>
-    </div>
+   </div>
   
-    <!--
-        <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
-        <ng-template #pass> Loading...</ng-template>
-        <ng-template #fail> Loaded</ng-template>-->
-  
-      
-       <ion-button class="color-picker">Color Picker</ion-button>
-  
-       <ion-card class="colorshown">Color shown here</ion-card>
-  
-  
-    <ion-button (click)="SignOut()">Log Out</ion-button>
+   
+
+<div class=subtitle ><h6>Popular Choice</h6></div><br>
+<!--Popular choice Carousel-->
+  <div id="popcarousel" >
+  <ion-slides [options]="sliderConfigx" >
+    <ion-slide >
+      <ion-card  class= 'listcard'>
+       <div id ="coverimg">
+        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+        <img class="coverpic" src="./assets/FoodIMG.png" />
+       </div>
+
+       <div id="txtlabelposition">
+        <ion-card-title id ="foodname">
+          Food Name
+        </ion-card-title>
+        <ion-card-subtitle id="locate">
+          Sch . Canteen
+        </ion-card-subtitle>
+      </div>
     
-  </ion-content>
+      </ion-card>
+      </ion-slide>
+  </ion-slides>
+  </div>
+
+  <!--
+      <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
+      <ng-template #pass> Loading...</ng-template>
+      <ng-template #fail> Loaded</ng-template>-->
+
+    
+    <!-- <ion-button class="color-picker">Color Picker</ion-button>-->
+
   
+</ion-content>

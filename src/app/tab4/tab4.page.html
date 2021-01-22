@@ -18,19 +18,33 @@
       
       <div id="userinfo" class="Font">
         <div style="font-size: 20px;padding-top: 25px;"> Hello,</div>
-        <div style="font-size: 23px;"> User's Name </div>
+        <div style="font-size: 23px;"> {{currentAccount}} </div>
       </div>
 
       <br>
 
     <div class="wrapbtnrectangle">
       <div id="btns">
-    <img src="./assets/UpdatePro.png" class="rounded" />
-    <img src="./assets/Fav.png" class="rounded" />
-    <img src="./assets/RLeft.png" class="rounded"/> 
+        <div class="btnroundedUpdate">
+          <img width="45%" style="padding-top: 4px;"  src="./assets/ProfileImg.png"/>
+          <p style="margin:auto; width: 96%;">UPDATE USER INFO</p>
+        </div>
+        <br>
+        <div class="btnroundedFav">
+          <img width="45%" style="padding-top: 4px;" src="./assets/Fav.png"/>
+          <p style="margin: auto; width:97%;">Favourites</p>
+        </div>
+        <br>
+        <div class="btnroundedStamp" *ngIf="currentRole === 'student'" >
+          <!-- <img src="./assets/RLeft.png" />--> 
+          <h4>{{stamps}}</h4>
+          <p>Redemption Left</p>
+        </div>
+    
       </div>
      
-      <div class=subtitle ><h6>Your Orders</h6></div>
+      <div *ngIf="currentRole == 'student'">
+        <div class=subtitle ><h6>Your Orders</h6></div>
       <!-- Rcent Order Carousel-->
       <div id="RecOdr">
         <ion-slides [options]="sliderConfig" >
@@ -74,6 +88,9 @@
           </ion-slide>
         </ion-slides>
       </div>
+      </div>
+      
+
     </div>
 
     

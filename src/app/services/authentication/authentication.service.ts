@@ -152,7 +152,7 @@ export class AuthenticationService {
    }
 
    //For Vendor Accounts Only!
-   async SignUpVendor(email, password, canteenID, stallname, role){
+   async SignUpVendor(email, password, canteenID, stallname, role, image, filename){
 
     await this.storage.set('adminusage',true);
     this.checkAdmin2 = true;
@@ -160,7 +160,7 @@ export class AuthenticationService {
       this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
         
         await this.SendVerificationMail();
-        this.userService.addVendor(email, canteenID, stallname, role);
+        this.userService.addVendor(email, canteenID, stallname, role, image, filename);
         resolve(res);
        
       }).catch(async (error)=>{

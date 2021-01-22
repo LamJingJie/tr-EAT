@@ -15,6 +15,10 @@ export class ModalAddvendorPage implements OnInit {
   adduser_form: FormGroup; 
   addstudent_form: FormGroup;
 
+  selectedFile: any;
+  filename: any;
+  files: any;
+
   addingVendorSubscription: Subscription;
   canteenData: any = [];
   currentRole: string;
@@ -52,6 +56,9 @@ export class ModalAddvendorPage implements OnInit {
       stallname: new FormControl('',Validators.compose([ //Vendor
         Validators.required
       ])),
+      stallimage: new FormControl('',Validators.compose([
+        Validators.required
+      ]))
     })
 
 
@@ -130,7 +137,8 @@ export class ModalAddvendorPage implements OnInit {
 
       await this.presentLoadingSignUpAdmin();
 
-      await this.authService.SignUpVendor(this.adduser_form.value['email'], this.adduser_form.value['password'], this.adduser_form.value['canteen'], this.adduser_form.value['stallname'], this.currentRole).then(async (res)=>{
+      await this.authService.SignUpVendor(this.adduser_form.value['email'], this.adduser_form.value['password'], this.adduser_form.value['canteen'], this.adduser_form.value['stallname'], this.currentRole,
+      this.selectedFile, this.filename).then(async (res)=>{
       await this.adduser_form.reset();
       //console.log(res);
  
@@ -176,6 +184,28 @@ export class ModalAddvendorPage implements OnInit {
     this.passwordmatch();
   }
   
+}
+
+//Get Image Name
+onFileSelected(event){
+    
+  this.selectedFile = event.target.files[0];
+  this.filename = event.target.files[0].name + event.timeStamp;
+  //console.log(this.filename); 
+
+  //Convert to base64 to then read in the html page and change prev image to current image. It will not be submitted yet just to
+  //visualize what the image will look like.
+  let me = this;
+  let file = event.target.files[0];
+  let reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function(){
+    me.files = reader.result;
+   // console.log(me.files);
+  };
+  reader.onerror = function (error){
+    console.log('Error: ', error);
+  };
 }
 
   async passwordmatch(){

@@ -17,8 +17,40 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
   styleUrls: ['tab4.page.scss']
 })
 export class Tab4Page {
+
+  currentAccount: any;
+  currentRole: any;
+
+  stamps: any; //Student
+
   customBackBtnSubscription: Subscription;
-  constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController) {}
+
+  userSub: Subscription;
+
+
+  constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController, 
+    private authService: AuthenticationService, private storage: Storage, private userService: UserService) {}
+
+  ngOnInit(){
+    this.storage.get('email').then(res =>{
+      this.currentAccount = res;
+      // console.log("Email tabs: " + res);
+      //alert("Email tabs: " + res);
+    });
+
+    this.storage.get('role').then(res =>{
+      this.currentRole = res;
+      // console.log("Email tabs: " + res);
+      //alert("Email tabs: " + res);
+      if(this.currentRole === 'student'){
+        this.userSub = this.userService.getOne(this.currentRole).subscribe((res=>{
+          this.stamps = res['stampLeft'];
+
+          this.userSub.unsubscribe();
+        }))
+      }
+    });
+  }
 
 
   ionViewWillEnter(){
@@ -27,6 +59,12 @@ export class Tab4Page {
         this.leavePopup();
       });
     }
+
+    
+  }
+
+  SignOut(){
+    this.authService.SignOut();
   }
 
   ionViewWillLeave(){
@@ -64,6 +102,10 @@ export class Tab4Page {
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
+
+    if(this.userSub){
+      this.userSub.unsubscribe();
+    }
   }
   
  

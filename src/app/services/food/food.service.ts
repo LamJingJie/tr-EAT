@@ -41,7 +41,7 @@ export class FoodService {
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true)).valueChanges({idField:'id'});
     }
   }
-
+h
   async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
     //console.log(image);
     var storageURL = 'Food Images/';

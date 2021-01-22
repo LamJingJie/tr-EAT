@@ -21,12 +21,18 @@ export class AdminAccountDetailsPage implements OnInit {
   userDetailsSubscription: Subscription;
   canteenSubscription: Subscription;
   userDetails: any = [];
+
   listed: boolean;
   currentRole: string;
   canteenData: any = [];
+  currentMergedName: any;
   canteenChanged: any;
   editstall_form: FormGroup; 
   editedStall: boolean;
+
+  selectedFile: any;
+  filename: any;
+  files: any;
 
 
   constructor(private activatedRoute: ActivatedRoute, private navCtrl:NavController, private userService: UserService,
@@ -44,6 +50,37 @@ export class AdminAccountDetailsPage implements OnInit {
       })
     
    }
+
+ 
+
+   //Get Image Name
+  changeImage(event, canteenid, stallname){
+    console.log(canteenid);
+    this.selectedFile = event.target.files[0];
+    this.filename = event.target.files[0].name + event.timeStamp;
+
+    //console.log(this.filename); 
+    this.userService.updateStallImg(this.currentAccount, this.selectedFile, this.filename, this.userDetails.mergedName, canteenid, stallname)
+    .then((res=>{
+      this.UpdateshowSuccess_stallimage();
+    })).catch((err=>{
+      this.showError(err);
+    }))
+
+  //Convert to base64 to then read in the html page and change prev image to current image. It will not be submitted yet just to
+  //visualize what the image will look like.
+  /*let me = this;
+  let file = event.target.files[0];
+  let reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = function(){
+    me.files = reader.result;
+   // console.log(me.files);
+  };
+  reader.onerror = function (error){
+    console.log('Error: ', error);
+  };*/
+}
 
   ngOnInit() {
 
@@ -189,6 +226,11 @@ export class AdminAccountDetailsPage implements OnInit {
 
   async UpdateshowSuccess_stallname(){
     const toast = await this.toast.create({message: "Stall Updated", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async UpdateshowSuccess_stallimage(){
+    const toast = await this.toast.create({message: "Stall Image Updated", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
     toast.present();
   }
 

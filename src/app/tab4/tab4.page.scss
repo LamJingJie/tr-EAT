@@ -75,8 +75,73 @@
          text-align: center;
      }
      #btns{
-         text-align: center;
+         display: flex;
+         justify-content: center;
      }
+     .btnroundedStamp{
+        position: relative;
+        left: 5%;
+        display: block;
+        width: 67px;
+        height: 67px;
+        //line-height: 100px;
+        background-color: #fddea3;
+        border: 2px solid  #fddea3;
+        border-radius: 50%;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        font-size: 8px;
+        font-weight: bold;
+        box-shadow: 1px 5px 6px rgb(170, 169, 169);
+     }
+     .btnroundedUpdate{
+        position: relative;
+        right: 5%;
+        display: block;
+        width: 67px;
+        height: 67px;
+        //line-height: 100px;
+        background-color: #fddea3;
+        border: 2px solid  #fddea3;
+        border-radius: 50%;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        font-size: 8px;
+        font-weight: bold;
+        box-shadow: 1px 5px 6px rgb(170, 169, 169);
+     }
+     .btnroundedFav{
+        display: block;
+        width: 67px;
+        height: 67px;
+        //line-height: 100px;
+        background-color: #fddea3;
+        border: 2px solid  #fddea3;
+        border-radius: 50%;
+        color: black;
+        text-align: center;
+        text-decoration: none;
+        font-size: 8px;
+        font-weight: bold;
+        box-shadow: 1px 5px 6px rgb(170, 169, 169);
+     }
+
+     .btnroundedStamp p {
+         margin: auto;
+         padding-top: 5px;
+         width: 97%;
+     }
+     .btnroundedStamp h4{
+         margin: auto;
+         padding-top: 5px;
+         width: 86%
+     }
+
+
+  
+   
 
 
      .image-cropper {

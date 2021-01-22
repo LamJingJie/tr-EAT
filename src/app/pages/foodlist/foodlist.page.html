@@ -44,7 +44,7 @@
       
       <img width="50%" src = {{food.image}} />
     
-      {{food.foodname}} - ${{food.foodprice}} - {{food.availquantity}}
+      {{food.foodname}} - {{food.foodprice | currency}} - {{food.availquantity}}
 
       <button *ngIf="userRole === 'student' || userRole ==='admin'" (click)="RedeemFood(food.id, food.availquantity, food.foodname, food.foodprice, food.image, food.userid)">redeem</button>
       
@@ -56,7 +56,7 @@
 
 
  <!---Cart to be shown at the bottom of the screen--->
- <ion-button id="cart_bottom" (click)="cartPage()"><ion-icon name="cart"></ion-icon>Cart Total: ${{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount inside {{countCart}}</ion-badge></ion-button>
+ <ion-button id="cart_bottom" (click)="cartPage()"><ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount inside {{countCart}}</ion-badge></ion-button>
   
 
 
