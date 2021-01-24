@@ -67,6 +67,10 @@ export class ModalVerifychckoutPage implements OnInit {
       
     })
     //console.log(this.cart);
+
+    setTimeout(()=>{
+      this.dismiss();
+    }, 10000) //10 seconds
   }
 
   async pay(){
