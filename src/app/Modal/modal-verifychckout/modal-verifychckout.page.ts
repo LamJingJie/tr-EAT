@@ -30,10 +30,12 @@ export class ModalVerifychckoutPage implements OnInit {
   @Input() user: any;
 
   foodSub: Subscription;
+  foodSub2: Subscription;
 
   pay_foodSub: Subscription;
 
-  todayDate: Date = new Date();
+  totalPriceAll: number;
+  
   
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
@@ -45,13 +47,24 @@ export class ModalVerifychckoutPage implements OnInit {
     }
 
   ngOnInit() {
+   
+
+  
+  }
+
+  ionViewWillEnter(){
+    
+    this.totalPriceAll = 0;
     this.cart.forEach((res,index)=>{
-      this.foodSub = this.foodService.getFoodById(res['id']).subscribe((foodres=>{
+      
+     //Get data so that if there's any changes to the db, the user will see it here as the cart page doesn't automatically update
+      this.foodSub = this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
         this.cart[index].foodname = foodres['foodname']; //store foodname
         this.cart[index].individualfoodPrice = foodres['foodprice'] * res['orderquantity']; //total price for individual food
-        this.cart[index].availquantity = foodres['availquantity'];
         this.cart[index].image = foodres['image'];
+        this.totalPriceAll += res['orderquantity'] * foodres['foodprice'];
       }))
+      
     })
     //console.log(this.cart);
   }
@@ -60,25 +73,31 @@ export class ModalVerifychckoutPage implements OnInit {
 
   
    console.log(this.cart)
-   
+   var todayDate: Date = new Date();
+
    
    await this.presentLoadingPay();
     var totalquantity = 0;
     this.cart.forEach((res, index)=>{
+
+      //Get latest data for availquantity
+      this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+
+        totalquantity = foodres['availquantity'] + res['orderquantity'];
+
+        console.log(totalquantity);
+       
+        //1. Add orderquantity to respective food
+        this.foodService.updateAvailQuantity(res.id, totalquantity);
+  
+        //2. Add cart data into history db, date will be the same for all food in a cart.
+        this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
+        res['foodprice'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);
       
-      totalquantity = res['availquantity'] + res['orderquantity']
-      //console.log(totalquantity);
-     
-      //1. Add orderquantity to respective food
-      this.foodService.updateAvailQuantity(res.id, totalquantity);
-      //2. Add cart data into history db
-      this.historyService.transfer_cart_to_history(this.user, this.todayDate, res['canteenid'], res.id, res['foodname'],
-      res['price'], res['image'], res['orderquantity'], res['userid']);
-      //3. Delete all carts data
-     
-      
-    
+      }))
+         
     })
+    //3. Delete all carts data
     await this.cartService.deleteCart(this.user);
     
     this.loading.dismiss(null,null,'pay'); 
@@ -90,7 +109,7 @@ export class ModalVerifychckoutPage implements OnInit {
   async presentLoadingPay(){
     const loading3 = await this.loading.create({
       cssClass: 'my-custom-class',
-      message: 'Please wait...',
+      message: 'Paying...',
       id: 'pay'
     });
     await loading3.present();
@@ -106,10 +125,13 @@ export class ModalVerifychckoutPage implements OnInit {
     });
   }
 
-  ngOnDestroy(){
+  ionViewWillLeave(){
     if(this.foodSub){
       this.foodSub.unsubscribe();
     }
+  }
+  ngOnDestroy(){
+   
   }
 
 }

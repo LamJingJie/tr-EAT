@@ -95,6 +95,11 @@ export class UserService {
     return this.firestore.collection('users').doc(email).update({stampLeft: stamp})
   }
 
+  //For students when they redeem a food
+  updateOrderId(email, orderid){
+    return this.firestore.collection('users').doc(email).update({orderid: orderid});
+  }
+
  
 
 

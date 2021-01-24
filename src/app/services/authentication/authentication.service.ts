@@ -207,10 +207,10 @@ export class AuthenticationService {
       //console.log((await this.ngFireAuth.currentUser).emailVerified);
 
       await this.presentLoading();
-
+     // console.log("Here");
       this.storage.get('adminusage').then(async res =>{
         //Check if admin user made any add or delete of other user accounts. Null if no.
-        console.log("admin: " + res);
+        //console.log("admin: " + res);
         if(res === null){
           //No action made by admin
           if(e){
@@ -307,7 +307,7 @@ export class AuthenticationService {
       //Since when admin delete an account, the ngFireAuth will think that we have already logged out. Since the 
       //ngFireAuth.delete() also causes a signout(). So this basically just checks if the admin has deleted any account
       //and if so, determine how to "logout" because the standard signout() won't work since its alrdy "signed out" technically
-      this.storage.get('deleteAcc').then(async res =>{
+      /*this.storage.get('deleteAcc').then(async res =>{
         //console.log(res);
         if(res === null){
           
@@ -327,14 +327,18 @@ export class AuthenticationService {
       }).catch(err=>{
         console.log(err);
         this.loading.dismiss(null, null, 'presentLoad2');
-      })
+      })*/
+      console.log("Log out")
+      this.router.navigateByUrl("login");
+      this.ngFireAuth.signOut();
+      this.loading.dismiss(null, null, 'presentLoad2');
      
    }
 
 
    //Delete user accounts for admin users only
    async deleteUserAdmin(email, password,role){ 
-      await this.storage.set('deleteAcc',true);
+      //await this.storage.set('deleteAcc',true);
       await this.storage.set('adminusage',true);
 
       this.checkAdmin = true;
@@ -366,7 +370,7 @@ export class AuthenticationService {
             //Delete "history" collection (maybe)
   
             //Delete Cart
-              this.cartService.deleteRespectiveCart(email).then(res =>{
+              this.cartService.deleteCart(email).then(res =>{
                 console.log(res);
               }).catch(err=>{
                 console.log(err);
@@ -377,7 +381,7 @@ export class AuthenticationService {
           resolve(res);
   
          }).catch(err=>{
-           this.storage.remove('deleteAcc');
+           //this.storage.remove('deleteAcc');
            this.storage.remove('adminusage');
            console.log(err);
            reject(err);

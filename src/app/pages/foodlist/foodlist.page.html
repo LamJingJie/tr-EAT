@@ -41,7 +41,7 @@
 
 
  <!--Food data shown to students-->
- <div *ngIf="userRole === 'student' || userRole ==='admin'">
+ <div *ngIf="userRole === 'student' ">
   <ion-card   *ngFor = "let food1 of redeemfoodArray">
     <ion-item>
       
@@ -49,7 +49,7 @@
     
       {{food1.foodname}} - {{food1.foodprice | currency}} - {{food1.availquantity}}
 
-      <button *ngIf="userRole === 'student' || userRole ==='admin'" (click)="RedeemFood(food1.id, food1.availquantity, food1.foodname, food1.foodprice, food1.image, food1.userid)">redeem</button>
+      <button *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === ''" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice)">redeem</button>
       
     </ion-item>  
   </ion-card>

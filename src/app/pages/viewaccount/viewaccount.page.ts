@@ -19,6 +19,8 @@ import { ModalAddvendorPage } from 'src/app/pages/adminaddvendor/modal-addvendor
 })
 export class ViewaccountPage implements OnInit {
   userSubscription: Subscription;
+  userSubscription2: Subscription;
+
   userData: any = [];
   currentRole: string;
   listed: boolean;
@@ -32,7 +34,7 @@ export class ViewaccountPage implements OnInit {
       
 
 
-    this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {this.userData = data;});
+   
    }
 
    async addAccount(){
@@ -44,6 +46,12 @@ export class ViewaccountPage implements OnInit {
 
    }
 
+   ionViewWillEnter(){
+    this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {
+      this.userData = data;
+    });
+   }
+
   ngOnInit() {
   }
 
@@ -51,7 +59,9 @@ export class ViewaccountPage implements OnInit {
     //console.log(role.detail.value);
     this.currentRole = role.detail.value;
     this.editStamp = false;
-    this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {this.userData = data;});
+    this.userSubscription2 = this.userService.getAll(this.currentRole).subscribe((data) => {
+      this.userData = data;
+    });
   }
 
   async presentPopover(ev, userid, listed, stamp) {
@@ -73,10 +83,17 @@ export class ViewaccountPage implements OnInit {
     this.navCtrl.pop();
   }
 
-  ngOnDestroy(){
+  ionViewWillLeave(){
     if(this.userSubscription){
       this.userSubscription.unsubscribe();
     }
+    if(this.userSubscription2){
+      this.userSubscription2.unsubscribe();
+    }
+  }
+
+  ngOnDestroy(){
+   
   }
 
   openStampAlert(stamp){

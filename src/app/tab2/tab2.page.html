@@ -25,12 +25,12 @@
 
       <!--Food name-->
       <div>
-        {{cart.id | foodname | async}}
+        {{cart.foodname}}
       </div>
 
       <!--Price-->
       <div>
-        Price:  {{cart.id | foodprice: cart.orderquantity | async | currency}}
+        Price:  {{cart.totalfoodprice | currency}}
       </div>
 
       
@@ -55,6 +55,41 @@
   <ion-button *ngIf="totalPriceAll !== 0" [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
   </div>
   
+
+
+
+  <!--When student click on redeem, the receipt will be shown here-->
+  <div *ngIf="userRole === 'student'">
+    <div *ngIf="receiptData.orderid !==''">
+ 
+      <h2>REDEMPTION SUCCESSFUL!</h2>
+      <ion-card>
+        <div>Redemption Number #{{receiptData.orderid}}</div>
+
+        <!--Food Name-->
+        <div>
+          {{receiptData.foodname}}
+        </div>
+ 
+        <div>   
+          <!--Canteen-->
+          <div>{{receiptData.canteenid}}</div>
+
+          <ion-icon name="ellipse-outline"></ion-icon>
+
+          <!--Vendor Stall Name-->
+          <div>{{receiptData.stallname}}</div>
+        </div>
+
+      </ion-card>
+
+      <ion-button color="success" (click)="collected()">COLLECTED</ion-button>
+    </div>
+
+    <div *ngIf="receiptData.orderid === ''">Food that is pending collection after redeeming, will be shown here.</div>
+    
+  </div>
+
 
  
  

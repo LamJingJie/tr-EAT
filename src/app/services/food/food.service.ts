@@ -27,6 +27,7 @@ export class FoodService {
     return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
   }
 
+
   getFoodBasedOnStall(vendor){
     return this.firestore.collection('food', ref => ref.where('userid', '==', vendor)).valueChanges({idField: 'id'});
   }
@@ -115,6 +116,11 @@ export class FoodService {
   //When sponsor pay
   updateAvailQuantity(id, quantity: number){
     return this.firestore.collection('food').doc(id).update({availquantity: quantity})
+  }
+
+  //When student redeem food
+  updatePopularity(id, popularity: number){
+    return this.firestore.collection('food').doc(id).update({popularity: popularity})
   }
 
   

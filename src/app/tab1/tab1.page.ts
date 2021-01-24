@@ -73,12 +73,6 @@ colorLoop: any;
     });
 
 
-
-
-    
-
-    
-
    // this.userRole = this.authService.currentUserRole();
    // this.userEmail = this.authService.currentUserEmail();
     //alert(this.userRole);

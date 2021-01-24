@@ -41,6 +41,8 @@ export class AdminfoodPage implements OnInit {
     this.foodSubscription = this.foodService.getRespectiveFood(this.currentAcc).subscribe((res)=>{
       //console.log(res);
       this.foodData = res;
+
+      this.foodSubscription.unsubscribe();//prevent constant refreshing becuase of the students or sponsors
     })
    }
 
@@ -57,7 +59,12 @@ export class AdminfoodPage implements OnInit {
       },
       cssClass: 'modal_editfood_class'
     });
-    return await modal.present();
+
+     await modal.present();
+
+     await modal.onWillDismiss().then((res=>{
+      this.ionViewWillEnter(); //refresh
+      }));
   
    }
 
@@ -70,7 +77,11 @@ export class AdminfoodPage implements OnInit {
       },
       cssClass: 'modal_addfood_class'
     });
-    return await modal.present();
+     await modal.present();
+
+     await modal.onWillDismiss().then((res=>{
+      this.ionViewWillEnter(); //refresh
+      }));
    }
 
   

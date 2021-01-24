@@ -16,6 +16,7 @@ import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-foodlist',
@@ -30,6 +31,9 @@ getfoodSubscription2: Subscription;
 filterfoodSubscription: Subscription;
 cartSubscription: Subscription;
 foodRedemSub: Subscription;
+studentDataSub: Subscription;
+
+redeemSub: Subscription;
 
 vendor: any;
 stall: any;
@@ -61,6 +65,9 @@ storefoodpriceArray: any[] = [];
 foodtotalprice: any[] = [];
 totalPriceAll: number;
 
+stampsLeft: number;
+orderid: any;
+
 
 foodM = new Map();
 cartM = new Map();
@@ -68,12 +75,13 @@ cartM2 = new Map();
 
 number: number;
 
+
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, private foodService: FoodService,
     private popoverCtrl: PopoverController, private storage: Storage, private cartService: CartService, 
-    private carttotalcostpipe: CartTotalCostPipe) {
+    private carttotalcostpipe: CartTotalCostPipe, private firestore: AngularFirestore, private loading: LoadingController) {
 
       this.chosenFilter = 'all'
       this.count = 1;
@@ -91,18 +99,9 @@ number: number;
       this.canteen = params.canteenid;
       //console.log(this.stall);
       //console.log(this.vendor);
-      this.storage.get('role').then(res=>{
-        console.log("role: " + res);
-        this.userRole = res;
-        this.filterFood(this.chosenFilter);
-      });
-     
+       
      
     });
-
-   
-   
-
 
   }
 
@@ -119,14 +118,28 @@ number: number;
       //console.log("email: " + res);
       this.userEmail = res;
       this.calculateTotalCost();
+      this.getStudentData();
+    });
+
+    this.storage.get('role').then(res=>{
+      console.log("role: " + res);
+      this.userRole = res;
+      this.filterFood(this.chosenFilter);
     });
    
    
   }
 
+  getStudentData(){
+    this.studentDataSub = this.userService.getOne(this.userEmail).subscribe((res=>{
+      this.orderid = res['orderid'];
+      this.stampsLeft = res['stampLeft'];
+    }))
+  }
 
 
   calculateTotalCost(){
+    this.cartArray = [];
      //Set hashmap keys
      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
       //this.cartM.clear();
@@ -189,6 +202,9 @@ number: number;
     }
     if( this.foodRedemSub){
       this.foodRedemSub.unsubscribe();
+    }
+    if(this.studentDataSub){
+      this.studentDataSub.unsubscribe();
     }
    
   }
@@ -291,56 +307,107 @@ number: number;
     var foodname123 = foodname;
     var amountOrdered = this.foodM.get(foodid);
     //console.log(amountOrdered);
-    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, foodname, vendorid).then((res=>{
+    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
       this.CartshowSuccess(foodname123);
       this.calculateTotalCost();
-     
+      this.filterFood(this.chosenFilter);
      
     })).catch((err=>{
       this.showError(err);
+      this.filterFood(this.chosenFilter);//Refresh page
     }))
   }
 
   //Student
-  async RedeemFood(id, quantity, foodname, foodprice, image, vendorid){
-    //Show alert box
+  async RedeemFood(id,  foodname, foodprice){
+  
     var food_name = foodname;
+    
     const alert1 = await this.alertCtrl.create({
       header: 'Confirmation of Redemption',
       message: 'Are you sure you would like to redeem the following item' + '<br><br><br><br>' + '1x ' + foodname + "  $"+foodprice,
       buttons:[
         {
           text: 'Confirm',
-          handler:()=>{
+          handler:async ()=>{
+            await this.presentLoadRedeem();
             //Use 'vendorid' param to retrieve respective canteenID from 'users' database
-            if(quantity > 0){
-              quantity = quantity - 1; //Deduct per redeem
-              console.log(quantity);
 
-              //Deduct overall value in firebase first
-              this.foodService.decreaseAvailQuantity(id, quantity).then((res =>{
-                let current_date: any = new Date();
-                var stamp = 1;
+            //Check if food has been deleted by admin before continuing.
+            var foodDoc = this.firestore.collection('food').doc(id);
 
-                //Once completed, then add into orders for vendor to see
-                this.orderService.addOrders(this.canteen, current_date, foodname, foodprice, image, stamp, this.userEmail, vendorid)
-                .then((res=>{
-                  this.RedeemshowSuccess(food_name);
+            foodDoc.get().toPromise().then(doc=>{
+              if(!doc.exists){
+                this.showError("Food does not exists");
+                this.filterFood(this.chosenFilter); //refresh
+                this.loading.dismiss(null,null,'redeem');
+              }else{
+                //Get latest data
+                this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
+                  var availquantity = res['availquantity'];
+                  var popularity = res['popularity'];
+                  var foodname = res['foodname'];
+                  var foodprice = res['foodprice'];
+                  var image = res['image'];
+                  var vendorid = res['userid'];
 
-                })).catch((err =>{
-                  this.showError(err);
+                  //console.log(availquantity);
+                  if(availquantity > 0){
+                    var todayDate: Date = new Date();
+                    var stamp = 1;
+      
+                     //Create new order
+                     this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid)
+                     .then((async res=>{
+                      
+                        popularity = popularity + 1;
+                        this.stampsLeft = this.stampsLeft - 1; 
+                        availquantity = availquantity - 1; 
+                        //console.log(availquantity);
+                        //console.log(stampsLeft);
+      
+                        //Decrease available quantity of that food
+                        this.foodService.decreaseAvailQuantity(id, availquantity); 
+      
+                        //Deduct stamp
+                        this.userService.updateStamp(this.userEmail, this.stampsLeft);
+      
+                        //Increase food popularity
+                        this.foodService.updatePopularity(id, popularity);
+      
+                        //Get orders id and update student's 'orderid' field to that
+                        await this.userService.updateOrderId(this.userEmail, res.id);
+      
+                        //Go to cart page to show receipt of redeemed food
+                        this.router.navigate(['/tabs/tab2']);
 
+                        this.loading.dismiss(null,null,'redeem');
+      
+                        //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
+                        //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
+                        //false to true.
+                        this.RedeemshowSuccess(food_name);
+ 
+                     })).catch((err =>{
+                       this.showError(err);
+                       this.loading.dismiss(null,null,'redeem');
+                     }))
+                  }else{
+                    this.showError("Food no longer available")
+                    this.filterFood(this.chosenFilter); //refresh
+                    this.loading.dismiss(null,null,'redeem');
+                  }
+    
+                  this.redeemSub.unsubscribe();
                 }))
+              }
+            }).catch(err=>{
+              this.showError(err);
+              this.loading.dismiss(null,null,'redeem');
+            })
 
-              })).catch((err =>{
-                this.showError(err);
-
-              }))
-
-
-            }else{
-              alert('"' + foodname + '"' + " is currently unavailable. Please redeem another food");  
-            }
+           
+ 
           }
         },
         {
@@ -352,6 +419,18 @@ number: number;
 
     await alert1.present();
     
+
+  }
+
+  async presentLoadRedeem(){
+    const loading3 = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message: 'Redeeming...',
+      id: 'redeem'
+    });
+    await loading3.present();
+
+    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
 
   }
 
@@ -372,7 +451,7 @@ number: number;
     //console.log(this.userRole);
 
     //For sponsors
-    if(this.userRole === 'sponsor' || this.userRole === 'admin' ){
+    if(this.userRole === 'sponsor'){
       this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
 
         this.foodlistArray = res;
@@ -384,18 +463,18 @@ number: number;
         }))
         this.getKeys();
         //console.log(this.foodM.entries());
-        this.filterfoodSubscription.unsubscribe();
+        this.filterfoodSubscription.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
     }
 
 
     //For students
-    if(this.userRole === 'student' || this.userRole === 'admin'){
+    if(this.userRole === 'student'){
         //For students
         this.foodRedemSub = this.foodService.getRedeemableFoodNFilter(this.vendor, filter).subscribe((res =>{
-        this.redeemfoodArray = res;
+          this.redeemfoodArray = res;
           //console.log(this.redeemfoodArray);
-        this.foodRedemSub.unsubscribe();
+          this.foodRedemSub.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
     }
     

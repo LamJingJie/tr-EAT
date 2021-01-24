@@ -27,6 +27,10 @@ import { ModalVerifychckoutPage } from 'src/app/Modal/modal-verifychckout/modal-
 export class Tab2Page {
   customBackBtnSubscription: Subscription;
   cartSubscription: Subscription;
+  receiptSubscription: Subscription;
+  orderSubscription: Subscription;
+  getStallNameSubscription: Subscription;
+
   foodSub: Subscription;
   userRole: any;
   userEmail: any;
@@ -41,6 +45,8 @@ export class Tab2Page {
 
   disabled:boolean;
 
+  receiptData: any = [];
+
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
@@ -52,8 +58,6 @@ export class Tab2Page {
 
   ngOnInit(){
     
-
-   console.log("Ngoninit")
     
 
   }
@@ -73,7 +77,7 @@ export class Tab2Page {
     await modal.present();
 
     await modal.onWillDismiss().then((res=>{
-      this.run_everytime();
+      this.calculate_total_price();
     }));
     
   
@@ -107,53 +111,91 @@ export class Tab2Page {
   }
 
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
+
+    this.userEmail = await this.storage.get('email');
+    this.userRole = await this.storage.get('role');
+    //console.log(this.userRole)
+
+    if(this.userRole === 'sponsor'){
+      this.getCart().then(res=>{
+        this.calculate_total_price();
+      });
+    }
    
+   
+    if(this.userRole === 'student'){
+      this.getReceipt();
+    }
+    
+
+    if (this.platform.is('android')) { 
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+        this.leavePopup();
+      });
+    }
 
     this.disabled = true; //Disable the purchase btn to give time to load total cost
     setTimeout(()=>{
       this.disabled = false; //Enable the purchase btn
       
     },1500)
-   
-    if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
-        this.leavePopup();
-      });
-    }
-    this.run_everytime();
-   
+
 
   }
 
-  run_everytime(){
-    this.storage.get('email').then(res=>{
-      //console.log("role: " + res);
-      this.userEmail = res;
-      this.calculate_total_price();
 
-    });
+  //For students that redeemed a food
+  getReceipt(){
+    this.receiptSubscription = this.userService.getOne(this.userEmail).subscribe((res=>{
+      this.receiptData = res;
+      if(this.receiptData.orderid !== ""){
 
-    console.log("will enter")
-    this.storage.get('role').then(res=>{
-      //console.log("role: " + res);
-      this.userRole = res;
-      
+        //Get foodname, canteen and date of order
+        this.orderSubscription = this.orderService.getOneOrder(this.receiptData.orderid).subscribe((res=>{
+          this.receiptData.foodname = res['foodname'];
+          this.receiptData.canteenid = res['canteenID'];
+          this.receiptData.date = res['date'];
+
+          //Get stall name
+          this.getStallNameSubscription = this.userService.getOne(res['vendorID']).subscribe((res=>{
+            this.receiptData.stallname = res['stallname'];
+     
+          }))
+
+        }))
+      }else{
+        console.log("Empty orderid");
+      }
+     
+     // console.log(this.receiptData);
+ 
+    }))
+  }
+
+  getCart(){
+    return new Promise((resolve, reject) =>{
+      this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
+        this.cartArray = res;
+       
+        resolve(this.cartArray);
+      }))
     });
+    
   }
 
   calculate_total_price(){
-   
-    this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
       this.totalPriceAll = 0;
-      this.cartArray = res;
-    
+      
+     // console.log("cart")
       this.cartArray.forEach((resEach,index)=>{
-        
+       // console.log("loop")
         //Calculate total food price
         this.foodSub = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
           
           this.cartArray[index].price = resFood['foodprice'];
+          this.cartArray[index].totalfoodprice = resFood['foodprice'] * resEach['orderquantity'];
+          this.cartArray[index].foodname = resFood['foodname'];
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
           console.log(this.totalPriceAll);
   
@@ -161,12 +203,35 @@ export class Tab2Page {
         }))
       
       })
+
+     // console.log(this.cartArray);
       
-      
-      this.cartSubscription.unsubscribe();
-      
-    }))
-    
+      //this.cartSubscription.unsubscribe();
+  }
+
+  async collected(){
+    const alert2 = await this.alertCtrl.create({
+      header: 'Confirm Collection?',
+      message: 'changes is irrevisible',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+           //console.log("Yes")
+           //console.log(this.receiptData.orderid);
+           //Remove orderid from user db to empty string
+           this.userService.updateOrderId(this.userEmail, "");
+           this.orderService.updateComplete(this.receiptData.orderid);
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert2.present();
   }
 
   async quantityRemove(cartid){
@@ -221,6 +286,15 @@ export class Tab2Page {
     }
     if(this.foodSub){
       this.foodSub.unsubscribe();
+    }
+    if(this.getStallNameSubscription){
+      this.getStallNameSubscription.unsubscribe();
+    }
+    if(this.orderSubscription){
+      this.orderSubscription.unsubscribe();
+    }
+    if(this.receiptSubscription){
+      this.receiptSubscription.unsubscribe();
     }
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){

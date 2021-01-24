@@ -79,6 +79,7 @@ foodSubscription: Subscription;
       this.currentHalal = this.foodData.halal;
       this.currentVeg = this.foodData.vegetarian;
       //console.log(this.foodData);
+      this.foodSubscription.unsubscribe(); //Prevent constant refresh by students or sponsors due to the constant updates to the db
     });
   }
 
@@ -89,6 +90,7 @@ foodSubscription: Subscription;
   async editFood(){
    
     await this.presentEditFoodLoading();
+    
     //Check if there is any data inside those 2 variables. If there is data, it will imply that they have selected an image for update
     if(this.image == null && this.filename == null){
    //   console.log(this.editfood_form.value['foodname']);
