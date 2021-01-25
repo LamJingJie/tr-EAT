@@ -41,7 +41,7 @@
         <!---Added NgIf because of a bug that hasn't been fixed yet by the ionic team. The ngIf solves it by rerendering the control,
         thus displaying the value on load.--->
         <ion-select *ngIf="canteenData && canteenData.length" value={{userDetails.canteenID}} (ionChange)="changeCanteen($event)">
-          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.id}}</ion-select-option>
+          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.canteenname}}</ion-select-option>
         </ion-select>
  
      

@@ -70,7 +70,7 @@ export class ModalVerifychckoutPage implements OnInit {
 
     setTimeout(()=>{
       this.dismiss();
-    }, 10000) //10 seconds
+    }, 20000) //20 seconds
   }
 
   async pay(){
@@ -88,6 +88,7 @@ export class ModalVerifychckoutPage implements OnInit {
       this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
 
         totalquantity = foodres['availquantity'] + res['orderquantity'];
+        
 
         console.log(totalquantity);
        
@@ -96,7 +97,7 @@ export class ModalVerifychckoutPage implements OnInit {
   
         //2. Add cart data into history db, date will be the same for all food in a cart.
         this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
-        res['foodprice'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);
+        res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);
       
       }))
          

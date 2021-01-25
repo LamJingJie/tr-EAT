@@ -94,6 +94,7 @@ export class AdminAccountDetailsPage implements OnInit {
 
     this.userDetailsSubscription = this.userService.getOne(this.currentAccount).subscribe((data) => {
       this.userDetails = data;
+      //console.log(this.userDetails);
       this.listed = this.userDetails.listed;
       this.currentRole = this.userDetails.role
       //console.log(this.listed);

@@ -13,18 +13,18 @@
     <ion-icon name="funnel-outline"></ion-icon>Filter
   </ion-button>
   
-  <!--Food data shown to sponsors-->
-  <div *ngIf="userRole === 'sponsor' || userRole ==='admin'" >
+  <!--Food data shown to sponsors and vendor-->
+  <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
     <ion-card  *ngFor = "let food of foodlistArray | keyvalue;">
       <ion-item>
         
-        <img width="10%" src = {{food.value.image}} />
+        <img width="50%" src = {{food.value.image}} />
       
         {{food.value.foodname}} -  ${{food.value.foodprice}}
-        <button *ngIf="userRole === 'sponsor' || userRole ==='admin'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
+        <button *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
      
         <!--Increase and decrease amount to be added to cart-->
-        <div>
+        <div *ngIf="userRole === 'sponsor'">
           <ion-button (click)="deductAmt(food.value.id)">-1</ion-button>
           {{food.key | cartitemcount: valueArray | async}}
           <ion-button (click)="addAmt(food.value.id)">+1</ion-button>
@@ -49,7 +49,7 @@
     
       {{food1.foodname}} - {{food1.foodprice | currency}} - {{food1.availquantity}}
 
-      <button *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === ''" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice)">redeem</button>
+      <button *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === ''" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid, food1.image)">redeem</button>
       
     </ion-item>  
   </ion-card>
@@ -60,9 +60,11 @@
 
 
 
+
+
  
  <!---Cart to be shown at the bottom of the screen, only for sponsors to see--->
- <ion-button id="cart_bottom" (click)="cartPage()" *ngIf="userRole === 'sponsor' || userRole ==='admin'"><ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount inside {{countCart}}</ion-badge></ion-button>
+ <ion-button id="cart_bottom" (click)="cartPage()" *ngIf="userRole === 'sponsor'"><ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount inside {{countCart}}</ion-badge></ion-button>
   
 
 

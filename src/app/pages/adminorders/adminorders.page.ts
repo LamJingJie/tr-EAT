@@ -171,7 +171,7 @@ export class AdminordersPage implements OnInit {
     this.newOrderArray = [];
     
     this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
-      //console.log(res);
+      console.log(res);
       //this.newOrderArray = res;
       //console.log(this.newOrderArray);
   

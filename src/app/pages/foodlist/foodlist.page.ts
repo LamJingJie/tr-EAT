@@ -114,7 +114,7 @@ number: number;
     //this.foodtotalprice = [];
     
     //console.log(this.canteen);
-    this.storage.get('email').then(async res=>{
+    this.storage.get('email').then(res=>{
       //console.log("email: " + res);
       this.userEmail = res;
       this.calculateTotalCost();
@@ -122,7 +122,7 @@ number: number;
     });
 
     this.storage.get('role').then(res=>{
-      console.log("role: " + res);
+     // console.log("role: " + res);
       this.userRole = res;
       this.filterFood(this.chosenFilter);
     });
@@ -319,7 +319,7 @@ number: number;
   }
 
   //Student
-  async RedeemFood(id,  foodname, foodprice){
+  async RedeemFood(id,  foodname, foodprice, vendorid, image){
   
     var food_name = foodname;
     
@@ -346,10 +346,7 @@ number: number;
                 this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
                   var availquantity = res['availquantity'];
                   var popularity = res['popularity'];
-                  var foodname = res['foodname'];
-                  var foodprice = res['foodprice'];
-                  var image = res['image'];
-                  var vendorid = res['userid'];
+                  //get canteen colors
 
                   //console.log(availquantity);
                   if(availquantity > 0){
@@ -357,7 +354,7 @@ number: number;
                     var stamp = 1;
       
                      //Create new order
-                     this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid)
+                     this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
                      .then((async res=>{
                       
                         popularity = popularity + 1;
@@ -450,8 +447,8 @@ number: number;
     //console.log(filter);
     //console.log(this.userRole);
 
-    //For sponsors
-    if(this.userRole === 'sponsor'){
+    //For sponsors and vendor
+    if(this.userRole === 'sponsor' || this.userRole === 'vendor'|| this.userRole === 'admin'){
       this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
 
         this.foodlistArray = res;

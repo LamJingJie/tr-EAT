@@ -14,6 +14,7 @@ import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { ModalController, PickerController } from '@ionic/angular';
 import { FoodService } from 'src/app/services/food/food.service';
 import { CartService } from 'src/app/services/cart/cart.service';
+import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { HistoryService } from 'src/app/services/history/history.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
@@ -30,6 +31,11 @@ export class Tab2Page {
   receiptSubscription: Subscription;
   orderSubscription: Subscription;
   getStallNameSubscription: Subscription;
+  canteenSub: Subscription;
+
+  //vendor
+  vendorOrderSub: Subscription;
+  vendorOrderArray: any[] = [];
 
   foodSub: Subscription;
   userRole: any;
@@ -52,7 +58,7 @@ export class Tab2Page {
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
-    private cartService: CartService, private historyService: HistoryService ) {
+    private cartService: CartService, private historyService: HistoryService, private canteenService: CanteenService ) {
       this.paymentMethod = 'PAYNOW';
     }
 
@@ -127,6 +133,10 @@ export class Tab2Page {
     if(this.userRole === 'student'){
       this.getReceipt();
     }
+
+    if(this.userRole === 'vendor'){
+      this.getOrders();
+    }
     
 
     if (this.platform.is('android')) { 
@@ -144,6 +154,14 @@ export class Tab2Page {
 
   }
 
+  //For vendors, retrieve latest orders
+  getOrders(){
+    this.vendorOrderSub = this.orderService.getAllForVendor(this.userEmail, false).subscribe((res=>{
+      this.vendorOrderArray = res;
+      //console.log(res);
+    }))
+  }
+
 
   //For students that redeemed a food
   getReceipt(){
@@ -151,16 +169,20 @@ export class Tab2Page {
       this.receiptData = res;
       if(this.receiptData.orderid !== ""){
 
-        //Get foodname, canteen and date of order
+        //Get foodname and date of order
         this.orderSubscription = this.orderService.getOneOrder(this.receiptData.orderid).subscribe((res=>{
           this.receiptData.foodname = res['foodname'];
-          this.receiptData.canteenid = res['canteenID'];
           this.receiptData.date = res['date'];
 
           //Get stall name
           this.getStallNameSubscription = this.userService.getOne(res['vendorID']).subscribe((res=>{
             this.receiptData.stallname = res['stallname'];
      
+          }))
+
+          //Get canteen name
+          this.canteenSub = this.canteenService.getCanteenbyid(res['canteenID']).subscribe((res=>{
+            this.receiptData.canteenname = res['canteenname'];
           }))
 
         }))
@@ -295,6 +317,12 @@ export class Tab2Page {
     }
     if(this.receiptSubscription){
       this.receiptSubscription.unsubscribe();
+    }
+    if(this.vendorOrderSub){
+      this.vendorOrderSub.unsubscribe();
+    }
+    if(this.canteenSub){
+      this.canteenSub.unsubscribe();
     }
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){

@@ -60,9 +60,12 @@
 
   <!--When student click on redeem, the receipt will be shown here-->
   <div *ngIf="userRole === 'student'">
+
+    <div *ngIf="receiptData.orderid === ''">Food that is pending collection after redeeming, will be shown here.</div>
+
     <div *ngIf="receiptData.orderid !==''">
  
-      <h2>REDEMPTION SUCCESSFUL!</h2>
+      <h2>REDEEMPTION SUCCESSFUL!</h2>
       <ion-card>
         <div>Redemption Number #{{receiptData.orderid}}</div>
 
@@ -73,9 +76,9 @@
  
         <div>   
           <!--Canteen-->
-          <div>{{receiptData.canteenid}}</div>
+          <div>{{receiptData.canteenname}}</div>
 
-          <ion-icon name="ellipse-outline"></ion-icon>
+          <ion-icon name="ellipse-outline" size></ion-icon>
 
           <!--Vendor Stall Name-->
           <div>{{receiptData.stallname}}</div>
@@ -86,8 +89,39 @@
       <ion-button color="success" (click)="collected()">COLLECTED</ion-button>
     </div>
 
-    <div *ngIf="receiptData.orderid === ''">Food that is pending collection after redeeming, will be shown here.</div>
     
+    
+  </div>
+
+
+
+  <!--Show latest orders from students that is pending-->
+  <div *ngIf="userRole === 'vendor'">
+    <div *ngIf="vendorOrderArray.length == 0">Uncompleted orders will be shown here</div>
+    <ion-card *ngFor="let order of vendorOrderArray">
+
+        <!--Redemption order ID-->
+        <div>
+          #{{order.id}}
+        </div>       
+      
+        <!--Food name-->
+        <div>
+          {{order.foodname}}
+        </div>
+
+        <!--Date-->
+        <div>
+          {{order.date?.toDate() | date: 'mediumTime'}}
+        </div>
+
+        <!---Customer--->
+        <div>
+          {{order.userID}}
+        </div>
+     
+    </ion-card>
+
   </div>
 
 

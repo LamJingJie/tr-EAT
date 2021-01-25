@@ -4,6 +4,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { ToastController } from '@ionic/angular';
 import firebase from 'firebase';
 import { Subscription } from 'rxjs';
+import { OrderService } from 'src/app/services/order/order.service';
+import { HistoryService } from 'src/app/services/history/history.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +15,8 @@ export class FoodService {
 
   test1: Subscription;
   test2: Subscription;
-  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
+  constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController,
+    private orderService: OrderService, private historyService: HistoryService) { }
 
 
   //Get Respective Food for vendors
@@ -96,16 +99,22 @@ export class FoodService {
 
   //When admin has select an image to update/edit
   async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal:boolean, vegetarian:boolean, userid, id, image, filename, mergedName1){
-    this.storage.ref('Food Images/' + mergedName1).delete(); //Delete previous food image
+ 
+      this.storage.ref('Food Images/' + mergedName1).delete(); //Delete previous food image
     
-    var storageURL = 'Food Images/';
-    var mergedName = filename + userid + foodname + foodprice;
+      var storageURL = 'Food Images/';
+      var mergedName = filename + userid + foodname + foodprice;
+  
+      var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
+      var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
 
-    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
-    var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
+  
+      return this.firestore.collection('food').doc(id).update({availquantity: availquantity, foodname: foodname, foodprice: foodprice,
+      halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
 
-    return this.firestore.collection('food').doc(id).update({availquantity: availquantity, foodname: foodname, foodprice: foodprice,
-    halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
+    
+    
+   
   }
 
   //When student redeem any food

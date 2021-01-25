@@ -38,7 +38,7 @@
     <!--Radio Button-->
       <ion-item >
         <ion-select placeholder="Select Canteen" formControlName="canteen">
-          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.id}}</ion-select-option>
+          <ion-select-option  *ngFor="let canteen of canteenData" value={{canteen.id}}>{{canteen.canteenname}}</ion-select-option>
         </ion-select>
         <!--<ion-input type="text" formControlName="canteen" placeholder="Select Canteen"></ion-input>-->
       </ion-item>

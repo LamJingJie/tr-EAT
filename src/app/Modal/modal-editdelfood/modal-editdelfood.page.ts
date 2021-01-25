@@ -98,7 +98,7 @@ foodSubscription: Subscription;
     //  console.log(this.currentVeg);
     //  console.log(this.foodData.userid);
     //  console.log(this.id);
-    console.log("EMPTY IMAGE");
+    //console.log("EMPTY IMAGE");
       this.foodService.editFoodNoImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
       this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid)
       .then(res=>{
@@ -112,7 +112,7 @@ foodSubscription: Subscription;
       })
 
     }else{
-      console.log("IMAGE");
+      //console.log("IMAGE");
     //  console.log(this.editfood_form.value['foodname']);
     //  console.log(this.currentHalal);
    //   console.log(this.currentVeg);

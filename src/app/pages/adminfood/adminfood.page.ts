@@ -90,6 +90,7 @@ export class AdminfoodPage implements OnInit {
 
      await this.presentDelFood();
     this.foodService.deleteFood(id, mergedName).then(async res =>{
+      this.ionViewWillEnter();
       await this.loading.dismiss(null, null, 'delFoodAdmin');
       this.showSuccess();
      }).catch(async (error) =>{

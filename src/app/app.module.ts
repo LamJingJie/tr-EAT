@@ -35,7 +35,7 @@ import Pickr from '@simonwep/pickr';
   declarations: [AppComponent],
   entryComponents: [],
   imports: [CommonModule,BrowserModule, IonicModule.forRoot({
-    rippleEffect: false,
+    rippleEffect: true,
   }), AppRoutingModule, HttpClientModule,AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
     IonicStorageModule.forRoot(),

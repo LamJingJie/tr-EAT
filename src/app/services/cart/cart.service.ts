@@ -58,6 +58,7 @@ export class CartService {
           cartDoc.get().toPromise().then(doc =>{
             if(!doc.exists){
               //console.log("Doesn't Exists")
+              //Get latest food
               this.firestore.collection('cart').doc(userid).collection('data').doc(foodid).set({userid: vendorid, canteenid: canteenid, orderquantity: orderquantity}).then((res=>{
                 resolve(res);
               }));
