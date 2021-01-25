@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+ <ion-header [translucent]="true">
     <ion-toolbar>
       <ion-title>
         Profile
@@ -48,7 +48,7 @@
 
       <!-- Rcent Order Carousel-->
       <div id="RecOdr">
-        <ion-slides [options]="sliderConfig" >
+        <ion-slides [options]="sliderConfigx" >
           
           <ion-slide *ngFor="let order of orderArray">
           <ion-card style="box-shadow:2">
@@ -60,6 +60,11 @@
             </div>
             <!--<img src="./assets/CanteenClrLabel.png"/>-->
             
+          <ion-slide>
+          <ion-card style="background-color: transparent;">
+           <div id ="coverimg">
+            <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+            <img class="coverpic" src="./assets/FoodIMG.png" />
            </div>
     
            <div id="txtlabelposition">
@@ -75,6 +80,24 @@
           </ion-card>
           </ion-slide>
 
+          <ion-slide>
+            <ion-card style="background-color: transparent;">
+             <div id ="coverimg">
+              <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+              <img class="coverpic" src="./assets/FoodIMG.png" />
+             </div>
+      
+             <div id="txtlabelposition">
+              <ion-card-title id ="foodname">
+                Food Name
+              </ion-card-title>
+              <ion-card-subtitle id="locate">
+                Sch . Canteen
+              </ion-card-subtitle>
+            </div>
+          
+            </ion-card>
+          </ion-slide>
         </ion-slides>
       </div>
       </div>

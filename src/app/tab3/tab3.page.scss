@@ -1,0 +1,54 @@
+#Logo{
+    position: relative;
+    z-index: 1;
+     display: block;
+     margin-left: auto;
+     margin-right: auto;;
+     margin-top: 0%;
+     max-width:40%;
+ 
+ }
+ .Footer{
+     position:fixed;
+     right:0;
+     bottom:-15px;
+     margin:0;
+     padding:0;
+     width:75%;
+ }
+ #TYN{
+     right:-20px;
+     overflow: visible;
+     max-width: 55%;
+     opacity: .5;
+ }
+ #RICE{
+     position: absolute;
+     top: -30px;
+     left:-50px;
+     overflow: visible;
+     max-width: 52%;
+     opacity: .25;
+ }
+
+
+
+ 
+ .coverpic{
+    height: 150px!important;
+    width: auto;
+}
+
+#txtlabelposition{
+    text-align: left;
+    margin: 10px;
+}
+#foodname{
+    font-size: 16px;
+    font-family: 'Segoe UI';
+}
+#locate{
+    font-size: 12px;
+    font-family: 'Segoe UI';
+    margin-top: 2px;
+}
