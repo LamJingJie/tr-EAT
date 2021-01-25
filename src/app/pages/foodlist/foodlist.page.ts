@@ -36,8 +36,6 @@ studentDataSub: Subscription;
 
 redeemSub: Subscription;
 
-canteenSub: Subscription;
-
 vendor: any;
 stall: any;
 canteen: any;
@@ -210,9 +208,6 @@ number: number;
     if(this.studentDataSub){
       this.studentDataSub.unsubscribe();
     }
-    if(this.canteenSub){
-      this.canteenSub.unsubscribe();
-    }
    
   }
 
@@ -314,7 +309,6 @@ number: number;
     var foodname123 = foodname;
     var amountOrdered = this.foodM.get(foodid);
     //console.log(amountOrdered);
-    
     this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
       this.CartshowSuccess(foodname123);
       this.calculateTotalCost();
@@ -354,22 +348,22 @@ number: number;
                 this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
                   var availquantity = res['availquantity'];
                   var popularity = res['popularity'];
+                  //get canteen colors
 
                   //console.log(availquantity);
                   if(availquantity > 0){
                     var todayDate: Date = new Date();
                     var stamp = 1;
-
-                    //Get canteen name and colors
-                    this.canteenSub = this.canteenService.getCanteenbyid(this.canteen).subscribe((canteenres=>{
-
-                       //Create new order
-                     this.orderService.addOrders(canteenres['canteenname'], todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id, canteenres['color'])
+      
+                     //Create new order
+                     this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
                      .then((async res=>{
                       
                         popularity = popularity + 1;
                         this.stampsLeft = this.stampsLeft - 1; 
                         availquantity = availquantity - 1; 
+                        //console.log(availquantity);
+                        //console.log(stampsLeft);
       
                         //Decrease available quantity of that food
                         this.foodService.decreaseAvailQuantity(id, availquantity); 
@@ -397,11 +391,6 @@ number: number;
                        this.showError(err);
                        this.loading.dismiss(null,null,'redeem');
                      }))
-                      
-                      this.canteenSub.unsubscribe();
-                    }))
-      
-                    
                   }else{
                     this.showError("Food no longer available")
                     this.filterFood(this.chosenFilter); //refresh
