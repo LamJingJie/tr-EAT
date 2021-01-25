@@ -17,6 +17,7 @@ import { CartService } from 'src/app/services/cart/cart.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
 import { HistoryService} from 'src/app/services/history/history.service';
+import { CanteenService } from 'src/app/services/canteen/canteen.service';
 
 @Component({
   selector: 'app-modal-verifychckout',
@@ -32,6 +33,8 @@ export class ModalVerifychckoutPage implements OnInit {
   foodSub: Subscription;
   foodSub2: Subscription;
 
+  canteenSub: Subscription;
+
   pay_foodSub: Subscription;
 
   totalPriceAll: number;
@@ -42,7 +45,8 @@ export class ModalVerifychckoutPage implements OnInit {
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
-    private cartService: CartService, private loading: LoadingController, private historyService: HistoryService) { 
+    private cartService: CartService, private loading: LoadingController, private historyService: HistoryService,
+    private canteenService: CanteenService) { 
 
     }
 
@@ -85,20 +89,22 @@ export class ModalVerifychckoutPage implements OnInit {
     this.cart.forEach((res, index)=>{
 
       //Get latest data for availquantity
-      this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+      this.foodSub2 = this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
 
         totalquantity = foodres['availquantity'] + res['orderquantity'];
-        
-
         console.log(totalquantity);
-       
         //1. Add orderquantity to respective food
         this.foodService.updateAvailQuantity(res.id, totalquantity);
+
+        //Get canteen name and color
+        this.canteenSub = this.canteenService.getCanteenbyid(res['canteenid']).pipe(first()).subscribe((canteenres=>{  
   
-        //2. Add cart data into history db, date will be the same for all food in a cart.
-        this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
-        res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);
-      
+          //2. Add cart data into history db, date will be the same for all food in a cart.
+          this.historyService.transfer_cart_to_history(this.user, todayDate, canteenres['canteenname'], res.id, res['foodname'],
+          res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice'], canteenres['color']);
+
+        }))
+           
       }))
          
     })
@@ -133,6 +139,12 @@ export class ModalVerifychckoutPage implements OnInit {
   ionViewWillLeave(){
     if(this.foodSub){
       this.foodSub.unsubscribe();
+    }
+    if(this.foodSub2){
+      this.foodSub2.unsubscribe();
+    }
+    if(this.canteenSub){
+      this.canteenSub.unsubscribe();
     }
   }
   ngOnDestroy(){

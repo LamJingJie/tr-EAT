@@ -34,10 +34,10 @@ export class OrderService {
   }
 
   //When student redeem a food, it will add it into their orders
-  addOrders(canteenid, date: Date, foodname, foodprice: number, image, stampUsed: number, userid, vendorid, foodid){
+  addOrders(canteenname, date: Date, foodname, foodprice: number, image, stampUsed: number, userid, vendorid, foodid, color){
     //foodid to be used when student wants to reorder the same food
-    return this.firestore.collection('orders').add({canteenID: canteenid, date: date, foodname: foodname, foodprice: foodprice,
-    image: image, stampUsed: stampUsed, userID: userid, vendorID: vendorid, foodid:foodid, completed: false});
+    return this.firestore.collection('orders').add({canteenname: canteenname, date: date, foodname: foodname, foodprice: foodprice,
+    image: image, stampUsed: stampUsed, userID: userid, vendorID: vendorid, foodid:foodid,canteencolor: color, completed: false});
 
   }
 
