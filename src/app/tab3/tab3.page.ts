@@ -17,6 +17,7 @@ import { CartService } from 'src/app/services/cart/cart.service';
 import { HistoryService } from 'src/app/services/history/history.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators'; 
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
   selector: 'app-tab3',
@@ -62,6 +63,31 @@ export class Tab3Page {
     if(this.completedOrderSub){
       this.completedOrderSub.unsubscribe();
     }
+  }
+
+  async aboutus_modal(){
+    //Unsubscribe back btn
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
+    await modal.onWillDismiss().then(res=>{
+      //Resubscribes back btn
+      if (this.platform.is('android')) { 
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+          this.leavePopup();
+        });
+      }
+    })
+
   }
 
   getCompletedOrders(){

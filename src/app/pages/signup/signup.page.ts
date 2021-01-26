@@ -3,9 +3,10 @@ import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from 'src/app/services/user/user.service';
-import { LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
+import { LoadingController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
   selector: 'app-signup',
@@ -26,6 +27,7 @@ export class SignupPage implements OnInit {
     private router: Router,
     private platform: Platform,
     private loading: LoadingController,
+    private modalCtrl: ModalController,
     private navCtrl: NavController) {
 
      
@@ -52,6 +54,17 @@ export class SignupPage implements OnInit {
   ngOnInit() {
   
    
+  }
+
+  async aboutus_modal(){
+
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
   }
 
 

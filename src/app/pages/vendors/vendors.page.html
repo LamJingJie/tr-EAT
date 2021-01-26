@@ -6,6 +6,10 @@
 </ion-header>
 
 <ion-content style="padding:10px">
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
+  
   <img id="Logo" src="./assets/Logo.png" />
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
@@ -13,7 +17,7 @@
   <div id = "intro">
     <h4>Welcome to</h4>
     <h1 *ngIf="canteen_chosen ==='ALL'">TP Canteens</h1>
-    <h1 *ngIf ="canteen_chosen !== 'ALL'">{{canteen_chosen}}</h1>
+    <h1 *ngIf ="canteen_chosen !== 'ALL'">{{canteen_name}}</h1>
   </div>
 
   
@@ -25,17 +29,11 @@
       <ion-card-title id="vendorname">
         {{vendor.stallname}}
         </ion-card-title>
-        <ion-card-subtitle id="stallde">
-          Stall Description
-        </ion-card-subtitle>
-<<<<<<< Updated upstream
       
-=======
->>>>>>> Stashed changes
     </ion-card-header>
   </ion-card>
-</div>
+
   <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
 
 
-
+</ion-content>

@@ -18,7 +18,7 @@ export class OrderService {
     //console.log("Date Format: " +date);
     //console.log(date2);
     //return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2).where('vendorID','==',id)).valueChanges({idField: 'id'});
-    return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2)).valueChanges({idField: 'id'});
+    return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2).where('completed', '==', true)).valueChanges({idField: 'id'});
   }
 
   getAllForVendor(vendorid, completed: boolean){

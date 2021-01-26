@@ -18,6 +18,7 @@ import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { first } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
   selector: 'app-foodlist',
@@ -104,6 +105,19 @@ number: number;
        
      
     });
+
+  }
+
+  
+  async aboutus_modal(){
+
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
 
   }
 

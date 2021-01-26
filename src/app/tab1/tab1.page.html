@@ -9,10 +9,15 @@
   </ion-header>
   
   <ion-content [fullscreen]="true">
+    <div style="position: absolute; right:0; padding: 10px;">
+      <ion-button (click)='aboutus_modal()'></ion-button>
+    </div>
     <img id="Logo" src="./assets/Logo.png" />
     <img class="Footer" id="TYN" src="./assets/TYN.png"/>
     <img id="RICE" src="./assets/RICE.png"/>
   
+    <!---About us-->
+   
     <div id = "intro">
     <h1>Hello</h1>
     <h4>Would you like a tr-EAT?</h4>
@@ -77,62 +82,19 @@
             Sch . Canteen
           </ion-card-subtitle>
         </div>
-      
-              <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
-              <div id="canteen_txt">
-                {{ct.id}} 
-              </div>
-            </div>
+    
+            
         </ion-card>
         </ion-slide>
-  
-        <ion-slide >
-          <ion-card  class= 'listcard'>
-           <div id ="coverimg">
-            <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-            <img class="coverpic" src="./assets/FoodIMG.png" />
-           </div>
-    
-           <div id="txtlabelposition">
-            <ion-card-title id ="foodname">
-              Food Name
-            </ion-card-title>
-            <ion-card-subtitle id="locate">
-              Sch . Canteen
-            </ion-card-subtitle>
-          </div>
-        
-          </ion-card>
-          </ion-slide>
       </ion-slides>
-    </div>
-    </div>
-   
-    
-  <div id="recentcarousel">
-    <div class=subtitle ><h6>Your Recent Order</h6></div>
-    <ion-slides [options]="sliderConfigx" >
-      <ion-slide>
-      <ion-card class= 'listcard'>
-        <div>
-        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-        <img class="coverpic" src="./assets/FoodIMG.png" />
-        </div>
-
-       <div id="txtlabelposition">
-        <ion-card-title id ="foodname">
-          Food Name
-        </ion-card-title>
-        <ion-card-subtitle id="locate">
-          Sch . Canteen
-        </ion-card-subtitle>
       </div>
-    
-      </ion-card>
-      </ion-slide>
+
+ 
+   
+  
 
   <!--Only show for students-->
-   <div *ngIf="userRole == 'student'">
+   <div id="recentcarousel" *ngIf="userRole == 'student'">
     <div class=subtitle ><h6>Your Recent Order</h6></div><br>
     <ion-slides [options]="sliderConfigx" >
       <ion-slide >
@@ -156,40 +118,13 @@
     </ion-slides>
   </div>
 
-<div class=subtitle ><h6>Popular Choice</h6></div>
-<!--Popular choice Carousel-->
-  <div id="popcarousel" >
-  <ion-slides [options]="sliderConfigx" >
-    <ion-slide >
-      <ion-card  class= 'listcard'>
-       <div id ="coverimg">
-        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-        <img class="coverpic" src="./assets/FoodIMG.png" />
-       </div>
-
-       <div id="txtlabelposition">
-        <ion-card-title id ="foodname">
-          Food Name
-        </ion-card-title>
-        <ion-card-subtitle id="locate">
-          Sch . Canteen
-        </ion-card-subtitle>
-      </div>
-    
-      </ion-card>
-      </ion-slide>
-  </ion-slides>
-  </div>
 
   <!--
       <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
       <ng-template #pass> Loading...</ng-template>
       <ng-template #fail> Loaded</ng-template>-->
 
-    
-     <ion-button class="color-picker">Color Picker</ion-button>
 
-     <ion-card class="colorshown">Color shown here</ion-card>
      <!--<div *ngFor = "let ct of canteen">
       {{ct.id}} - {{ct.color}}
       <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>

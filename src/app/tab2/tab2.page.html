@@ -7,6 +7,9 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">

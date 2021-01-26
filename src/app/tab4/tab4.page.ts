@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, Platform } from '@ionic/angular'; 
+import { AlertController, ModalController, Platform } from '@ionic/angular'; 
 import { Router } from '@angular/router';
 import {CanteenService} from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -11,8 +11,9 @@ import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
 import { HttpClientModule, HttpClient } from '@angular/common/http'; 
 import { OrderService } from 'src/app/services/order/order.service';
+import { FoodService  } from 'src/app/services/food/food.service';
 import { first } from 'rxjs/operators';
-
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
   selector: 'app-tab4',
@@ -30,14 +31,17 @@ export class Tab4Page {
   orderSubscription: Subscription;
   userSub: Subscription;
   canteenSubscription: Subscription;
+  userSub2: Subscription;
+  foodSub:Subscription;
 
   orderArray: any[] = [];
-  top5_orderArray: any[] = [];
+  //top5_orderArray: any[] = [];
+  foodArray: any[] = [];
 
 
   constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController, 
     private authService: AuthenticationService, private storage: Storage, private userService: UserService,
-    private orderService: OrderService, private canteenService: CanteenService) {}
+    private orderService: OrderService, private canteenService: CanteenService, private foodService: FoodService, private modalCtrl: ModalController) {}
 
   ngOnInit(){
   
@@ -53,7 +57,7 @@ export class Tab4Page {
       this.getStamps();
     }
     if(this.currentRole ==='vendor'){
-      this.getLatest5Order();
+      this.getVendorFood();
     }
 
     if (this.platform.is('android')) { 
@@ -65,6 +69,31 @@ export class Tab4Page {
     
   }
 
+  async aboutus_modal(){
+    //Unsubscribe back btn
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
+    await modal.onWillDismiss().then(res=>{
+      //Resubscribes back btn
+      if (this.platform.is('android')) { 
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+          this.leavePopup();
+        });
+      }
+    })
+
+  }
+
   getStamps(){
     this.userSub = this.userService.getOne(this.currentAccount).subscribe((res=>{
       this.stamps = res['stampLeft'];
@@ -74,30 +103,27 @@ export class Tab4Page {
     }))
   }
 
-  //Get orders that hasn't been completed yet
-  getLatest5Order(){
-    this.orderSubscription = this.orderService.getLast5Orders(this.currentAccount, false).subscribe((res=>{
-      this.orderArray = res;
-      this.orderArray.forEach((res, index)=>{
-        //Get canteen color and canteen name
-        this.canteenSubscription=this.canteenService.getCanteenbyid(res['canteenID']).pipe(first()).subscribe((canteen_res=>{
-          this.orderArray[index].canteencolor = canteen_res['color'];
-          this.orderArray[index].canteenname = canteen_res['canteenname'];
+  getVendorFood(){
+    this.foodSub = this.foodService.getFoodBasedOnStall(this.currentAccount).subscribe((res=>{
+      this.foodArray= res;
+      //console.log(this.foodArray);
+      this.foodArray.forEach((val, index)=>{
+        //Get canteen id
+        this.userSub2 = this.userService.getOne(this.currentAccount).subscribe((userres=>{
+          var canteenid = userres['canteenID'];
+          //Get canteen name and color
+          this.canteenSubscription = this.canteenService.getCanteenbyid(canteenid).subscribe((canteenres=>{
+            this.foodArray[index].canteenname = canteenres['canteenname'];
+            this.foodArray[index].canteencolor = canteenres['color'];
+          }))
         }))
-
       })
-      //console.log(this.orderArray)
-     /* if(this.orderArray.length >= 5){
-        var top5 = this.orderArray.length - 5;
-        console.log(top5);
-        this.top5_orderArray = this.orderArray.slice(top5, this.orderArray.length); //Get the top 5 only and display 
-      }else{
-        this.top5_orderArray = this.orderArray;
-      }*/
-    
-      //console.log(this.top5_orderArray);
     }))
+
+    //console.log(this.foodArray);
   }
+
+ 
 
   SignOut(){
     this.authService.SignOut();
@@ -114,6 +140,15 @@ export class Tab4Page {
     }
     if(this.orderSubscription){
       this.orderSubscription.unsubscribe();
+    }
+    if(this.canteenSubscription){
+      this.canteenSubscription.unsubscribe();
+    }
+    if(this.foodSub){
+      this.foodSub.unsubscribe();
+    }
+    if(this.userSub2){
+      this.userSub2.unsubscribe();
     }
     if(this.canteenSubscription){
       this.canteenSubscription.unsubscribe();

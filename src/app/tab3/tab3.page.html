@@ -8,7 +8,9 @@
 
 <ion-content [fullscreen]="true">
 
-
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
 
   <!---Show completed orders for vendors--->
   <div *ngIf="userRole === 'vendor'">

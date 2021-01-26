@@ -19,7 +19,7 @@ export class UserService {
 
   addSponsor(email, role){
     // console.log(email + role);
-    return  this.firestore.collection('users').doc(email).set({role: role, listed: true});
+    return  this.firestore.collection('users').doc(email).set({role: role, listed: true, deleted: false});
 
   }
 
@@ -32,7 +32,7 @@ export class UserService {
     //console.log(storageRef);
     var downloadURL = await this.storage.ref('Stall Images/' + mergedName).getDownloadURL().toPromise();
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true, stallimage: downloadURL, mergedName: mergedName});
+      return  this.firestore.collection('users').doc(email).set({role: role, canteenID: canteenid, stallname: stallname, listed: true, stallimage: downloadURL, mergedName: mergedName, deleted: false});
   }
 
   async updateStallImg(email, image, filename, mergedName1, canteenid, stallname){
@@ -46,26 +46,26 @@ export class UserService {
     return this.firestore.collection('users').doc(email).update({stallimage: downloadURL, mergedName: mergedName})
   }
 
-   addStudent(email, stamp:number, role){
+  addStudent(email, stamp:number, role){
     //console.log(email + role);
-      return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true, orderid: ''});
+    return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true, orderid: '', deleted: false});
   }
 
   getAll(role){
-    return this.firestore.collection('users', ref => ref.where('role', '!=', "admin").where('role','==', role)).valueChanges({idField: 'id'});
+    return this.firestore.collection('users', ref => ref.where('role', '!=', "admin").where('role','==', role).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
 
   getOnlyVendor(){
-    return this.firestore.collection('users', ref => ref.where('role', '==',"vendor")).valueChanges({idField: 'id'});
+    return this.firestore.collection('users', ref => ref.where('role', '==',"vendor").where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
 
   getVendorBasedOnCanteen(canteen){
-    return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen)).valueChanges({idField: 'id'});
+    return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
   
 
   deleteUser(id){
-    return this.firestore.collection('users').doc(id).delete();
+    return this.firestore.collection('users').doc(id).update({deleted: true});
   }
 
 

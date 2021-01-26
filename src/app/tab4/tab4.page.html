@@ -7,6 +7,10 @@
   </ion-header>
   
   <ion-content [fullscreen]="true">
+    <div style="position: absolute; right:0; padding: 10px;">
+      <ion-button (click)='aboutus_modal()'></ion-button>
+    </div>
+    
     <img id="Logo" src="./assets/Logo.png" />
     <img class="Footer" id="TYN" src="./assets/TYN.png"/>
     <img id="RICE" src="./assets/RICE.png"/>
@@ -43,66 +47,39 @@
     
       </div>
      
-      <div *ngIf="currentRole === 'student' || currentRole === 'vendor'">
-        <div class=subtitle><h6>Your Orders</h6></div>
+      <!--Vendor foods-->
+      <div *ngIf="currentRole === 'vendor'">
+        <div class=subtitle><h6>Your Foods</h6></div>
 
-      <!-- Rcent Order Carousel-->
       <div id="RecOdr">
-        <ion-slides [options]="sliderConfigx" >
-          
-          <ion-slide *ngFor="let order of orderArray">
-          <ion-card style="box-shadow:2">
-           <div id ="coverimg" style="display: flex;">
-            <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
+        <ion-slides [options]="sliderConfigx" >    
+   
+          <ion-slide *ngFor="let food of foodArray">
+          <ion-card style="background-color: transparent;box-shadow:2;">
+           <div id ="coverimg"  style="display: flex;">
+            <div  class="coverpic" style="flex: 1;" [style.background-color] = "food.canteencolor"></div>
 
             <div  style="flex: 9;">
-              <img class="coverpic"  src={{order.image}} />
+              <img class="coverpic"  src={{food.image}} />
             </div>
-            <!--<img src="./assets/CanteenClrLabel.png"/>-->
-            
-          <ion-slide>
-          <ion-card style="background-color: transparent;">
-           <div id ="coverimg">
-            <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-            <img class="coverpic" src="./assets/FoodIMG.png" />
            </div>
     
            <div id="txtlabelposition">
             <ion-card-title id ="foodname">
-              {{order.foodname}}
+              {{food.foodname}}
             </ion-card-title>
             <ion-card-subtitle id="locate">
               <!--We do not have school data, only canteen and vendor stall name, so i will be displaying the canteen data here-->
-              {{order.canteenname}}
+              {{food.canteenname}}
             </ion-card-subtitle>
           </div>
         
           </ion-card>
           </ion-slide>
-
-          <ion-slide>
-            <ion-card style="background-color: transparent;">
-             <div id ="coverimg">
-              <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-              <img class="coverpic" src="./assets/FoodIMG.png" />
-             </div>
-      
-             <div id="txtlabelposition">
-              <ion-card-title id ="foodname">
-                Food Name
-              </ion-card-title>
-              <ion-card-subtitle id="locate">
-                Sch . Canteen
-              </ion-card-subtitle>
-            </div>
-          
-            </ion-card>
-          </ion-slide>
         </ion-slides>
       </div>
       </div>
       
-
     </div>
 
     
