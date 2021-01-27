@@ -24,7 +24,7 @@
   <!--Show all the stores-->
   <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
     
-    <img style="padding:7px;padding-bottom: 0%;"src= "assets/shapes.svg" alt='image'/>
+    <img style="padding:7px;padding-bottom: 0%;"src= {{vendor.stallimage}} alt='image'/>
     <ion-card-header>
       <ion-card-title id="vendorname">
         {{vendor.stallname}}
