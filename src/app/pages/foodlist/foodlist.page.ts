@@ -35,6 +35,8 @@ cartSubscription: Subscription;
 foodRedemSub: Subscription;
 studentDataSub: Subscription;
 
+
+userSub: Subscription;
 redeemSub: Subscription;
 
 vendor: any;
@@ -347,7 +349,6 @@ number: number;
           text: 'Confirm',
           handler:async ()=>{
             await this.presentLoadRedeem();
-            //Use 'vendorid' param to retrieve respective canteenID from 'users' database
 
             //Check if food has been deleted by admin before continuing.
             var foodDoc = this.firestore.collection('food').doc(id);
@@ -358,69 +359,80 @@ number: number;
                 this.filterFood(this.chosenFilter); //refresh
                 this.loading.dismiss(null,null,'redeem');
               }else{
-                //Get latest data
-                this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
-                  var availquantity = res['availquantity'];
-                  var popularity = res['popularity'];
-                  //get canteen colors
 
-                  //console.log(availquantity);
-                  if(availquantity > 0){
-                    var todayDate: Date = new Date();
-                    var stamp = 1;
-      
-                     //Create new order
-                     this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
-                     .then((async res=>{
-                      
-                        popularity = popularity + 1;
-                        this.stampsLeft = this.stampsLeft - 1; 
-                        availquantity = availquantity - 1; 
-                        //console.log(availquantity);
-                        //console.log(stampsLeft);
-      
-                        //Decrease available quantity of that food
-                        this.foodService.decreaseAvailQuantity(id, availquantity); 
-      
-                        //Deduct stamp
-                        this.userService.updateStamp(this.userEmail, this.stampsLeft);
-      
-                        //Increase food popularity
-                        this.foodService.updatePopularity(id, popularity);
-      
-                        //Get orders id and update student's 'orderid' field to that
-                        await this.userService.updateOrderId(this.userEmail, res.id);
-      
-                        //Go to cart page to show receipt of redeemed food
-                        this.router.navigate(['/tabs/tab2']);
+                //Get vendor 'listed' boolean field
+                this.userSub = this.userService.getOne(vendorid).subscribe((userres=>{
+                  var listed = userres['listed'];
+                  //Check if vendor is currently listed
+                  if(listed === true){
 
-                        this.loading.dismiss(null,null,'redeem');
+                    //Get latest data
+                    this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
+                      var availquantity = res['availquantity'];
+                      var popularity = res['popularity'];
+
+                      //console.log(availquantity);
+
+                      if(availquantity > 0){
+                        var todayDate: Date = new Date();
+                        var stamp = 1;
+            
+                          //Create new order
+                          this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
+                          .then((async res=>{
+                            
+                            popularity = popularity + 1;
+                            this.stampsLeft = this.stampsLeft - 1; 
+                            availquantity = availquantity - 1; 
+                            //console.log(availquantity);
+                            //console.log(stampsLeft);
+            
+                            //Decrease available quantity of that food
+                            this.foodService.decreaseAvailQuantity(id, availquantity); 
+            
+                            //Deduct stamp
+                            this.userService.updateStamp(this.userEmail, this.stampsLeft);
+            
+                            //Increase food popularity
+                            this.foodService.updatePopularity(id, popularity);
+            
+                            //Get orders id and update student's 'orderid' field to that
+                            await this.userService.updateOrderId(this.userEmail, res.id);
+            
+                            //Go to cart page to show receipt of redeemed food
+                            this.router.navigate(['/tabs/tab2']);
       
-                        //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
-                        //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
-                        //false to true.
-                        this.RedeemshowSuccess(food_name);
- 
-                     })).catch((err =>{
-                       this.showError(err);
-                       this.loading.dismiss(null,null,'redeem');
-                     }))
+                            this.loading.dismiss(null,null,'redeem');
+            
+                            //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
+                            //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
+                            //false to true.
+                            this.RedeemshowSuccess(food_name);
+       
+                          })).catch((err =>{
+                            this.showError(err);
+                            this.loading.dismiss(null,null,'redeem');
+                          }))
+                        }else{
+                          this.showError("Food no longer available")
+                          this.filterFood(this.chosenFilter); //refresh
+                          this.loading.dismiss(null,null,'redeem');
+                        }
+                       
+                        this.redeemSub.unsubscribe();
+                      }))
                   }else{
-                    this.showError("Food no longer available")
-                    this.filterFood(this.chosenFilter); //refresh
+                    this.showError('Vendor is unavailable currently.')
                     this.loading.dismiss(null,null,'redeem');
+                    this.navCtrl.pop(); //go back to prev page.
                   }
-    
-                  this.redeemSub.unsubscribe();
-                }))
+                  this.userSub.unsubscribe();
+                })) 
               }
             }).catch(err=>{
               this.showError(err);
               this.loading.dismiss(null,null,'redeem');
             })
-
-           
- 
           }
         },
         {
@@ -429,10 +441,7 @@ number: number;
         }
       ]
     });
-
-    await alert1.present();
-    
-
+    await alert1.present();    
   }
 
   async presentLoadRedeem(){

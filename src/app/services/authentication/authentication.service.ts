@@ -359,6 +359,11 @@ export class AuthenticationService {
             } catch (error) {
               console.log(error);
             }
+
+            //Delete stall image as well
+            this.userService.deleteStallImg(email).catch((error=>{
+              console.log(error);
+            }));
             
           }
           if(role === "student"){

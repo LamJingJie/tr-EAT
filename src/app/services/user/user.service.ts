@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Storage } from '@ionic/storage';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { Subscription } from 'rxjs';
 
 export interface User{
   email: string,
@@ -14,6 +15,7 @@ export interface User{
 })
 export class UserService {
   user: any;
+  deleteStallSub: Subscription;
 
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage) { }
 
@@ -46,6 +48,19 @@ export class UserService {
     return this.firestore.collection('users').doc(email).update({stallimage: downloadURL, mergedName: mergedName})
   }
 
+  deleteStallImg(email){
+    //get mergedName 
+    return new Promise((resolve, reject) =>{
+      this.deleteStallSub = this.getOne(email).subscribe((res=>{
+        var mergedName = res['mergedName'];
+        this.storage.ref('Stall Images/' + mergedName).delete();//delete stall image
+        resolve('deleted stall image');
+        this.deleteStallSub.unsubscribe();
+      }))
+    });
+   
+  }
+
   addStudent(email, stamp:number, role){
     //console.log(email + role);
     return  this.firestore.collection('users').doc(email).set({role: role, stampLeft: stamp, favourite: [], listed: true, orderid: '', deleted: false});
@@ -56,11 +71,11 @@ export class UserService {
   }
 
   getOnlyVendor(){
-    return this.firestore.collection('users', ref => ref.where('role', '==',"vendor").where('deleted', '==', false)).valueChanges({idField: 'id'});
+    return this.firestore.collection('users', ref => ref.where('role', '==',"vendor").where('listed', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
 
   getVendorBasedOnCanteen(canteen){
-    return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen).where('deleted', '==', false)).valueChanges({idField: 'id'});
+    return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen).where('listed', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
   
 

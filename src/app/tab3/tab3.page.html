@@ -30,7 +30,7 @@
     <div id ="coverimg"  style="display: flex;">
       <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
 
-      <div  style="flex: 9;">
+      <div  style="flex: 10;">
         <img class="coverpic" style=" width:max-content;"  src={{order.image}} />
       </div>
      </div>
@@ -44,7 +44,7 @@
         {{order.stallname}} . {{order.canteenname}}
        </div>
        <div>
-        {{order.date?.toDate() | date: 'mediumTime'}}
+        {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
        </div>
       
      </ion-card-subtitle>
