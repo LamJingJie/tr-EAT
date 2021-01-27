@@ -30,6 +30,10 @@ export class HistoryService {
     foodname: foodname, foodprice: foodprice, image: image, orderquantity: orderquantity, vendorid: vendorid, totalcost: totalcost});
   }
 
+  getSponsorHistory(email){
+    return this.firestore.collection("history").doc(email).collection('data', ref=> ref.orderBy('date', 'desc')).valueChanges({idField: 'id'});
+  }
+
  
 
 }

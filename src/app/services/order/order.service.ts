@@ -25,6 +25,10 @@ export class OrderService {
     return this.firestore.collection('orders', ref => ref.where('vendorID', '==', vendorid).where('completed', '==', completed).orderBy('date', 'desc')).valueChanges({idField: 'id'});
   }
 
+  getAllForStudent(studentid, completed: boolean){
+    return this.firestore.collection('orders', ref => ref.where('userID', '==', studentid).where('completed', '==', completed).orderBy('date', 'desc')).valueChanges({idField: 'id'});
+  }
+
   getLast5Orders(vendorid, completed: boolean){
     return this.firestore.collection('orders', ref => ref.where('vendorID', '==', vendorid).where('completed', '==', completed).orderBy('date', 'desc').limit(5)).valueChanges({idField: 'id'});
   }
