@@ -11,6 +11,8 @@ import {OrderService } from 'src/app/services/order/order.service';
 import { rejects } from 'assert';
 import { KeyValuePipe } from '@angular/common';
 import { ModalController, PickerController } from '@ionic/angular';
+import { CanteenService } from 'src/app/services/canteen/canteen.service';
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
   selector: 'app-vendors',
@@ -19,7 +21,10 @@ import { ModalController, PickerController } from '@ionic/angular';
 })
 export class VendorsPage implements OnInit {
   canteen_chosen: any;
+  canteen_name: any;
+
   canteenSubscription: Subscription;
+  canteenSubscription2: Subscription; //for canteen name
 
   vendorSubscription: Subscription;
   AllVendorSubscription: Subscription;
@@ -29,7 +34,7 @@ export class VendorsPage implements OnInit {
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
-    private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute) { 
+    private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, private canteenService: CanteenService) { 
 
       
 
@@ -39,6 +44,10 @@ export class VendorsPage implements OnInit {
 
     this.canteenSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.canteen_chosen = params.canteenid;
+      //Get canteen name
+      this.canteenSubscription2 = this.canteenService.getCanteenbyid(params.canteenid).subscribe((res=>{
+        this.canteen_name = res['canteenname'];
+      }))
       //console.log(this.canteen_chosen);
       if(this.canteen_chosen === 'ALL'){
         this.getAllVendors();
@@ -47,6 +56,17 @@ export class VendorsPage implements OnInit {
       }
      
     });
+  }
+
+  async aboutus_modal(){
+
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
   }
 
   selectedStall(vendor, stall, canteenid){
@@ -71,6 +91,9 @@ export class VendorsPage implements OnInit {
   ngOnDestroy(){
     if(this.canteenSubscription){
       this.canteenSubscription.unsubscribe();
+    }
+    if(this.canteenSubscription2){
+      this.canteenSubscription2.unsubscribe();
     }
     if(this.vendorSubscription){
       this.vendorSubscription.unsubscribe();

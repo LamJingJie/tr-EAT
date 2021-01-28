@@ -1,4 +1,6 @@
+
 <ion-tabs>
+  
   <!--This page is just to link the other tabs from Tab1 to Tab4-->
     <ion-tab-bar style="color: violet;" slot="bottom">
   
@@ -9,7 +11,7 @@
       </ion-tab-button>
   
       <!----For Student and Sponsors and vendors (so far)-->
-      <ion-tab-button tab="tab2" id="order" *ngIf="currentRole == 'sponsor' || currentRole == 'vendor' || currentRole == 'student' || currentRole == 'admin'">
+      <ion-tab-button tab="tab2" id="order" *ngIf="currentRole == 'sponsor' || currentRole == 'vendor' || currentRole == 'student'">
         <ion-icon name="cart"></ion-icon> <!--For sponsors and vendor-->
         <ion-label>Cart</ion-label>
       </ion-tab-button>

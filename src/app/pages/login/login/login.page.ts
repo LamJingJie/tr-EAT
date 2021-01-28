@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
-import { AlertController, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class LoginPage implements OnInit {
     private toast: ToastController,
     private loading: LoadingController,
     private navCtrl: NavController,
+    private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     private platform: Platform) {
 
@@ -51,6 +53,31 @@ export class LoginPage implements OnInit {
         this.leavePopup();
       });
     }
+  }
+
+  async aboutus_modal(){
+    //Unsubscribe back btn
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
+    await modal.onWillDismiss().then(res=>{
+      //Resubscribes back btn
+      if (this.platform.is('android')) { 
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+          this.leavePopup();
+        });
+      }
+    })
+
   }
 
   ionViewDidEnter(){

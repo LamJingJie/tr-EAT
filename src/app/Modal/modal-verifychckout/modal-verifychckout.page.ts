@@ -80,32 +80,28 @@ export class ModalVerifychckoutPage implements OnInit {
   async pay(){
 
   
-   console.log(this.cart)
+   //console.log(this.cart)
    var todayDate: Date = new Date();
 
    
    await this.presentLoadingPay();
     var totalquantity = 0;
     this.cart.forEach((res, index)=>{
-
+      //console.log(res['id']);
       //Get latest data for availquantity
-      this.foodSub2 = this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+      this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+        //console.log(foodres);
 
         totalquantity = foodres['availquantity'] + res['orderquantity'];
-        console.log(totalquantity);
+        //console.log(totalquantity);
         //1. Add orderquantity to respective food
         this.foodService.updateAvailQuantity(res.id, totalquantity);
 
-        //Get canteen name and color
-        this.canteenSub = this.canteenService.getCanteenbyid(res['canteenid']).pipe(first()).subscribe((canteenres=>{  
-  
-          //2. Add cart data into history db, date will be the same for all food in a cart.
-          this.historyService.transfer_cart_to_history(this.user, todayDate, canteenres['canteenname'], res.id, res['foodname'],
-          res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice'], canteenres['color']);
-
-        }))
-           
+        //2. Add cart data into history db, date will be the same for all food in a cart.
+        this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
+        res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);  
       }))
+  
          
     })
     //3. Delete all carts data

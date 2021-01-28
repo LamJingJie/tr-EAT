@@ -38,6 +38,8 @@ export class TabsPage {
       //alert("Email tabs: " + res);
      });
   }
+
+  
  
   ionViewDidEnter(){
 

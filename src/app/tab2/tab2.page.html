@@ -11,6 +11,9 @@
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">

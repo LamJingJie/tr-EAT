@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, Platform } from '@ionic/angular'; 
+import { AlertController, ModalController, Platform } from '@ionic/angular'; 
 import { NavigationExtras, Router } from '@angular/router';
 import {CanteenService} from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -11,6 +11,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
 import { HttpClientModule, HttpClient } from '@angular/common/http'; 
+import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
@@ -50,7 +51,8 @@ colorLoop: any;
     setWrapperSize: true,
     centeredSlides: false,
     slidesPerView: 2.5,
-    roundLengths: true
+    roundLengths: true,
+    loop: false
   }
 
   sliderConfigx={
@@ -65,7 +67,7 @@ colorLoop: any;
   constructor(private canteenService: CanteenService, private alertCtrl: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
     public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient, private platform: Platform,
-    private foodService: FoodService ) {
+    private foodService: FoodService, private modalCtrl: ModalController ) {
     this.data = true;
     
     this.canteenSub = canteenService.getAll().subscribe((data) => {
@@ -123,6 +125,31 @@ colorLoop: any;
     pickr.hide();
   });*/
     
+  }
+
+  async aboutus_modal(){
+    //Unsubscribe back btn
+    if (this.platform.is('android')) {
+      if(this.customBackBtnSubscription){
+        this.customBackBtnSubscription.unsubscribe();
+      }   
+    }
+
+    const modal = await this.modalCtrl.create({
+      component: ModalAboutusPage,
+      cssClass: 'modal_aboutus_class'
+    });
+    await modal.present();
+
+    await modal.onWillDismiss().then(res=>{
+      //Resubscribes back btn
+      if (this.platform.is('android')) { 
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+          this.leavePopup();
+        });
+      }
+    })
+
   }
 
 

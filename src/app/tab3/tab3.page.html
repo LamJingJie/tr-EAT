@@ -4,36 +4,20 @@
 
 <ion-content [fullscreen]="true">
 
-
-
-  <!---Show completed orders for vendors--->
-  <div *ngIf="userRole === 'vendor'">
-    <div *ngIf="orderArray.length == 0">Orders completed will be shown here</div>
-    <ion-card *ngFor="let order of orderArray">
-
-         <!--Redemption order ID-->
-         <div>
-          {{order.id}}
-        </div>       
-      
-        <!--Food name-->
-        <div>
-          {{order.foodname}}
-        </div>
-
-        <!--Date-->
-        <div>
-          {{order.date?.toDate() | date: 'mediumTime'}}
-        </div>
-
-        <!---Customer--->
-        <div>
-          {{order.userID}}
-        </div>
-
-    </ion-card>
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
   </div>
 
+
+
+   <!-- </ion-card>
+  </div>-->
+
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">History</ion-title>
+    </ion-toolbar>
+  </ion-header>
   
   <img id="Logo" src="./assets/Logo.png" />
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
@@ -47,33 +31,35 @@
      <img class="coverpic"style="width:max-content;" src="./assets/FoodIMG.png" />
     </div>
 
-    <div id="txtlabelposition">
-     <ion-card-title id ="foodname">
-       Food Name
-     </ion-card-title>
-     <ion-card-subtitle id="locate">
-       Sch . Canteen
-     </ion-card-subtitle>
-   </div>
- 
-   </ion-card>
+  <div *ngIf="orderArray.length == 0">Orders completed will be shown here</div>
+  <ion-card *ngFor="let order of orderArray" style="background-color: transparent;">
+    <div id ="coverimg"  style="display: flex;">
+      <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
 
    <ion-card style="background-color: white;">
-    <div id ="coverimg">
-     <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-     <img class="coverpic"style="width:max-content;" src="./assets/FoodIMG.png" />
+   <!--<div id ="coverimg">-->
+      <div  style="flex: 10;">
+      <img class="coverpic" style=" width:max-content;"  src={{order.image}} />
     </div>
+  </div>
 
     <div id="txtlabelposition">
      <ion-card-title id ="foodname">
-       Food Name
+      {{order.foodname}}
      </ion-card-title>
-     <ion-card-subtitle id="locate">
-       Sch . Canteen
+     <ion-card-subtitle id="locate" style="display: flex;">
+       <div style="flex: 1;">
+        {{order.stallname}} . {{order.canteenname}}
+       </div>
+       <div>
+        {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
+       </div>
+      
      </ion-card-subtitle>
    </div>
  
    </ion-card>
+
 
   <!--<app-explore-container name="Tab 3 page"></app-explore-container>-->
 </ion-content>
