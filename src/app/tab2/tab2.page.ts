@@ -214,7 +214,7 @@ export class Tab2Page {
 
         }))
       }else{
-        console.log("Empty orderid");
+        //console.log("Empty orderid");
       }
      
      // console.log(this.receiptData);
@@ -246,7 +246,7 @@ export class Tab2Page {
           this.cartArray[index].totalfoodprice = resFood['foodprice'] * resEach['orderquantity'];
           this.cartArray[index].foodname = resFood['foodname'];
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
-          console.log(this.totalPriceAll);
+          //console.log(this.totalPriceAll);
   
           
         }))

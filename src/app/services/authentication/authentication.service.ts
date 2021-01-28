@@ -200,6 +200,20 @@ export class AuthenticationService {
         u.sendEmailVerification();
       })
     }
+
+    //send password reset email
+    resetPassword(email: string){
+      return new Promise(async (resolve, reject)=>{
+        this.ngFireAuth.sendPasswordResetEmail(email).then(()=>{
+          console.log('password reset email has been send, please check your indox or spam folders')
+          resolve('sent');
+        }).catch((error)=>{
+          console.log(error);
+          reject(error);
+        })
+      })
+  
+    }
     
 
      async checkAuth(){
