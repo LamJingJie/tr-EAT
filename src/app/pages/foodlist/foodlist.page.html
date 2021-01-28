@@ -9,10 +9,30 @@
     <div style="position: absolute; right:0; padding: 10px;">
       <ion-button (click)='aboutus_modal()'></ion-button>
     </div>
-
+    
     <img id="Logo" src="./assets/Logo.png" />
     <img class="Footer" id="TYN" src="./assets/TYN.png"/>
     <img id="RICE" src="./assets/RICE.png"/>
+  
+    <div id = "intro">
+      <div class="font" style="font-size: 20px;">Welcome to</div>
+      <div class="font" style="font-size: 25px;"> Vendor:{{stall}} </div>
+    </div>
+      <br>
+      <br>
+      
+        <!----Filter button---->
+        <div style="text-align: right;margin-right: 15px;">
+    <ion-button (click)="filter($event)" shape="round" size="small">
+      <ion-icon name="funnel-outline"></ion-icon> Filter
+    </ion-button>
+  </div>
+      <div class="subtitle">Items Available</div>
+    
+     <ion-card>
+      <div style="text-align: left; padding:8px; "><img style="height:110px; width: 110px;" src="./assets/FoodIMG.png"/></div> 
+
+    </ion-card>
   
     <div id = "intro">
       <div class="font" style="font-size: 20px;">Welcome to</div>

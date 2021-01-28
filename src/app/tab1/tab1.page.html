@@ -9,6 +9,11 @@
   </ion-header>
   
   <ion-content [fullscreen]="true">
+    <!---About us-->
+    <div style="position: absolute; right:0; padding: 10px;">
+      <ion-button (click)='aboutus_modal()'></ion-button>
+    </div>
+
     <div style="position: absolute; right:0; padding: 10px;">
       <ion-button (click)='aboutus_modal()'></ion-button>
     </div>
@@ -31,17 +36,25 @@
       <div id = "ctncarousel">
         <ion-slides [options]="sliderConfig" class="slider">
         
+          <ion-slide id="slide">
+            <ion-card class='canteen'(click)="ChosenCanteen('ALL')">
+              <div id="btnClick">
+              <img class="img" src="./assets/All_logoimg.png"/>
+              </div>
+            </ion-card>
+            </ion-slide>
+
           <ion-slide *ngFor = "let ct of canteen" id="slide">
             <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)" [style.background-color] = "ct.color">
               <div id="btnClick">
                 <!--Uncomment the line below to see image carousell-->
                  <!-- <img class="img2" src={{ct.image}}/>-->
-                <div id="canteen_txt">
-                  {{ct.canteenname}} 
+                <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
+                 <div id="canteen_txt">
+                {{ct.id}} 
                 
                 </div>
               </div>
-            </div>
           </ion-card>
           </ion-slide>
         </ion-slides>
@@ -125,4 +138,6 @@
     
     <ion-button class="color-picker">Color Picker</ion-button>
      <ion-card class="colorshown">Color shown here</ion-card>
+     
+     <ion-button (click)="SignOut()">Log Out</ion-button>
 </ion-content>

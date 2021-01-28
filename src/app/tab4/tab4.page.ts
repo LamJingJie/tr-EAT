@@ -58,20 +58,12 @@ export class Tab4Page {
     this.currentAccount = await this.storage.get('email')
 
     this.currentRole =  await this.storage.get('role');
-
-    if(this.currentRole === 'student'){
-      this.getStamps();
-    }
-
-    if(this.currentRole ==='vendor'){
-      this.getVendorFood();
-    }
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
-  }    
+  }      
 
 
   async aboutus_modal(){
