@@ -109,6 +109,14 @@ export class AdminAccountDetailsPage implements OnInit {
     
   }
 
+  resetPassword(){
+    this.authService.resetPassword(this.currentAccount).then((res=>{
+      this.ResendPassword();
+    })).catch((err=>{
+      this.showError(err);
+    }))
+  }
+
   ionViewDidEnter(){
     
     //console.log(this.userDetails);
@@ -232,6 +240,11 @@ export class AdminAccountDetailsPage implements OnInit {
 
   async UpdateshowSuccess_stallimage(){
     const toast = await this.toast.create({message: "Stall Image Updated", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async ResendPassword(){
+    const toast = await this.toast.create({message: "Reset Password Email has been sent to " + "'" + this.currentAccount + "'", position: 'bottom', duration: 1000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
     toast.present();
   }
 

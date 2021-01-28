@@ -80,6 +80,41 @@ export class LoginPage implements OnInit {
 
   }
 
+  async passwordreset(){
+    const alert1 = await this.alertCtrl.create({
+      cssClass:'resetAccPassword',
+      inputs:[
+        {
+          type:'email',
+          name: 'email',
+          placeholder: 'Email'
+        }
+      ],
+      buttons:[
+        {
+          text: 'Reset Password',
+          handler: async email=>{
+              
+            //console.log(password.password);
+            //console.log(this.currentAccount);
+            if(email.email != ""){
+            
+              await this.authService.resetPassword(email.email).then(async res =>{
+              //  console.log(res);
+
+              this.showResetPassword(email.email);
+            }).catch(async (err)=>{
+              this.showError(err);
+            });          
+            }        
+        }
+        },
+      ]
+    });
+  
+    await alert1.present();
+  }
+
   ionViewDidEnter(){
    
   }
@@ -155,6 +190,11 @@ export class LoginPage implements OnInit {
 
   async showError(error){
     const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async showResetPassword(email){
+    const toast = await this.toast.create({message: "Password Reset Email has been sent to "+ "'" + email + "'" + ". Check your indox or spam folders", position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
     toast.present();
   }
 
