@@ -16,26 +16,36 @@
     </div>
       <br>
       <br>
-      
-        <!----Filter button---->
-        <div style="text-align: right;margin-right: 15px;">
-    <ion-button (click)="filter($event)" shape="round" size="small">
-      <ion-icon name="funnel-outline"></ion-icon> Filter
-    </ion-button>
-  </div>
-      <div class="subtitle">Items Available</div>
-    
-     <ion-card>
-      <div style="text-align: left; padding:8px; "><img style="height:110px; width: 110px;" src="./assets/FoodIMG.png"/></div> 
 
+        <!----Filter button---->
+        <div class='subtop'>
+            <div id="top">  
+              <div class="subtitle" style="position: relative; ">Items Available</div>
+              <div style="text-align: right; position: relative; margin-left: 140px;">
+              <ion-button style="margin-right: 15px;" (click)="filter($event)" shape="round" size="small">
+                <ion-icon name="funnel-outline"></ion-icon> Filter
+              </ion-button>
+              </div>
+            </div>
+        </div>
+    
+      <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
+     <ion-card *ngFor = "let food of foodlistArray | keyvalue;">
+      <div style="text-align: left; padding:8px; display: inline-block; "><img style="height:90px; width: 90px;" src={{food.value.image}}/></div> 
+      <div style="display:inline-block; text-align: left; padding: 5px;">
+      <ion-card-subtitle style="font-size: 10px;">${{food.value.foodprice}}</ion-card-subtitle>
+      <ion-card-subtitle style="font-size: 13px;"> {{food.value.foodname}} </ion-card-subtitle><br>
+      <ion-card-subtitle style="font-size: 9px;">Food Description</ion-card-subtitle>
+      </div>
+   <div *ngIf="userRole == 'student'" style="text-align: right;"><ion-button style="display: inline-block" size="small" color="dark">REDEEM</ion-button></div>
     </ion-card>
   
   <!--Food data shown to sponsors and vendor-->
-  <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
+  <!--<div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
     <ion-card  *ngFor = "let food of foodlistArray | keyvalue;">
       <ion-item>
         
-        <img width="50%" src = {{food.value.image}} />
+        <img width="50%" src = {{food.value.image}} />-->
       
         {{food.value.foodname}} -  ${{food.value.foodprice}}
         <button *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
@@ -48,8 +58,8 @@
         </div>
          
         
-      </ion-item>  
-    </ion-card>
+     <!-- </ion-item>  
+    </ion-card>-->
 
      <!--Shown for sponsors-->
     <p *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</p>
@@ -62,8 +72,10 @@
   <ion-card   *ngFor = "let food1 of redeemfoodArray">
     <ion-item>
       
-      <img width="50%" src = {{food1.image}} />
-    
+      <div class="image-cropper">
+      <img id="fdimg" width="100%" src = {{food1.image}} />
+    </div>
+
       {{food1.foodname}} - {{food1.foodprice | currency}} - {{food1.availquantity}}
 
       <button *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === ''" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid, food1.image)">redeem</button>

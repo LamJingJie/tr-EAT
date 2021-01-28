@@ -60,6 +60,15 @@
     }
 
     //CONTENT OF PAGE
+    .img2{
+        position: absolute;
+        z-index: -2;
+        left: 0%;
+        right: 0%;
+        width: 100%;
+        height: 100%;
+    }
+
     #intro{
         font-weight: bolder;
         font-family: "Segoe UI";

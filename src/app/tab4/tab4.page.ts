@@ -34,6 +34,14 @@ export class Tab4Page {
   orderArray: any[] = [];
   top5_orderArray: any[] = [];
 
+  sliderConfigx={
+    spaceBetween: 1,
+    setWrapperSize: true,
+    centeredSlides: false,
+    slidesPerView: 1.5,
+    roundLengths: true
+  }
+
 
   constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController, 
     private authService: AuthenticationService, private storage: Storage, private userService: UserService,
@@ -42,8 +50,6 @@ export class Tab4Page {
   ngOnInit(){
   
   }
-
-
   async ionViewWillEnter(){
     this.currentAccount = await this.storage.get('email')
 
@@ -52,18 +58,17 @@ export class Tab4Page {
     if(this.currentRole === 'student'){
       this.getStamps();
     }
+
     if(this.currentRole ==='vendor'){
       this.getLatest5Order();
     }
-
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
+  }    
 
-    
-  }
 
   getStamps(){
     this.userSub = this.userService.getOne(this.currentAccount).subscribe((res=>{
@@ -86,7 +91,7 @@ export class Tab4Page {
         }))
 
       })
-      //console.log(this.orderArray)
+      console.log(this.orderArray)
      /* if(this.orderArray.length >= 5){
         var top5 = this.orderArray.length - 5;
         console.log(top5);

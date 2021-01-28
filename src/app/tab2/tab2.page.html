@@ -7,6 +7,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <img id="Logo" src="./assets/Logo.png" />
+  <img class="Footer" id="TYN" src="./assets/TYN.png"/>
+  <img id="RICE" src="./assets/RICE.png"/>
+
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">
@@ -65,28 +69,31 @@
 
     <div *ngIf="receiptData.orderid !==''">
  
-      <h2>REDEEMPTION SUCCESSFUL!</h2>
-      <ion-card>
-        <div>Redemption Number #{{receiptData.orderid}}</div>
-
-        <!--Food Name-->
-        <div>
-          {{receiptData.foodname}}
-        </div>
- 
-        <div>   
-          <!--Canteen-->
-          <div>{{receiptData.canteenname}}</div>
-
-          <ion-icon name="ellipse-outline" size></ion-icon>
-
-          <!--Vendor Stall Name-->
-          <div>{{receiptData.stallname}}</div>
-        </div>
-
+      <div id="Headertxt">REDEEMPTION SUCCESSFUL!</div>
+      <div style="padding: 5px;"></div>
+      <ion-card style="background-color: #FFE7E7;">
+        <div style="padding: 20px;"></div>
+       <div class="headercnt">
+         <div class="rdmlabel">Redemption Number</div><i style="color: #55559F;"> #{{receiptData.orderid}}</i></div>
+        
+          <br>
+          <br>
+          <!--Food Name-->
+          <div id="foodname">{{receiptData.foodname}}</div>
+       
+          <br> 
+          <br>
+          <!--Canteen--><!--Vendor Stall Name-->
+          <div>
+          <div id="cntxt">{{receiptData.canteenname}} • {{receiptData.stallname}}</div>
+          </div>
+          <br>
+          <div style="padding: 20px;"></div>
       </ion-card>
-
-      <ion-button color="success" (click)="collected()">COLLECTED</ion-button>
+      
+      <div style="text-align: center;">
+         <ion-button style="padding-left: 10px; padding-right: 10px; padding-top: 5px; font-weight: bold;" color="success" expand="block" fill="solid" (click)="collected()">COLLECTED</ion-button>
+         </div>
     </div>
 
     

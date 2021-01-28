@@ -43,10 +43,25 @@
     font-family: "Segoe UI";
     font-style: normal;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     color: black;
-    position: relative;
+    position: absolute;
     left: 8%;
+}
+
+.subtop{
+    height: max-content;   
+    width: 100%;
+    background-color:white;
+    position: relative;;
+    z-index: 1;
+    border-radius: 15px;
+    border: 2px;
+}
+#top{
+    display: flex;
+    justify-content: center;
+    vertical-align: baseline;
 }
 
 .coverpic{
@@ -75,3 +90,21 @@
     bottom: 0;
     z-index:1;
 }
+
+.image-cropper {
+    width: 100px;
+    height: 75px;
+    position: relative;
+    padding: 3px;
+    z-index: 2;
+    overflow: hidden;
+    border-radius: 10%;     
+  }
+
+  #fdimg {
+    display: inline;
+    margin: 0 auto;
+    height: 100%;
+    width: auto;
+    border-radius: 10%;  
+  }

@@ -26,28 +26,17 @@
       <div id = "ctncarousel">
         <ion-slides [options]="sliderConfig" class="slider">
         
-          <ion-slide id="slide">
-          <ion-card class='canteen'(click)="ChosenCanteen('ALL')">
+          <ion-slide *ngFor = "let ct of canteen" id="slide">
+          <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)">
             <div id="btnClick">
-            <img class="img" src="./assets/All_logoimg.png"/>
+               <!--Uncomment the line below to see image carousell-->
+             <!-- <img class="img2" src={{ct.image}}/>-->
+              <div id="canteen_txt">
+                {{ct.canteenname}} 
+              </div>
             </div>
           </ion-card>
           </ion-slide>
-  
-          <ion-slide *ngFor = "let ct of canteen" id="slide">
-            <ion-card class='canteen'  (click)="ChosenCanteen(ct.id)">
-              <div id="btnClick">
-                <!--Uncomment the line below to see image carousell-->
-                <!--img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>-->
-                <div id="canteen_txt">
-                  {{ct.canteenname}} 
-                
-                </div>
-              </div>
-            
-          </ion-card>
-          </ion-slide>
-  
         </ion-slides>
       </div>
     </div>
@@ -59,9 +48,10 @@
     </div>-->
      
      <!--Popular choice Carousel-->
+     <div class="section">
      <div id="popcarousel" >
-    <div class=subtitle ><h6>Popular Choice</h6></div><br>
-      <ion-slides [options]="sliderConfigx" >
+    <div class=subtitle ><h6>Popular Choice</h6></div>
+      <ion-slides [options]="sliderConfigx">
         <ion-slide>
         <ion-card class= 'listcard'>
           <div>
@@ -78,11 +68,10 @@
           </ion-card-subtitle>
         </div>
       
-              <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
+             <!-- <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
               <div id="canteen_txt">
                 {{ct.id}} 
-              </div>
-            </div>
+              </div>-->
         </ion-card>
         </ion-slide>
   
@@ -107,35 +96,13 @@
       </ion-slides>
     </div>
     </div>
-   
-    
-  <div id="recentcarousel">
+
+  <!--Only show for students-->
+  <!-- <div *ngIf="userRole == 'student'">-->
+    <div id="recentcarousel">
     <div class=subtitle ><h6>Your Recent Order</h6></div>
     <ion-slides [options]="sliderConfigx" >
       <ion-slide>
-      <ion-card class= 'listcard'>
-        <div>
-        <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-        <img class="coverpic" src="./assets/FoodIMG.png" />
-        </div>
-
-       <div id="txtlabelposition">
-        <ion-card-title id ="foodname">
-          Food Name
-        </ion-card-title>
-        <ion-card-subtitle id="locate">
-          Sch . Canteen
-        </ion-card-subtitle>
-      </div>
-    
-      </ion-card>
-      </ion-slide>
-
-  <!--Only show for students-->
-   <div *ngIf="userRole == 'student'">
-    <div class=subtitle ><h6>Your Recent Order</h6></div><br>
-    <ion-slides [options]="sliderConfigx" >
-      <ion-slide >
         <ion-card  class= 'listcard'>
          <div id ="coverimg">
           <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
@@ -154,11 +121,13 @@
         </ion-card>
         </ion-slide>
     </ion-slides>
-  </div>
+    </div>
+ <!-- </div>-->
+  
 
-<div class=subtitle ><h6>Popular Choice</h6></div>
+<!--<div class=subtitle ><h6>Popular Choice</h6></div>-->
 <!--Popular choice Carousel-->
-  <div id="popcarousel" >
+ <!-- <div id="popcarousel" >
   <ion-slides [options]="sliderConfigx" >
     <ion-slide >
       <ion-card  class= 'listcard'>
@@ -179,7 +148,8 @@
       </ion-card>
       </ion-slide>
   </ion-slides>
-  </div>
+
+  </div>-->
 
   <!--
       <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
@@ -187,14 +157,11 @@
       <ng-template #fail> Loaded</ng-template>-->
 
     
-     <ion-button class="color-picker">Color Picker</ion-button>
-
-     <ion-card class="colorshown">Color shown here</ion-card>
-     <!--<div *ngFor = "let ct of canteen">
+      <!--<div *ngFor = "let ct of canteen">
       {{ct.id}} - {{ct.color}}
       <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>
     </div>-->
-
-
-  
+    
+    <ion-button class="color-picker">Color Picker</ion-button>
+     <ion-card class="colorshown">Color shown here</ion-card>
 </ion-content>

@@ -19,7 +19,6 @@
   
   <!--Show all the stores-->
   <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
-    
     <img style="padding:7px;padding-bottom: 0%;"src= "assets/shapes.svg" alt='image'/>
     <ion-card-header>
       <ion-card-title id="vendorname">
@@ -28,14 +27,11 @@
         <ion-card-subtitle id="stallde">
           Stall Description
         </ion-card-subtitle>
-<<<<<<< Updated upstream
-      
-=======
->>>>>>> Stashed changes
     </ion-card-header>
   </ion-card>
-</div>
+
   <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
+</ion-content>
 
 
 

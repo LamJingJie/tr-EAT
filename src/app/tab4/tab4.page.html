@@ -14,53 +14,58 @@
     <div class="image-cropper">
       <img id="profilepic" src="./assets/ProfileImg.png" class="rounded" />
     </div>
+
     <div class="Footer"class="BGDrectangle">
       
       <div id="userinfo" class="Font">
         <div style="font-size: 20px;padding-top: 25px;"> Hello,</div>
         <div style="font-size: 23px;"> {{currentAccount}} </div>
       </div>
-
+      <br>
       <br>
 
     <div class="wrapbtnrectangle">
       <div id="btns">
-        <div class="btnroundedUpdate">
-          <img width="45%" style="padding-top: 4px;"  src="./assets/ProfileImg.png"/>
-          <p style="margin:auto; width: 96%;">UPDATE USER INFO</p>
+        <div class="btnprop" style="display:relative; position: relative; right: 3%;">
+          <div style="text-align: center;">
+          <img width="50%" style="padding-top: 3px;" src="./assets/ProfileImg.png"/>
+          <p style="margin:auto; width: 95%;">UPDATE USER INFO</p>
+          </div>
         </div>
         
-        <div class="btnroundedFav">
-          <img width="45%" style="padding-top: 4px;" src="./assets/Fav.png"/>
-          <p style="margin: auto; width:97%;">Favourites</p>
+        <div class="btnprop" style="display:block;">
+          <div style="text-align: center;">
+          <img width="50%" style="padding-top: 3px;" src="./assets/FavStar.png"/>
+          <p style="margin:auto; width: 95%;">Favourites</p>
+          </div>
+        </div>
+
+        <div class="btnprop" style="display:relative; position:relative; left:3%;"  *ngIf="currentRole === 'student'">
+          <div style="text-align: center;">
+          <div style="text-align: center;font-weight: bolder;font-family: 'Segoe UI'; font-size: 30px;color: #55559F;"> {{stamps}} </div>
+          <p style="margin:auto; width: 95%;">Redemption Left</p>
+          </div>
         </div>
         
-        <div class="btnroundedStamp" *ngIf="currentRole === 'student'" >
+        <!--<div class="btnroundedStamp" >-->
           <!-- <img src="./assets/RLeft.png" />--> 
-          <h4>{{stamps}}</h4>
+         <!-- <h4>{{stamps}}</h4>
           <p>Redemption Left</p>
-        </div>
+        </div>-->
     
       </div>
+    </div>
      
-      <div *ngIf="currentRole === 'student' || currentRole === 'vendor'">
-        <div class=subtitle><h6>Your Orders</h6></div>
 
+
+    <br>
+     <div *ngIf="currentRole === 'student' || currentRole === 'vendor'"> 
+        <div class=subtitle><h6>Your Orders</h6></div>
       <!-- Rcent Order Carousel-->
       <div id="RecOdr">
         <ion-slides [options]="sliderConfigx" >
           
-          <ion-slide *ngFor="let order of orderArray">
-          <ion-card style="box-shadow:2">
-           <div id ="coverimg" style="display: flex;">
-            <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
-
-            <div  style="flex: 9;">
-              <img class="coverpic"  src={{order.image}} />
-            </div>
-            <!--<img src="./assets/CanteenClrLabel.png"/>-->
-            
-          <ion-slide>
+          <!--<ion-slide>
           <ion-card style="background-color: transparent;">
            <div id ="coverimg">
             <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
@@ -69,18 +74,17 @@
     
            <div id="txtlabelposition">
             <ion-card-title id ="foodname">
-              {{order.foodname}}
+              Food Name
             </ion-card-title>
             <ion-card-subtitle id="locate">
-              <!--We do not have school data, only canteen and vendor stall name, so i will be displaying the canteen data here-->
-              {{order.canteenname}}
+              Sch . Canteen
             </ion-card-subtitle>
           </div>
         
           </ion-card>
-          </ion-slide>
+          </ion-slide>-->
 
-          <ion-slide>
+         <!--- <ion-slide>
             <ion-card style="background-color: transparent;">
              <div id ="coverimg">
               <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
@@ -97,19 +101,51 @@
             </div>
           
             </ion-card>
+          </ion-slide>-->
+          
+         <!-- <ion-slide *ngFor="let order of orderArray">
+          <ion-card style="box-shadow:2">
+           <div id ="coverimg" style="display: flex;">
+            <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
+
+            <div  style="flex: 9;">
+              <img class="coverpic"  src={{order.image}} />
+            </div>-->
+            <!--<img src="./assets/CanteenClrLabel.png"/>-->
+            
+          <ion-slide *ngFor ="let order of orderArray">
+          <ion-card style="background-color: transparent;">
+           <div id ="coverimg" style="display: flex;">
+            <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
+            <div  style="flex: 9;">
+              <img class="coverpic"  src={{order.image}} />
+            </div>
+           </div>
+           
+    
+           <div id="txtlabelposition">
+            <ion-card-title id ="foodname">
+              {{order.foodname}}
+            </ion-card-title>
+            <ion-card-subtitle id="locate">
+              <!--We do not have school data, only canteen and vendor stall name, so i will be displaying the canteen data here-->
+              {{order.canteenname}}
+            </ion-card-subtitle>
+          </div>
+        
+          </ion-card>
           </ion-slide>
         </ion-slides>
       </div>
+
       </div>
-      
+       
 
-    </div>
-
-    
-    <ion-button style="padding-left: 15px; padding-right: 15px;"color="dark" expand="full" fill="solid" (click)="SignOut()">Log Out</ion-button>
-  </div> 
-    
+    <br>
+    <ion-button style="padding-left: 15px; padding-right: 15px;border-radius:3%" color="dark" expand="block" fill="solid"  (click)="SignOut()">Log Out</ion-button>
   
-   <!-- <app-explore-container name="Tab 4 page"></app-explore-container>-->
-  </ion-content>
+  </div>   
+</ion-content>
+  
+ 
   

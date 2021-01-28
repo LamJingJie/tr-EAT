@@ -1,7 +1,12 @@
 
 ion-tab-button{
     --color-selected: orange;
-    border-top: 2px solid black;
+    border-top: 2px solid #ddc2bc;
    
-    --color:black;
+    --color:#55559F;
+}
+
+ion-tab-bar{
+    --background: #F0D5D0;
+
 }
