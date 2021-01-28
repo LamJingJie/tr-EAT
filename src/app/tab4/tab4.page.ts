@@ -57,7 +57,19 @@ export class Tab4Page {
   async ionViewWillEnter(){
     this.currentAccount = await this.storage.get('email')
 
+<<<<<<< Updated upstream
     this.currentRole =  await this.storage.get('role');
+=======
+  sliderConfigx={
+    spaceBetween: 1,
+    setWrapperSize: true,
+    centeredSlides: false,
+    slidesPerView: 1.5,
+    roundLengths: true
+  }
+  
+  ionViewWillEnter(){
+>>>>>>> Stashed changes
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
