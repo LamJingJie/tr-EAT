@@ -14,10 +14,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 
-import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
-import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
-import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
-import Pickr from '@simonwep/pickr';
+
 
 
 @Component({
@@ -88,42 +85,7 @@ colorLoop: any;
 
   ngOnInit(){
 
-   /* const pickr = Pickr.create({
-      el: '.color-picker',
-      theme: 'classic', // or 'monolith', or 'nano'
-  
-      components: {
-  
-          // Main components
-          preview: true,
-          opacity: true,
-          hue: true,
-  
-          // Input / output Options
-          interaction: {
-              hex: true,
-              rgba: true,
-              hsla: true,
-              hsva: true,
-              cmyk: true,
-              input: true,
-              clear: false,
-              save: true
-          }
-      }
-  });
-
-  //await pickr.show();
-
-  //Instances on when the color picker is opened
-  pickr.on('save', (...args) => {
-    let colorChosen = args[0].toRGBA();
     
-    this.colorChose = colorChosen.toString();
-    console.log(this.colorChose);
-    (<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
-    pickr.hide();
-  });*/
     
   }
 

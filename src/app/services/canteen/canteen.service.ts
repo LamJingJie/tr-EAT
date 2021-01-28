@@ -20,23 +20,18 @@ export class CanteenService {
     return this.firestore.collection('canteen').doc(id).valueChanges({ idField: 'id' })
   }
 
-  //Add canteen
-  async addCanteen(canteenName, image, id, filename) {
-    //console.log(image);
-    var storageURL = 'Canteen Images/';
-    var mergedName = filename + id;
-    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
-    var downloadURL = await this.storage.ref('Canteen Images/' + mergedName).getDownloadURL().toPromise();
+  //Add canteen, remove images
+  async addCanteen(canteenName, color,) {
+    console.log(canteenName, color)
     return this.firestore.collection('canteen').add({
       canteenname : canteenName,
-      image: downloadURL,
-      mergedname: mergedName
+      color: color,
+      deleted : false
     });
   }
 
   //Delete canteen
   deleteCanteen(id, mergedName) {
-    this.storage.ref('Canteen Images/' + mergedName).delete(); //Delete previous food image
     return this.firestore.collection('canteen').doc(id).delete();
   }
 
@@ -53,6 +48,10 @@ export class CanteenService {
     var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
     var downloadURL = await this.storage.ref('Canteen Images/' + mergedName).getDownloadURL().toPromise();
     return this.firestore.collection('canteen').doc(id).update({ id: id, image: downloadURL, mergedName: mergedName })
+  }
+  //This is for the change deleted field in canteen collection
+  Update(id, deleted){
+    this.firestore.collection('canteen').doc(id).update({deleted:deleted})
   }
 
   getAll() {

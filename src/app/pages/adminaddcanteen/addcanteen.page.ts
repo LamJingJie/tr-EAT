@@ -19,6 +19,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ModalAddcanteenPage } from 'src/app/Modal/modal-addcanteen/modal-addcanteen.page';
 import { ModalEditdelcanteenPage } from 'src/app/Modal/modal-editdelcanteen/modal-editdelcanteen.page';
 
+
+
 @Component({
   selector: 'app-addcanteen',
   templateUrl: 'addcanteen.page.html',
@@ -58,6 +60,12 @@ export class AddcanteenPage {
   ngOnInit() {
   }
 
+  changeCanteenPopUp(id, deleted){
+    deleted = !deleted 
+    this.canteenService.Update(id,deleted)
+  } 
+
+
   // Open up add canteen modal
   async addCanteen() {
     const modal = await this.modalController.create({
@@ -76,6 +84,8 @@ export class AddcanteenPage {
     });
     return await modal.present();
   }
+
+  
 
   async deleteCanteen(id, mergedName) {
     await this.presentDelCanteen();

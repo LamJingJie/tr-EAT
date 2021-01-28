@@ -53,7 +53,8 @@ const routes: Routes = [
   {
     path: 'modal-editdelcanteen/:id',
     loadChildren: () => import('./Modal/modal-editdelcanteen/modal-editdelcanteen.module').then( m => m.ModalEditdelcanteenPageModule)
-  },  {
+  },
+  {
     path: 'modal-aboutus',
     loadChildren: () => import('./Modal/modal-aboutus/modal-aboutus.module').then( m => m.ModalAboutusPageModule)
   },

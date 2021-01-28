@@ -7,6 +7,11 @@ import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
+import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
+import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
+import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
+import Pickr from '@simonwep/pickr';
+
 export interface MyData {
   name: string;
   filepath: string;
@@ -29,6 +34,18 @@ export class ModalAddcanteenPage implements OnInit {
   filename: any;
   files: any;
 
+  colorChose: any;
+
+
+colorLoop: any;
+
+  sliderConfig={
+    spaceBetween: 1,
+    setWrapperSize: true,
+    centeredSlides: false,
+    slidesPerView: 2.5,
+    roundLengths: true
+  }
   constructor(
     private modalController: ModalController,
     private formBuilder: FormBuilder,
@@ -53,6 +70,43 @@ export class ModalAddcanteenPage implements OnInit {
     //     this.router.navigate(["/login"]);
     //   }
     // });
+    const pickr = Pickr.create({
+      el: '.color-picker',
+      theme: 'classic', // or 'monolith', or 'nano'
+  
+      components: {
+  
+          // Main components
+          preview: true,
+          opacity: true,
+          hue: true,
+  
+          // Input / output Options
+          interaction: {
+              hex: true,
+              rgba: true,
+              hsla: true,
+              hsva: true,
+              cmyk: true,
+              input: true,
+              clear: false,
+              save: true
+          }
+      }
+  });
+
+  //await pickr.show();
+
+  //Instances on when the color picker is opened
+  pickr.on('save', (...args) => {
+    let colorChosen = args[0].toRGBA();
+    
+    this.colorChose = colorChosen.toString();
+    console.log(this.colorChose);
+    //(<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
+    pickr.hide();
+  });
+    
   }
 
   //Get Image Name
@@ -81,9 +135,7 @@ export class ModalAddcanteenPage implements OnInit {
     await this.startLoader();
     this.canteenService.addCanteen(
       data.value.canteenname,
-      this.selectedFile,
-      uuidv4(),
-      this.filename
+      this.colorChose,
     ).then(res => {
       this.loading.dismiss(null, null, 'addCanteenAdmin');
       this.showSuccess();
