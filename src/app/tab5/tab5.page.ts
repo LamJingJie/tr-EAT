@@ -95,6 +95,11 @@ export class Tab5Page {
     this.router.navigate(['/tabs/tab5/adminorders']);
   }
 
+  openOrdersMonthly(){
+
+    this.router.navigate(['/tabs/tab5/adminorder-monthly']);
+  }
+
   async leavePopup(){
     
     const alert1 = await this.alertCtrl.create({

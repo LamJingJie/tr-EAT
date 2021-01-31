@@ -1,0 +1,29 @@
+#orderData{
+    padding: 1px;
+}
+
+#date_calendar{
+    opacity: 0; 
+    position: absolute;
+    width: 100%; 
+    height: 100%; 
+}
+
+#date, #userid{
+    font-size: 11px;
+}
+
+#foodprice_date{
+    text-align: end;
+}
+
+#stallname{
+    flex:3;
+    text-align:center;
+}
+#canteen{
+    flex:3;
+    text-align:center;
+}
+
+

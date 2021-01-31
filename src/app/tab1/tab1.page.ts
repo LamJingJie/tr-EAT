@@ -48,8 +48,7 @@ colorLoop: any;
     setWrapperSize: true,
     centeredSlides: false,
     slidesPerView: 2.5,
-    roundLengths: true,
-    loop: false
+    roundLengths: true
   }
 
   sliderConfigx={

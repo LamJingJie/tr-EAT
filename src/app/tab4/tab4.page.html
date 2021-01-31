@@ -66,7 +66,6 @@
         <div class=subtitle><h6>Your Foods</h6></div>
       <!-- Rcent Order Carousel-->
       <div id="RecOdr">
-<<<<<<< Updated upstream
         <ion-slides [options]="sliderConfigx" >    
    
           <ion-slide *ngFor="let food of foodArray">
@@ -78,9 +77,6 @@
               <img class="coverpic"  src={{food.image}} />
             </div>
        <!-- <ion-slides [options]="sliderConfigx" >
-=======
-        <ion-slides [options]="sliderConfigx" >
->>>>>>> Stashed changes
           
           <ion-slide>
           <ion-card style="background-color: transparent;">
@@ -102,34 +98,16 @@
           </ion-card>
           </ion-slide>
 
-          <ion-slide>
-            <ion-card style="background-color: transparent;">
-             <div id ="coverimg">
-              <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-              <img class="coverpic" src="./assets/FoodIMG.png" />
-             </div>
-      
-             <div id="txtlabelposition">
-              <ion-card-title id ="foodname">
-                Food Name
-              </ion-card-title>
-              <ion-card-subtitle id="locate">
-                Sch . Canteen
-              </ion-card-subtitle>
-            </div>
-          
-            </ion-card>
-          </ion-slide>
         </ion-slides>
       </div>
       </div>
-      
+      <ion-button style="padding-left: 15px; padding-right: 15px;border-radius:3%" color="dark" expand="block" fill="solid"  (click)="SignOut()">Log Out</ion-button>
     </div>
 
     <br>
-    <ion-button style="padding-left: 15px; padding-right: 15px;border-radius:3%" color="dark" expand="block" fill="solid"  (click)="SignOut()">Log Out</ion-button>
+    
   
-  </div>   
+  
 </ion-content>
   
  

@@ -15,21 +15,27 @@
     </ion-header>
 
     <ion-card>   
-      <h4 style="font-weight: bold; text-align: center;">Orders For Each Vendor (Last 7 days)</h4>
+      <h4 style="font-weight: bold; text-align: center;">Monthly Completed Orders</h4>
+      <ion-button expand="block" (click)="openOrdersMonthly()">View Orders</ion-button>
+     
+    </ion-card>
+
+    <ion-card>   
+      <h4 style="font-weight: bold; text-align: center;">Weekly Completed Orders</h4>
       <ion-button expand="block" (click)="openOrders()">View Orders</ion-button>
-      <!--<ion-button expand="block" (click)="delAccountPopUp()">Delete Account</ion-button>-->
+     
     </ion-card>
 
     <ion-card>   
       <h4 style="font-weight: bold; text-align: center;">Canteens</h4>
       <ion-button expand="block" (click)="addCanteenPopUp()">View Canteen</ion-button>
-      <!--<ion-button expand="block" (click)="delCanteenPopUp()">Delete Canteen</ion-button>-->
+     
     </ion-card>
 
     <ion-card>   
         <h4 style="font-weight: bold; text-align: center;">Users</h4>
         <ion-button expand="block" (click)="ViewAccount()">View Account</ion-button>
-        <!--<ion-button expand="block" (click)="delAccountPopUp()">Delete Account</ion-button>-->
+        
     </ion-card>
  
   

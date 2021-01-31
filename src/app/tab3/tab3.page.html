@@ -9,10 +9,6 @@
   </div>
 
 
-
-   <!-- </ion-card>
-  </div>-->
-
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">History</ion-title>
@@ -23,29 +19,19 @@
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
-<<<<<<< Updated upstream
   <br>  
   <br>
-=======
->>>>>>> Stashed changes
   <ion-card style="background-color: transparent;">
-    <div id ="coverimg">
-     <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-     <img class="coverpic"style="width:max-content;" src="./assets/FoodIMG.png" />
-    </div>
 
-<<<<<<< Updated upstream
   <div *ngIf="orderArray.length == 0">Orders completed will be shown here</div>
   <ion-card *ngFor="let order of orderArray" style="background-color: transparent;">
     <div id ="coverimg"  style="display: flex;">
       <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
-
-   <ion-card style="background-color: white;">
-   <!--<div id ="coverimg">-->
       <div  style="flex: 10;">
       <img class="coverpic" style=" width:max-content;"  src={{order.image}} />
     </div>
   </div>
+
 
     <div id="txtlabelposition">
      <ion-card-title id ="foodname">
@@ -59,41 +45,10 @@
         {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
        </div>
       
-  <!--  <div id="txtlabelposition">
-     <ion-card-title id ="foodname">
-=======
-    <div id="txtlabelposition">
-     <ion-card-title id ="foodname">
->>>>>>> Stashed changes
-       Food Name
-     </ion-card-title>
-     <ion-card-subtitle id="locate">
-       Sch . Canteen
      </ion-card-subtitle>
    </div>
  
    </ion-card>
+</ion-card>
 
-   <ion-card style="background-color: transparent;">
-    <div id ="coverimg">
-     <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-     <img class="coverpic"style="width:max-content;" src="./assets/FoodIMG.png" />
-    </div>
-
-    <div id="txtlabelposition">
-     <ion-card-title id ="foodname">
-       Food Name
-     </ion-card-title>
-     <ion-card-subtitle id="locate">
-<<<<<<< Updated upstream
-       Sch . Canteen-->
-=======
-       Sch . Canteen
->>>>>>> Stashed changes
-     </ion-card-subtitle>
-   </div>
- 
-   </ion-card>
-
-  <!--<app-explore-container name="Tab 3 page"></app-explore-container>-->
 </ion-content>

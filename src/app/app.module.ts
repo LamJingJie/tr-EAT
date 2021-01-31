@@ -31,6 +31,8 @@ import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
 import Pickr from '@simonwep/pickr';
 
 
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

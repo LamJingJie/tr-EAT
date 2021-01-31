@@ -81,56 +81,69 @@ export class AdminordersPage implements OnInit {
       
      }
 
-  get7Days(date){
+  get7Days(date: Date){
    
      //Today Date
-     this.todayVar = this.today.setDate(date.getDate());
+     this.todayVar = this.today.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
      this.today.setHours(0,0,0,0); //Start
      //console.log("tday: " + this.todayVar);
-     this.today2.setDate(this.today.getDate());
+     this.today2.setFullYear( this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
      this.today2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday date
-     this.ytdVar = this.ytd.setDate(date.getDate() -1);
+     this.ytdVar = this.ytd.setFullYear(date.getFullYear(), date.getMonth(), date.getDate() -1);
      this.ytd.setHours(0,0,0,0); //Start 
      //console.log("ytd: " + this.ytdVar);
-     this.ytd2.setDate(this.ytd.getDate());
+     this.ytd2.setFullYear(this.ytd.getFullYear(), this.ytd.getMonth(), this.ytd.getDate());
      this.ytd2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday -1 Date
-     this.ytdMinus1Var =this.ytdMinus1.setDate(date.getDate() -2);
+     this.ytdMinus1Var = this.ytdMinus1.setFullYear(date.getFullYear(), date.getMonth(), date.getDate()-2);
      this.ytdMinus1.setHours(0,0,0,0); //Start
      //console.log("ytd -1: " + this.ytdMinus1Var);
-     this.ytdMinus1_2.setDate(this.ytdMinus1.getDate());
+     this.ytdMinus1_2.setFullYear(this.ytdMinus1.getFullYear(), this.ytdMinus1.getMonth(), this.ytdMinus1.getDate());
      this.ytdMinus1_2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday -2 Date
-     this.ytdMinus2Var = this.ytdMinus2.setDate(date.getDate() -3);
+     this.ytdMinus2Var = this.ytdMinus2.setFullYear(date.getFullYear(), date.getMonth(), date.getDate()-3);
      this.ytdMinus2.setHours(0,0,0,0); //Start
      //console.log("ytd -2: " +this.ytdMinus2Var);
-     this.ytdMinus2_2.setDate(this.ytdMinus2.getDate());
+     this.ytdMinus2_2.setFullYear(this.ytdMinus2.getFullYear(), this.ytdMinus2.getMonth(), this.ytdMinus2.getDate());
      this.ytdMinus2_2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday -3 Date
-     this.ytdMinus3Var =this.ytdMinus3.setDate(date.getDate() -4);
+     this.ytdMinus3Var = this.ytdMinus3.setFullYear(date.getFullYear(), date.getMonth(), date.getDate() -4);
      this.ytdMinus3.setHours(0,0,0,0); //Start
      //console.log("ytd -3: " +this.ytdMinus3Var);
-     this.ytdMinus3_2.setDate(this.ytdMinus3.getDate());
+     this.ytdMinus3_2.setFullYear(this.ytdMinus3.getFullYear(),this.ytdMinus3.getMonth(), this.ytdMinus3.getDate() );
      this.ytdMinus3_2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday -4 Date
-     this.ytdMinus4Var = this.ytdMinus4.setDate(date.getDate() -5);
+     this.ytdMinus4Var = this.ytdMinus4.setFullYear(date.getFullYear(), date.getMonth(), date.getDate() -5);
      this.ytdMinus4.setHours(0,0,0,0); //Start
      //console.log("ytd -4: " +this.ytdMinus4Var);
-     this.ytdMinus4_2.setDate(this.ytdMinus4.getDate());
+     this.ytdMinus4_2.setFullYear(this.ytdMinus4.getFullYear(), this.ytdMinus4.getMonth(), this.ytdMinus4.getDate());
      this.ytdMinus4_2.setHours(23,59,59,999); //End
 
+
+
      //Yesterday -5 Date
-     this.ytdMinus5Var =this.ytdMinus5.setDate(date.getDate() -6);
+     this.ytdMinus5Var = this.ytdMinus5.setFullYear(date.getFullYear(), date.getMonth(), date.getDate() -6);
      this.ytdMinus5.setHours(0,0,0,0); //Start
      //console.log("ytd -5: " +this.ytdMinus5Var);
-     this.ytdMinus5_2.setDate(this.ytdMinus5.getDate());
+     this.ytdMinus5_2.setFullYear(this.ytdMinus5.getFullYear(), this.ytdMinus5.getMonth(), this.ytdMinus5.getDate());
      this.ytdMinus5_2.setHours(23,59,59,999); //End
+
   }
 
   ngOnInit() {
@@ -168,8 +181,11 @@ export class AdminordersPage implements OnInit {
   //then plug them to the correct element
 
   getOrders(date1, date2){
-    this.newOrderArray = [];
     
+    this.newOrderArray = [];
+    //console.log(date1)
+    //console.log(date2)
+
     this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
       //console.log(res);
       //this.newOrderArray = res;
@@ -273,7 +289,58 @@ export class AdminordersPage implements OnInit {
  
 
   dateChanged(event){
-    //console.log(event)
+    //console.log(event.detail.value)
+    //console.log(this.todayVar.toString());
+    switch(event.detail.value){
+      case this.todayVar.toString():{
+        this.getOrders(this.today, this.today2);
+        console.log("Today");
+        break;
+      }
+
+      case this.ytdVar.toString():{
+        console.log("Yesterday");
+        this.getOrders(this.ytd, this.ytd2);
+        break;
+      }
+        
+      case this.ytdMinus1Var.toString():{
+        console.log("Yesterday -1");
+        this.getOrders(this.ytdMinus1, this.ytdMinus1_2);
+        break;
+      }
+        
+      case this.ytdMinus2Var.toString():{
+        console.log("Yesterday -2");
+        this.getOrders(this.ytdMinus2, this.ytdMinus2_2);
+        break;
+      }
+        
+      case this.ytdMinus3Var.toString():{
+        console.log("Yesterday -3");
+        this.getOrders(this.ytdMinus3, this.ytdMinus3_2);
+        break;
+      }
+        
+      case this.ytdMinus4Var.toString():{
+        console.log("Yesterday -4");
+        this.getOrders(this.ytdMinus4, this.ytdMinus4_2);
+        break;
+      }       
+
+      case this.ytdMinus5Var.toString():{
+        console.log("Yesterday -5");
+        this.getOrders(this.ytdMinus5, this.ytdMinus5_2);
+        break;
+      }  
+
+      default:{
+        console.log("Error: no date matches in weekly admin order");
+        break;
+      }
+        
+    }
+    /*
     if(event.detail.value == this.todayVar){
       console.log("Today");
       this.getOrders(this.today, this.today2);
@@ -301,7 +368,7 @@ export class AdminordersPage implements OnInit {
     if(event.detail.value == this.ytdMinus5Var){
       console.log("Yesterday -5");
       this.getOrders(this.ytdMinus5, this.ytdMinus5_2);
-    }
+    }*/
 
    
     //console.log(event.detail.value);
@@ -311,18 +378,17 @@ export class AdminordersPage implements OnInit {
   dateChanged2(event){
 
     let date: Date = new Date(event.detail.value);
-    let date2: Date = new Date(event.detail.value);
+    //let date2: Date = new Date(event.detail.value);
     date.setHours(0,0,0,0);
-    date2.setHours(23,59,59,999);
+    //date2.setHours(23,59,59,999);
 
-    //this.todayVar = date;
 
     this.get7Days(date);
     //console.log(date2);
   }
 
 
-  ngOnDestroy(){
+  ionViewWillLeave(){
     if(this.orderSubscription){
       this.orderSubscription.unsubscribe();
     }

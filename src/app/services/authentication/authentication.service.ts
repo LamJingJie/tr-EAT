@@ -118,10 +118,11 @@ export class AuthenticationService {
     //reject() being called.
     return new Promise((resolve, reject)=>{
       this.ngFireAuth.createUserWithEmailAndPassword(email, password).then(async res =>{
+        await this.SendVerificationMail();
         console.log((await this.ngFireAuth.currentUser).email);
        
        // ****************************UNCOMMENT THIS DURING PRODUCTION***************************** //
-        await this.SendVerificationMail();
+        
         this.userService.addSponsor(email, role);
         resolve(res);
         

@@ -14,11 +14,16 @@ export class OrderService {
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
 
   getAllOrders(date,date2){
-    //console.log(id);
-    //console.log("Date Format: " +date);
+    //console.log(date);
     //console.log(date2);
     //return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2).where('vendorID','==',id)).valueChanges({idField: 'id'});
     return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<=',date2).where('completed', '==', true)).valueChanges({idField: 'id'});
+  }
+
+  getMonthly(date, date2){
+    //console.log(date);
+    //console.log(date2);
+    return this.firestore.collection('orders', ref => ref.where('date', '>=', date).where('date', '<',date2).where('completed', '==', true)).valueChanges({idField: 'id'});
   }
 
   getAllForVendor(vendorid, completed: boolean){
@@ -48,6 +53,11 @@ export class OrderService {
   //Then change the orders instead of using canteenid, store its canteenname and colors instead when completed
   updateComplete(id){
     return this.firestore.collection('orders').doc(id).update({completed: true});
+  }
+
+  //Check if current student has made any orders recently
+  checkOrders(email, date, date2){
+    return this.firestore.collection('orders', ref=> ref.where('userID', '==', email). where('date','>=',date).where('date','<=', date2)).valueChanges({idField: 'id'});
   }
 
   

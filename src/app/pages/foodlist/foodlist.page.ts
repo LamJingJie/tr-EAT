@@ -35,6 +35,8 @@ cartSubscription: Subscription;
 foodRedemSub: Subscription;
 studentDataSub: Subscription;
 
+checkOrderSubscription: Subscription;
+
 
 userSub: Subscription;
 redeemSub: Subscription;
@@ -79,6 +81,10 @@ cartM2 = new Map();
 
 number: number;
 
+today: Date = new Date();
+today2: Date = new Date();
+ordersMade: boolean; //for students, true if they have made any orders today, false if not.
+
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
@@ -104,9 +110,9 @@ number: number;
       this.canteen = params.canteenid;
       //console.log(this.stall);
       //console.log(this.vendor);
-       
-     
     });
+
+     
 
   }
 
@@ -127,23 +133,31 @@ number: number;
     this.router.navigate(['/tabs/tab2']);
   }
 
-  ionViewWillEnter(){
-    //this.storefoodpriceArray = [];
-    //this.foodtotalprice = [];
+  async ionViewWillEnter(){
+
+    this.today.setHours(0,0,0,0); //Start
+    this.today2.setHours(23,59,59,999); //End
     
     //console.log(this.canteen);
-    this.storage.get('email').then(res=>{
-      //console.log("email: " + res);
-      this.userEmail = res;
-      this.calculateTotalCost();
-      this.getStudentData();
-    });
+    this.userEmail = await this.storage.get('email');
+    this.calculateTotalCost();
+    this.getStudentData();
 
-    this.storage.get('role').then(res=>{
-     // console.log("role: " + res);
-      this.userRole = res;
-      this.filterFood(this.chosenFilter);
-    });
+    this.userRole = await this.storage.get('role');
+    this.filterFood(this.chosenFilter);
+
+    if(this.userRole === 'student'){
+      //Check if current user has made any orders today
+      this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
+        //console.log(res);
+        //Empty, means no orders made by students and so redeem btn is activated
+        if(res.length == 0){
+          this.ordersMade = false;
+        }else{
+          this.ordersMade = true;
+        }
+      }))
+    }
    
    
   }
@@ -176,7 +190,7 @@ number: number;
         this.foodSubscription = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
           this.cartArray[index].price = resFood['foodprice'];
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
-          console.log(this.totalPriceAll);
+          //console.log(this.totalPriceAll);
 
           
         }))
@@ -223,6 +237,9 @@ number: number;
     }
     if(this.studentDataSub){
       this.studentDataSub.unsubscribe();
+    }
+    if(this.checkOrderSubscription){
+      this.checkOrderSubscription.unsubscribe();
     }
    
   }
@@ -337,7 +354,7 @@ number: number;
   }
 
   //Student
-  async RedeemFood(id,  foodname, foodprice, vendorid, image){
+  async RedeemFood(id,  foodname, foodprice: number, vendorid, image){
   
     var food_name = foodname;
     
@@ -477,7 +494,7 @@ number: number;
       this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
 
         this.foodlistArray = res;
-        //console.log(this.foodlistArray);
+        console.log(this.foodlistArray);
         res.forEach((res=>{
           //console.log(res.id);
           this.foodM.set(res.id, this.count); //Store each food with count = 1

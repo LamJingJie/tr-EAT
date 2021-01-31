@@ -30,7 +30,9 @@ export class FoodfilterComponent implements OnInit {
       this.filter = this.navParams.get('chosenFilter');
      }
 
-  ngOnInit() {}
+  ngOnInit() {
+    console.log("test")
+  }
 
   selectFilter(filter){
     //console.log(filter);

@@ -7,13 +7,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
+  
   <img id="Logo" src="./assets/Logo.png" />
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
-  <div style="position: absolute; right:0; padding: 10px;">
-    <ion-button (click)='aboutus_modal()'></ion-button>
-  </div>
+ 
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">
@@ -68,7 +70,9 @@
   <!--When student click on redeem, the receipt will be shown here-->
   <div *ngIf="userRole === 'student'">
 
-    <div *ngIf="receiptData.orderid === ''">Food that is pending collection after redeeming, will be shown here.</div>
+    <div *ngIf="receiptData.orderid === ''">
+      Food that is pending collection after redeeming, will be shown here. You are only entitled to <b>1 Redemption</b> per day.
+    </div>
 
     <div *ngIf="receiptData.orderid !==''">
  
