@@ -8,6 +8,7 @@ import { ModalVerifychckoutPageRoutingModule } from './modal-verifychckout-routi
 
 import { ModalVerifychckoutPage } from './modal-verifychckout.page';
 
+
 @NgModule({
   imports: [
     CommonModule,

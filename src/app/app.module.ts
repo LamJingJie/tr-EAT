@@ -22,6 +22,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicStorageModule } from '@ionic/storage';
 
+import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
+import { Market } from '@ionic-native/market/ngx';
+import { AppAvailability } from '@ionic-native/app-availability/ngx';
+
 import { KeyValuePipe } from '@angular/common';
 import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { CalendarModule } from 'ion2-calendar';
@@ -52,6 +56,9 @@ import Pickr from '@simonwep/pickr';
     SplashScreen,
     Storage,
     KeyValuePipe,
+    AppLauncher,
+    Market,
+    AppAvailability,
     CartTotalCostPipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

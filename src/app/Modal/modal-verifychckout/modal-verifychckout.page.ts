@@ -18,6 +18,9 @@ import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foo
 import { first } from 'rxjs/operators';
 import { HistoryService} from 'src/app/services/history/history.service';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
+import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
+import { Market } from '@ionic-native/market/ngx';
+import { AppAvailability } from '@ionic-native/app-availability/ngx';
 
 @Component({
   selector: 'app-modal-verifychckout',
@@ -46,7 +49,7 @@ export class ModalVerifychckoutPage implements OnInit {
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
     private cartService: CartService, private loading: LoadingController, private historyService: HistoryService,
-    private canteenService: CanteenService) { 
+    private canteenService: CanteenService, private appLauncher: AppLauncher, private market: Market, private appAvail: AppAvailability) { 
 
     }
 
@@ -82,9 +85,65 @@ export class ModalVerifychckoutPage implements OnInit {
   
    //console.log(this.cart)
    var todayDate: Date = new Date();
+   let app;
 
+   //Open app on android phone for paynow 
+   const options: AppLauncherOptions={
+    
+   }
+   if (this.platform.is('android')) {
+     if(this.paymentmethod === "PAYLAH"){
+        app = 'com.dbs.dbspaylah';
+        options.packageName = 'com.dbs.dbspaylah'
+     }
+     if(this.paymentmethod === "PAYNOW"){
+        app = 'com.ocbc.mobile';
+        options.uri = 'fb://profile'
+     } 
+  }
+  
+  this.appAvail.check(app)
+    .then(
+
+      //Available
+      (yes: boolean) => {
+        alert(app + ' is available')
+        this.appLauncher.canLaunch(options).then((launched: Boolean)=>{
+          if(launched){
+            this.appLauncher.launch(options);
+          }else{
+            alert('Unable to open')
+            this.market.open(app); //Open app store 
+          }
+        }).catch((err)=>{
+          alert("Error: " + err);
+        })
+      },
+
+      //Unavailable
+      (no: boolean) => {
+        alert(app + ' is NOT available')
+        this.market.open(app);//Open app store
+      }
+    );
+   /*this.appLauncher.canLaunch(options).then((launched: Boolean)=>{
+     if(launched){
+       this.appLauncher.launch(options).then(()=>{
+         alert("Opened!");
+       }).catch((err)=>{
+         alert(JSON.stringify(err));
+         this.market.open(options.toString());
+       })
+     }else{
+       alert("Unable to open")
+       this.market.open(options.toString());
+     }
+   }).catch((err=>{
+     alert(JSON.stringify(err));
+     this.market.open(options.toString());
+   }))*/
    
-   await this.presentLoadingPay();
+   /*await this.presentLoadingPay();
     var totalquantity = 0;
     this.cart.forEach((res, index)=>{
       //console.log(res['id']);
@@ -109,7 +168,7 @@ export class ModalVerifychckoutPage implements OnInit {
     
     this.loading.dismiss(null,null,'pay'); 
   
-    this.dismiss();
+    this.dismiss();*/
     
   }
 
