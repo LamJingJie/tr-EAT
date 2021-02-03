@@ -94,93 +94,83 @@ export class ModalVerifychckoutPage implements OnInit {
    if (this.platform.is('android')) {
      if(this.paymentmethod === "PAYLAH"){
         app = 'com.dbs.dbspaylah';
-        options.packageName = 'com.dbs.dbspaylah'
+        options.packageName = 'com.dbs.dbspaylah';
      }
      if(this.paymentmethod === "PAYNOW"){
         app = 'com.ocbc.mobile';
-        options.uri = 'fb://profile'
+        options.packageName = 'com.ocbc.mobile';
      } 
   }
   
+  //Check if app is installed, if not open app store to download
   this.appAvail.check(app)
     .then(
 
       //Available
       (yes: boolean) => {
-        alert(app + ' is available')
-        this.appLauncher.canLaunch(options).then((launched: Boolean)=>{
+        //alert(app + ' is available')
+        this.appLauncher.canLaunch(options).then(async (launched: Boolean)=>{
           if(launched){
+
+            /*await this.presentLoadingPay();
+            var totalquantity = 0;
+            this.cart.forEach((res, index)=>{
+              //console.log(res['id']);
+              //Get latest data for availquantity
+              this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+                //console.log(foodres);
+
+                totalquantity = foodres['availquantity'] + res['orderquantity'];
+                //console.log(totalquantity);
+                //1. Add orderquantity to respective food
+                this.foodService.updateAvailQuantity(res.id, totalquantity);
+
+                //2. Add cart data into history db, date will be the same for all food in a cart.
+                this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
+                res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);  
+              }))    
+            })
+            //3. Delete all carts data
+            await this.cartService.deleteCart(this.user);
+  
+            this.loading.dismiss(null,null,'pay'); 
+            this.dismiss();*/
+
             this.appLauncher.launch(options);
+            //When successfully launched
+            
           }else{
-            alert('Unable to open')
+            //alert('Unable to open');
             this.market.open(app); //Open app store 
           }
         }).catch((err)=>{
-          alert("Error: " + err);
+          this.showError(err);
+          
         })
       },
 
       //Unavailable
       (no: boolean) => {
-        alert(app + ' is NOT available')
+        this.showError(app + " not available");
         this.market.open(app);//Open app store
       }
     );
-   /*this.appLauncher.canLaunch(options).then((launched: Boolean)=>{
-     if(launched){
-       this.appLauncher.launch(options).then(()=>{
-         alert("Opened!");
-       }).catch((err)=>{
-         alert(JSON.stringify(err));
-         this.market.open(options.toString());
-       })
-     }else{
-       alert("Unable to open")
-       this.market.open(options.toString());
-     }
-   }).catch((err=>{
-     alert(JSON.stringify(err));
-     this.market.open(options.toString());
-   }))*/
-   
-   /*await this.presentLoadingPay();
-    var totalquantity = 0;
-    this.cart.forEach((res, index)=>{
-      //console.log(res['id']);
-      //Get latest data for availquantity
-      this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
-        //console.log(foodres);
 
-        totalquantity = foodres['availquantity'] + res['orderquantity'];
-        //console.log(totalquantity);
-        //1. Add orderquantity to respective food
-        this.foodService.updateAvailQuantity(res.id, totalquantity);
-
-        //2. Add cart data into history db, date will be the same for all food in a cart.
-        this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
-        res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);  
-      }))
-  
-         
-    })
-    //3. Delete all carts data
-    await this.cartService.deleteCart(this.user);
-    
-    this.loading.dismiss(null,null,'pay'); 
-  
-    this.dismiss();*/
-    
   }
 
   async presentLoadingPay(){
     const loading3 = await this.loading.create({
       cssClass: 'my-custom-class',
-      message: 'Paying...',
       id: 'pay'
     });
     await loading3.present();
 
     //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+  }
+
+  async showError(error){
+    const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 
   dismiss() {
