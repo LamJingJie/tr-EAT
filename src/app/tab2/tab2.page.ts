@@ -20,6 +20,8 @@ import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foo
 import { first } from 'rxjs/operators';
 import { ModalVerifychckoutPage } from 'src/app/Modal/modal-verifychckout/modal-verifychckout.page';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
+import { Clipboard } from '@ionic-native/clipboard/ngx';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-tab2',
@@ -33,6 +35,11 @@ export class Tab2Page {
   orderSubscription: Subscription;
   getStallNameSubscription: Subscription;
   canteenSub: Subscription;
+
+  historySub:Subscription;
+
+  getPaidBoolean: Subscription;
+  paid: boolean = false;
 
   //vendor
   vendorOrderSub: Subscription;
@@ -49,24 +56,39 @@ export class Tab2Page {
   totalPriceAll: number;
 
   paymentMethod: any;
+  bankChosen: any;
 
   disabled:boolean;
 
   receiptData: any = [];
+
+  historyData: any[] = [];
+  totalcostall: number;
 
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
-    private cartService: CartService, private historyService: HistoryService, private canteenService: CanteenService ) {
-      this.paymentMethod = 'PAYNOW';
+    private cartService: CartService, private historyService: HistoryService, private canteenService: CanteenService,
+    private clipboard: Clipboard, private loading: LoadingController, private firestore: AngularFirestore,) {
+      this.paymentMethod = 'OCBC';
+  
     }
 
   ngOnInit(){
     
     
 
+  }
+
+  copy(number: string){
+    //console.log(number);
+    this.clipboard.copy(number).then(()=>{
+      this.showClipboardMsg();
+    }).catch((err)=>{
+      this.showError(err);
+    });
   }
 
   async aboutus_modal(){
@@ -111,11 +133,14 @@ export class Tab2Page {
 
     await modal.onWillDismiss().then((res=>{
       this.calculate_total_price();
+      this.checkIfPaid();
+      this.getPending();
     }));
     
   
 
   }
+
 
   changePaymentMtd(event){
     this.paymentMethod = event;
@@ -123,24 +148,32 @@ export class Tab2Page {
 
   increaseAmt(quantity, cartid){
     //console.log(quantity);
-    quantity = quantity + 1;
-    this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
-      this.calculate_total_price();
-    }));
+     //Check if sponsor has paid and prevent them from increasing current amt
+ 
+      quantity = quantity + 1;
+      this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+        this.calculate_total_price();
+      }));
+ 
+   
   }
 
   decreaseAmt(quantity, cartid){
     //console.log(quantity);
-    if(quantity > 1){
-      //console.log(">1");
-      quantity = quantity -1;
-      this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
-        this.calculate_total_price();
-      }));
-    }else{
-      //console.log("<1");
-      this.quantityRemove(cartid);
-    }
+    //Check if sponsor has paid and prevent them from decreasing current amt
+
+      if(quantity > 1){
+        //console.log(">1");
+        quantity = quantity -1;
+        this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+          this.calculate_total_price();
+        }));
+      }else{
+        //console.log("<1");
+        this.quantityRemove(cartid);
+      }
+  
+    
   }
 
 
@@ -154,6 +187,11 @@ export class Tab2Page {
       this.getCart().then(res=>{
         this.calculate_total_price();
       });
+      this.checkIfPaid().then((res=>{
+        if(res === true){
+          this.getPending();
+        }
+      }));
     }
    
    
@@ -180,6 +218,7 @@ export class Tab2Page {
 
 
   }
+  
 
   //For vendors, retrieve latest orders
   getOrders(){
@@ -194,6 +233,7 @@ export class Tab2Page {
   getReceipt(){
     this.receiptSubscription = this.userService.getOne(this.userEmail).subscribe((res=>{
       this.receiptData = res;
+      //console.log(res);
       if(this.receiptData.orderid !== ""){
 
         //Get foodname and date of order
@@ -226,11 +266,105 @@ export class Tab2Page {
     return new Promise((resolve, reject) =>{
       this.cartSubscription = this.cartService.getAllCart(this.userEmail).subscribe((res=>{
         this.cartArray = res;
-       
+
         resolve(this.cartArray);
       }))
     });
     
+  }
+
+  //Check if sponsor has paid
+  checkIfPaid(){
+    return new Promise((resolve, reject)=>{
+      this.getPaidBoolean = this.userService.getOne(this.userEmail).subscribe((res =>{
+        this.paid = res['paid'];
+        //console.log(this.paid);
+        resolve(this.paid);
+      }))
+    })
+   
+  }
+
+  //Get history that is waiting to be confirmed as paid for sponsors
+  getPending(){
+    this.totalcostall = 0;
+    this.historySub = this.historyService.getSponsorHistory(this.userEmail, false).subscribe((res=>{
+      this.historyData = res;
+      this.historyData.forEach((val, index)=>{
+        this.totalcostall = this.totalcostall + val['totalcost'];
+      })
+
+      this.historySub.unsubscribe();
+    }))
+  }
+
+  /*
+  async paymentMade(){
+    const alert2 = await this.alertCtrl.create({
+      header: 'Payment Confirmation',
+      message: 'changes is irrevisible',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:async ()=>{
+            var todayDate: Date = new Date();
+            await this.presentLoadingConfirm();
+            this.userService.updatePaid(this.userEmail, false);
+
+            //Get history that isn't paid 
+            this.historyService.getHistoryNotPaid(this.userEmail).pipe(first()).subscribe((resArray=>{
+              //console.log(resArray);
+              var totalquantity = 0;
+              resArray.forEach((res, index)=>{
+                //console.log(res['id'])
+                //console.log(this.userEmail);
+                this.historyService.updateHistoryDate(this.userEmail, res['id'], todayDate);
+                this.historyService.updateConfirmPay(this.userEmail, res['id']);  
+                
+                //Get latest data for availquantity
+                //check if food has been deleted by admin
+                var foodDoc = this.firestore.collection('food').doc(res['foodid']);           
+                foodDoc.get().toPromise().then(foodDoc =>{                   
+                  if(foodDoc.exists){
+                    totalquantity = foodDoc.get('availquantity') + res['orderquantity'];
+                    //console.log(totalquantity);
+                    //Add orderquantity to respective food
+                    this.foodService.updateAvailQuantity(res['foodid'], totalquantity);            
+                  }
+                })
+              })
+            }))
+           
+            this.loading.dismiss(null,null,'cpay');
+            this.ionViewWillLeave() //unsubscribe so won't cause any issues when page refresh
+            this.ionViewWillEnter() //refresh page
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel',
+          handler: async ()=>{
+            console.log("no");
+          }
+        }
+      ]
+    });
+
+    await alert2.present();
+
+   
+  }
+  */
+
+  async presentLoadingConfirm(){
+    const loading3 = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message:'Confirming Payment...',
+      id: 'cpay'
+    });
+    await loading3.present();
+
+    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
   }
 
   calculate_total_price(){
@@ -329,7 +463,18 @@ export class Tab2Page {
     await alert1.present();
   }
 
+  async showClipboardMsg(){
+    const toast = await this.toast.create({message: "Copied to clipboard", position: 'bottom', duration: 3000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
+  async showError(error){
+    const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
+  }
+
   ionViewWillLeave(){
+   
     if(this.cartSubscription){
       this.cartSubscription.unsubscribe();
     }
@@ -350,6 +495,12 @@ export class Tab2Page {
     }
     if(this.canteenSub){
       this.canteenSub.unsubscribe();
+    }
+    if(this.getPaidBoolean){
+      this.getPaidBoolean.unsubscribe();
+    }
+    if(this.historySub){
+      this.historySub.unsubscribe();
     }
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){

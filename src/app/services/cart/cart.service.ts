@@ -36,6 +36,10 @@ export class CartService {
     return this.firestore.collection('cart').doc(email).delete();
   }
 
+  deleteCartByID(email, id){
+    return this.firestore.collection('cart').doc(email).collection('data').doc(id).delete();
+  }
+
   updateQuantity(email, quantity, foodid){
     return this.firestore.collection('cart').doc(email).collection('data').doc(foodid).update({orderquantity: quantity});
   }

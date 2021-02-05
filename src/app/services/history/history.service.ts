@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   providedIn: 'root'
 })
 export class HistoryService {
-  
+  history: Subscription;
 
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController) { }
 
@@ -27,11 +27,25 @@ export class HistoryService {
     console.log(vendorid)
     console.log(totalcost)*/
     return this.firestore.collection("history").doc(userid).collection('data').add({canteenid: canteenid, date: date, foodid: foodid,
-    foodname: foodname, foodprice: foodprice, image: image, orderquantity: orderquantity, vendorid: vendorid, totalcost: totalcost});
+    foodname: foodname, foodprice: foodprice, image: image, orderquantity: orderquantity, vendorid: vendorid, totalcost: totalcost, confirmpayment: false});
   }
 
-  getSponsorHistory(email){
-    return this.firestore.collection("history").doc(email).collection('data', ref=> ref.orderBy('date', 'desc')).valueChanges({idField: 'id'});
+  getSponsorHistory(email, confirmpayment: boolean){
+    return this.firestore.collection("history").doc(email).collection('data', ref=> ref.orderBy('date', 'desc').where('confirmpayment', '==', confirmpayment)).valueChanges({idField: 'id'});
+  }
+
+  getHistoryNotPaid(email){
+    return this.firestore.collection("history").doc(email).collection('data', ref=> ref.where('confirmpayment', '==', false)).valueChanges({idField: 'id'});
+  }
+
+  updateConfirmPay(email, id){
+  
+    return this.firestore.collection("history").doc(email).collection('data').doc(id).update({confirmpayment: true});
+    
+  }
+  //Update date to when the student clicks on confirm payment
+  updateHistoryDate(email, id, date){
+    return this.firestore.collection("history").doc(email).collection('data').doc(id).update({date: date});
   }
 
  

@@ -90,7 +90,11 @@ const routes: Routes = [
           {
             path: 'adminorder-monthly',
             loadChildren: () => import('../pages/adminorder-monthly/adminorder-monthly.module').then( m => m.AdminorderMonthlyPageModule)
-          }
+          },
+          {
+            path: 'admin-verify',
+            loadChildren: () => import('../pages/admin-verify/admin-verify.module').then( m => m.AdminVerifyPageModule)
+          },
         ]
         
       },

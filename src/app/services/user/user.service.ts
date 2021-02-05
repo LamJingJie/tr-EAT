@@ -21,7 +21,7 @@ export class UserService {
 
   addSponsor(email, role){
     // console.log(email + role);
-    return  this.firestore.collection('users').doc(email).set({role: role, listed: true, deleted: false});
+    return  this.firestore.collection('users').doc(email).set({role: role, listed: true, deleted: false, paid: false});
 
   }
 
@@ -77,6 +77,10 @@ export class UserService {
   getVendorBasedOnCanteen(canteen){
     return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen).where('listed', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
+
+  getOnlySponsor_Unverfied(){
+    return this.firestore.collection('users', ref=> ref.where('role', '==', 'sponsor').where('paid', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
+  }
   
 
   deleteUser(id){
@@ -106,13 +110,20 @@ export class UserService {
   }
 
   updateStamp(email, stamp: number){
-    console.log(stamp);
+    //console.log(stamp);
     return this.firestore.collection('users').doc(email).update({stampLeft: stamp})
   }
 
   //For students when they redeem a food
   updateOrderId(email, orderid){
     return this.firestore.collection('users').doc(email).update({orderid: orderid});
+  }
+
+  //Students//
+  //---Change to 'true' when user paid---
+  //---Change back to 'false' when user confirm payment---
+  updatePaid(email, paid: boolean){
+    return this.firestore.collection('users').doc(email).update({paid: paid});
   }
 
  

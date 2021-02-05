@@ -21,6 +21,7 @@ import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { AppLauncher, AppLauncherOptions } from '@ionic-native/app-launcher/ngx';
 import { Market } from '@ionic-native/market/ngx';
 import { AppAvailability } from '@ionic-native/app-availability/ngx';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-modal-verifychckout',
@@ -49,7 +50,8 @@ export class ModalVerifychckoutPage implements OnInit {
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
     private cartService: CartService, private loading: LoadingController, private historyService: HistoryService,
-    private canteenService: CanteenService, private appLauncher: AppLauncher, private market: Market, private appAvail: AppAvailability) { 
+    private canteenService: CanteenService, private appLauncher: AppLauncher, private market: Market, private appAvail: AppAvailability,
+    private firestore: AngularFirestore) { 
 
     }
 
@@ -63,21 +65,23 @@ export class ModalVerifychckoutPage implements OnInit {
     
     this.totalPriceAll = 0;
     this.cart.forEach((res,index)=>{
-      
-     //Get data so that if there's any changes to the db, the user will see it here as the cart page doesn't automatically update
+
+      //Get data so that if there's any changes to the db, the user will see it here as the cart page doesn't automatically update
       this.foodSub = this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
+       
         this.cart[index].foodname = foodres['foodname']; //store foodname
         this.cart[index].individualfoodPrice = foodres['foodprice'] * res['orderquantity']; //total price for individual food
         this.cart[index].image = foodres['image'];
         this.totalPriceAll += res['orderquantity'] * foodres['foodprice'];
+    
       }))
-      
+ 
     })
     //console.log(this.cart);
 
     setTimeout(()=>{
       this.dismiss();
-    }, 20000) //20 seconds
+    }, 5000) //5 seconds
   }
 
   async pay(){
@@ -92,14 +96,18 @@ export class ModalVerifychckoutPage implements OnInit {
     
    }
    if (this.platform.is('android')) {
-     if(this.paymentmethod === "PAYLAH"){
-        app = 'com.dbs.dbspaylah';
-        options.packageName = 'com.dbs.dbspaylah';
-     }
-     if(this.paymentmethod === "PAYNOW"){
-        app = 'com.ocbc.mobile';
-        options.packageName = 'com.ocbc.mobile';
-     } 
+    if(this.paymentmethod === "DBS"){
+      app = 'com.dbs.dbspaylah';
+      options.packageName = 'com.dbs.dbspaylah';
+    }
+    if(this.paymentmethod === "OCBC"){
+      app = 'com.ocbc.mobile';
+      options.packageName = 'com.ocbc.mobile';
+    } 
+    if(this.paymentmethod === "UOB"){
+      app = 'com.uob.mighty.app';
+      options.packageName = 'com.uob.mighty.app';
+    } 
   }
   
   //Check if app is installed, if not open app store to download
@@ -112,40 +120,31 @@ export class ModalVerifychckoutPage implements OnInit {
         this.appLauncher.canLaunch(options).then(async (launched: Boolean)=>{
           if(launched){
 
-            /*await this.presentLoadingPay();
-            var totalquantity = 0;
+            await this.presentLoadingPay();
+ 
             this.cart.forEach((res, index)=>{
               //console.log(res['id']);
-              //Get latest data for availquantity
-              this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
-                //console.log(foodres);
 
-                totalquantity = foodres['availquantity'] + res['orderquantity'];
-                //console.log(totalquantity);
-                //1. Add orderquantity to respective food
-                this.foodService.updateAvailQuantity(res.id, totalquantity);
-
-                //2. Add cart data into history db, date will be the same for all food in a cart.
-                this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
-                res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']);  
-              }))    
+              //Add cart data into history db, date will be the same for all food in a cart.
+              this.historyService.transfer_cart_to_history(this.user, todayDate, res['canteenid'], res.id, res['foodname'],
+              res['price'], res['image'], res['orderquantity'], res['userid'], res['individualfoodPrice']); 
             })
-            //3. Delete all carts data
+            this.userService.updatePaid(this.user, true);
+            
+            //Delete all carts data
             await this.cartService.deleteCart(this.user);
   
             this.loading.dismiss(null,null,'pay'); 
-            this.dismiss();*/
+            this.dismiss();
+               
+            this.appLauncher.launch(options);      
 
-            this.appLauncher.launch(options);
-            //When successfully launched
-            
           }else{
             //alert('Unable to open');
-            this.market.open(app); //Open app store 
+            this.showError("Unable to open");        
           }
         }).catch((err)=>{
           this.showError(err);
-          
         })
       },
 
@@ -154,7 +153,7 @@ export class ModalVerifychckoutPage implements OnInit {
         this.showError(app + " not available");
         this.market.open(app);//Open app store
       }
-    );
+    ); 
 
   }
 

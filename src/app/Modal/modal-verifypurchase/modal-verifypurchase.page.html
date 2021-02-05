@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+   
+    <ion-title>{{user}}</ion-title>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ 
+  
+  <ion-button style="width: 100%;" block (click)="verify()">Verify Purchase</ion-button>
+
+  <div style="padding: 10px;">
+    <h4 style="text-align: center;">Cart (Total: {{totalPriceAll | currency}})</h4>
+    <div> 
+      <ion-item *ngFor="let history of historyArray" style="display: flex;">
+        <div style="flex: 2;">
+          {{history.foodname}} - x{{history.orderquantity || 1}} 
+        </div>
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+          {{history.totalcost | currency}}
+        </div>
+      </ion-item>
+    </div>
+   
+  </div>
+  
+</ion-content>

@@ -35,10 +35,13 @@ cartSubscription: Subscription;
 foodRedemSub: Subscription;
 studentDataSub: Subscription;
 
+getPaid: Subscription;
+
 checkOrderSubscription: Subscription;
 
 
 userSub: Subscription;
+userSub2: Subscription;
 redeemSub: Subscription;
 
 vendor: any;
@@ -84,6 +87,8 @@ number: number;
 today: Date = new Date();
 today2: Date = new Date();
 ordersMade: boolean; //for students, true if they have made any orders today, false if not.
+
+paid: boolean = false;
 
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
@@ -141,12 +146,14 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
     //console.log(this.canteen);
     this.userEmail = await this.storage.get('email');
     this.calculateTotalCost();
-    this.getStudentData();
+    
 
     this.userRole = await this.storage.get('role');
     this.filterFood(this.chosenFilter);
 
     if(this.userRole === 'student'){
+      this.getStudentData();
+
       //Check if current user has made any orders today
       this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
         //console.log(res);
@@ -158,8 +165,18 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
         }
       }))
     }
+
+    if(this.userRole === 'sponsor'){
+      this.checkIfPaid();
+    }
    
    
+  }
+
+  checkIfPaid(){
+    this.getPaid = this.userService.getOne(this.userEmail).subscribe((res=>{
+      this.paid = res['paid'];
+    }))
   }
 
   getStudentData(){
@@ -168,6 +185,8 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
       this.stampsLeft = res['stampLeft'];
     }))
   }
+
+
 
 
   calculateTotalCost(){
@@ -240,6 +259,9 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
     }
     if(this.checkOrderSubscription){
       this.checkOrderSubscription.unsubscribe();
+    }
+    if(this.getPaid){
+      this.getPaid.unsubscribe();
     }
    
   }
@@ -337,20 +359,56 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
   }
 
   //Sponsors
-  CartFood(foodid, foodname, vendorid){
+  async CartFood(foodid, foodname, vendorid){
     //Add data into cart 
-    var foodname123 = foodname;
-    var amountOrdered = this.foodM.get(foodid);
-    //console.log(amountOrdered);
-    this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
-      this.CartshowSuccess(foodname123);
-      this.calculateTotalCost();
-      this.filterFood(this.chosenFilter);
-     
-    })).catch((err=>{
-      this.showError(err);
-      this.filterFood(this.chosenFilter);//Refresh page
-    }))
+
+    //If paid allow to add to cart
+    if(this.paid === false){
+      var foodname123 = foodname;
+      await this.presentLoadCart();
+      var amountOrdered = this.foodM.get(foodid);
+      //console.log(amountOrdered);
+      //Check if food has been deleted by admin before continuing.
+      var foodDoc = this.firestore.collection('food').doc(foodid);
+
+        foodDoc.get().toPromise().then(doc=>{
+          if(!doc.exists){
+            this.showError("Food does not exists");
+            this.loading.dismiss(null,null,'cart');
+            this.filterFood(this.chosenFilter); //refresh
+          }else{
+             //Get vendor 'listed' boolean field
+             this.userSub2 = this.userService.getOne(vendorid).subscribe((userres=>{
+              var listed = userres['listed'];
+              //Check if vendor is currently listed
+              if(listed === true){
+                this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
+                  this.CartshowSuccess(foodname123);
+                  this.calculateTotalCost();
+                  this.filterFood(this.chosenFilter);
+                  this.loading.dismiss(null,null,'cart');
+                })).catch((err=>{
+                  this.showError(err);
+                  this.loading.dismiss(null,null,'cart');
+                  this.filterFood(this.chosenFilter);//Refresh page
+                }))
+                
+              }else{
+                this.showError('Vendor is unavailable currently.')
+                this.loading.dismiss(null,null,'cart');
+                this.navCtrl.pop(); //go back to prev page.
+              }
+              this.userSub2.unsubscribe();
+            }))
+           
+          }
+        })
+      
+    }else{
+      this.showError('Unable to add to cart as you have not confirm your previous purchase');
+      this.router.navigate(['/tabs/tab2']);
+    }
+    
   }
 
   //Student
@@ -473,6 +531,18 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
 
   }
 
+  async presentLoadCart(){
+    const loading3 = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message: 'Adding to cart...',
+      id: 'cart'
+    });
+    await loading3.present();
+
+    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+
+  }
+
 
   async CartshowSuccess(foodname){
     const toast = await this.toast.create({message: '"' + foodname + '"' + ' has been added to cart.', position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
@@ -494,7 +564,7 @@ ordersMade: boolean; //for students, true if they have made any orders today, fa
       this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
 
         this.foodlistArray = res;
-        console.log(this.foodlistArray);
+        //console.log(this.foodlistArray);
         res.forEach((res=>{
           //console.log(res.id);
           this.foodM.set(res.id, this.count); //Store each food with count = 1

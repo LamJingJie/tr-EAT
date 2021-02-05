@@ -57,7 +57,13 @@ const routes: Routes = [
   {
     path: 'modal-aboutus',
     loadChildren: () => import('./Modal/modal-aboutus/modal-aboutus.module').then( m => m.ModalAboutusPageModule)
+  },  {
+    path: 'modal-verifypurchase',
+    loadChildren: () => import('./Modal/modal-verifypurchase/modal-verifypurchase.module').then( m => m.ModalVerifypurchasePageModule)
   },
+
+  
+
  
 
 

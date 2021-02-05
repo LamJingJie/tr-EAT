@@ -20,13 +20,13 @@
   </ion-item>
 
   <div>
-    Total: {{total | currency}}
+    Total: {{totalPriceAll | currency}}
   </div>
   <div>
     Payment Method: {{paymentmethod}}
   </div>
 
-  <ion-button (click)="pay()">
+  <ion-button *ngIf="totalPriceAll !== 0" (click)="pay()">
     CONFIRM
   </ion-button>
  

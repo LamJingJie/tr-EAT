@@ -7,10 +7,8 @@ import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
 
 import { AngularFireModule } from '@angular/fire'; 
 import { AngularFireDatabaseModule } from '@angular/fire/database'; 
@@ -29,6 +27,9 @@ import { AppAvailability } from '@ionic-native/app-availability/ngx';
 import { KeyValuePipe } from '@angular/common';
 import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { CalendarModule } from 'ion2-calendar';
+
+import { Clipboard } from '@ionic-native/clipboard/ngx';
+
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
 import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
@@ -58,6 +59,7 @@ import Pickr from '@simonwep/pickr';
     KeyValuePipe,
     AppLauncher,
     Market,
+    Clipboard,
     AppAvailability,
     CartTotalCostPipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }

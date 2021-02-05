@@ -103,7 +103,7 @@ export class Tab3Page {
   }
 
   getHistory(){
-    this.historysub = this.historyService.getSponsorHistory(this.userEmail).subscribe((res=>{
+    this.historysub = this.historyService.getSponsorHistory(this.userEmail, true).subscribe((res=>{
       this.orderArray = res;
 
       //get canteen name, canteen color and stall name
@@ -117,7 +117,7 @@ export class Tab3Page {
           this.orderArray[index].stallname = userres['stallname'];
         }))
       })
-      console.log(res);
+      //console.log(res);
     }))
   }
 

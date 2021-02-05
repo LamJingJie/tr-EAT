@@ -15,56 +15,85 @@
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
- 
+  <div style="text-align: center;">
+    <h5><b>IMPORTANT</b></h5>
+    <p>Do sent to <b>+65 <b (click)="copy('12345678')"id="clipboard">12345678</b></b> during payment.</p>
+    <p>After payment, you have to wait for the admin to verify that you have paid before you can purchase again.</p>
+  </div>
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">
-    <h5>YOUR CART</h5>
+    
 
-  <!---Cart here--->
-  <ion-card>
-    <ion-item  *ngFor="let cart of cartArray">
+    <!---Cart here--->
+    <div *ngIf="paid === false">
+      <h5>YOUR CART</h5>
+      <ion-card>
+        <ion-item  *ngFor="let cart of cartArray">
 
-      <!--Quantity-->
-      <div>
-        <ion-icon name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
-        {{cart.orderquantity}}
-        <ion-icon name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
-      </div>
+          <!--Quantity-->
+          <div>
+            <ion-icon name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+            {{cart.orderquantity}}
+            <ion-icon name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+          </div>
 
-      <!--Food name-->
-      <div>
-        {{cart.foodname}}
-      </div>
+          <!--Food name-->
+          <div>
+            {{cart.foodname}}
+          </div>
 
-      <!--Price-->
-      <div>
-        Price:  {{cart.totalfoodprice | currency}}
-      </div>
+          <!--Price-->
+          <div>
+            Price:  {{cart.totalfoodprice | currency}}
+          </div>
 
       
      
-    </ion-item>
+        </ion-item>
 
-     <!--Total Price-->
-    <ion-item>
-      <div>
-        Total {{totalPriceAll | currency}}
-      </div>
-    </ion-item>
-  </ion-card>
+        <!--Total Price-->
+        <ion-item>
+          <div>
+            Total {{totalPriceAll | currency}}
+          </div>
+        </ion-item>
 
-  <!--Payment selection-->
-  <ion-select value="PAYNOW" (ionChange)="changePaymentMtd($event.detail.value)">
-    <ion-select-option value="PAYNOW">PAYNOW</ion-select-option>
-    <ion-select-option value="PAYLAH">PAYLAH</ion-select-option>
-  </ion-select>
+        <!--Payment selection-->
+        <ion-select value="OCBC" (ionChange)="changePaymentMtd($event.detail.value)">
+          <ion-select-option value="OCBC">OCBC - PAYNOW</ion-select-option>
+          <ion-select-option value ="UOB">UOB - PAYNOW</ion-select-option>
+          <ion-select-option value="DBS">DBS - PAYLAH</ion-select-option>
+        </ion-select>
+      </ion-card>
+      <!--Payment here-->
+      <ion-button *ngIf="totalPriceAll !== 0 && paid === false" [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
+    </div>
 
-  <br>
-  <p>Do sent to <b>+65 12345678</b> during payment.</p>
 
-  <!--Payment here-->
-  <ion-button *ngIf="totalPriceAll !== 0" [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
+    <div *ngIf="paid === true">
+      <h5>Previous Purchase Cart</h5>
+      <ion-card>
+        <ion-item *ngFor="let history of historyData" style="display:flex;">
+          <div style="flex: 1;">
+            {{history.foodname}}
+          </div>
+          <div style="flex: 2;">
+           quantity: {{history.orderquantity}}
+          </div>
+          <div style="flex: 2; display:flex; justify-content: flex-end;">
+            Price: {{history.totalcost | currency}}
+          </div>
+        </ion-item>
+        <ion-item>
+          Total: {{totalcostall | currency}}
+        </ion-item>
+      </ion-card>
+
+      <!--Payment confirmation-->
+      <!--<ion-button *ngIf="paid === true" [disabled]="disabled === true" (click)="paymentMade()">Confirmation of Payment Made</ion-button>-->
+    </div>
+
   </div>
   
 

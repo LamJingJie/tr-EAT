@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, ModalController, NavController, Platform } from '@ionic/angular'; 
 import { Router } from '@angular/router';
 import {CanteenService} from '../services/canteen/canteen.service';
+
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from '../services/user/user.service';
@@ -21,8 +22,10 @@ import { ModalAddvendorPage } from 'src/app/pages/adminaddvendor/modal-addvendor
 })
 export class Tab5Page {
   customBackBtnSubscription:Subscription;
+  sponsorSubscription: Subscription;
+  verify_count: number;
   constructor(private authService: AuthenticationService, private modalCtrl: ModalController, private alertCtrl: AlertController,
-    private router: Router, private platform: Platform, private navCtrl: NavController) {
+    private router: Router, private platform: Platform, private navCtrl: NavController, private userService: UserService) {
      
     
       
@@ -39,6 +42,8 @@ export class Tab5Page {
         this.leavePopup();
       });
     }
+
+    this.countVerify();
   }
 
   ionViewWillLeave(){
@@ -47,6 +52,9 @@ export class Tab5Page {
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   
+    }
+    if(this.sponsorSubscription){
+      this.sponsorSubscription.unsubscribe();
     } 
   }
 
@@ -57,29 +65,7 @@ export class Tab5Page {
   ngOnDestroy(){
    
   }
-
-
- /* async addAccountPopUp(){
-    /*const alert = await this.alertCtrl.create({
-      header: 'Add Vendor Accounts',
-      inputs: [{
-        name: 'name1',
-        type: 'text',
-        placeholder: 'placeholder1'
-      }]
-    });
-
-    await alert.present();*/
-
-
-   /* const modal = await this.modalCtrl.create({
-      component: ModalAddvendorPage
-    });
-     await modal.present();*/
-
-    // this.router.navigate(['/adminaddvendor']);
-     
-    
+       
   
   addCanteenPopUp(){
      this.router.navigate(['/tabs/tab5/canteen']);
@@ -98,6 +84,20 @@ export class Tab5Page {
   openOrdersMonthly(){
 
     this.router.navigate(['/tabs/tab5/adminorder-monthly']);
+  }
+
+  ViewVerify(){
+    this.router.navigate(['/tabs/tab5/admin-verify']);
+  }
+
+  //Count and display how many sponsor users require their purchases to be verified
+  countVerify(){
+    this.verify_count = 0;
+    this.sponsorSubscription = this.userService.getOnlySponsor_Unverfied().subscribe((res=>{
+      res.forEach((res,index)=>{
+        this.verify_count = this.verify_count + 1;
+      })
+    }))
   }
 
   async leavePopup(){

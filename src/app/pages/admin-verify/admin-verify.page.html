@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Verify</ion-title>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+<!--[routerLink]="['/tabs/tab5/viewaccount/admin-account-details', user.id]"-->
+  <ion-list>
+    <ion-item *ngFor="let sponsor of sponsorArray" (click)='verifyPurchase(sponsor.id)'>
+      {{sponsor.id}}
+    </ion-item>
+  </ion-list>
+
+  <h6 *ngIf="sponsorArray.length == 0" style="position: relative; top: 20%; text-align: center;">
+    Any sponsor users that requires purchase verification will be shown here
+  </h6>
+ 
+
+</ion-content>
