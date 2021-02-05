@@ -80,17 +80,24 @@ export class FoodService {
   //Delete food respective to the vendor
   deleteFoodVendorEmail(email){
     //console.log(email);
-    return this.food =  this.firestore.collection('food', ref => ref.where('userid','==',email)).get().subscribe(res=>{
+    return new Promise((resolve, reject) =>{
+      this.food = this.firestore.collection('food', ref => ref.where('userid','==',email)).get().subscribe(res=>{
      
-      res.forEach(doc=>{
-        var mergedName = doc.get('mergedName')
-        //console.log(mergedName);
-        this.storage.ref('Food Images/' + mergedName).delete(); //Delete previous food image
-        doc.ref.delete();
-        
-      })
-      this.food.unsubscribe();
-    });
+        res.forEach(doc=>{
+          try {
+            var mergedName = doc.get('mergedName')
+            //console.log(mergedName);
+            this.storage.ref('Food Images/' + mergedName).delete(); //Delete previous food image
+            doc.ref.delete(); 
+          } catch (error) {
+            //If there's any error in deleting, exit and return error message
+            reject(error);
+          }
+        })
+        resolve("Success");
+        this.food.unsubscribe();
+      });
+    })
   }
 
   //When admin didn't select any images to update/edit

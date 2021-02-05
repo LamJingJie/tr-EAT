@@ -368,13 +368,11 @@ export class AuthenticationService {
           this.userService.deleteUser(email);
          
           if(role === "vendor"){   
-            try {
-              this.foodService.deleteFoodVendorEmail(email);
-             
-            } catch (error) {
+   
+            this.foodService.deleteFoodVendorEmail(email).catch((error=>{
               console.log(error);
-            }
-
+            }));
+             
             //Delete stall image as well
             this.userService.deleteStallImg(email).catch((error=>{
               console.log(error);
@@ -390,11 +388,11 @@ export class AuthenticationService {
             //Delete "history" collection (maybe)
   
             //Delete Cart
-              this.cartService.deleteCart(email).then(res =>{
-                console.log(res);
-              }).catch(err=>{
-                console.log(err);
-              })
+            this.cartService.deleteCart(email).then(res =>{
+              console.log(res);
+            }).catch(err=>{
+              console.log(err);
+            })
            
           }
         
