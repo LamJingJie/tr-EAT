@@ -51,7 +51,6 @@ export class AuthenticationService {
 
     SignIn(email, password,role,listed){
 
-
     return new Promise(async (resolve, reject)=>{
       await this.storage.set('role',role); 
       await this.storage.set('email',email);

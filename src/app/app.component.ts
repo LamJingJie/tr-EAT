@@ -8,6 +8,7 @@ import { AngularFireAuth } from "@angular/fire/auth";
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from 'src/app/services/user/user.service';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',

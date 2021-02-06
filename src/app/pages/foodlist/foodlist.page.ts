@@ -371,44 +371,43 @@ paid: boolean = false;
       //Check if food has been deleted by admin before continuing.
       var foodDoc = this.firestore.collection('food').doc(foodid);
 
-        foodDoc.get().toPromise().then(doc=>{
-          if(!doc.exists){
-            this.showError("Food does not exists");
-            this.loading.dismiss(null,null,'cart');
-            this.filterFood(this.chosenFilter); //refresh
-          }else{
-             //Get vendor 'listed' boolean field
-             this.userSub2 = this.userService.getOne(vendorid).subscribe((userres=>{
-              var listed = userres['listed'];
-              //Check if vendor is currently listed
-              if(listed === true){
-                this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
-                  this.CartshowSuccess(foodname123);
-                  this.calculateTotalCost();
-                  this.filterFood(this.chosenFilter);
-                  this.loading.dismiss(null,null,'cart');
-                })).catch((err=>{
-                  this.showError(err);
-                  this.loading.dismiss(null,null,'cart');
-                  this.filterFood(this.chosenFilter);//Refresh page
-                }))
-                
-              }else{
-                this.showError('Vendor is unavailable currently.')
+      foodDoc.get().toPromise().then(doc=>{
+        if(!doc.exists){
+          this.showError("Food does not exists");
+          this.loading.dismiss(null,null,'cart');
+          this.filterFood(this.chosenFilter); //refresh
+        }else{
+            //Get vendor 'listed' boolean field
+            this.userSub2 = this.userService.getOne(vendorid).subscribe((userres=>{
+            var listed = userres['listed'];
+            //Check if vendor is currently listed
+            if(listed === true){
+              this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res=>{
+                this.CartshowSuccess(foodname123);
+                this.calculateTotalCost();
+                this.filterFood(this.chosenFilter);
                 this.loading.dismiss(null,null,'cart');
-                this.navCtrl.pop(); //go back to prev page.
-              }
-              this.userSub2.unsubscribe();
-            }))
+              })).catch((err=>{
+                this.showError(err);
+                this.loading.dismiss(null,null,'cart');
+                this.filterFood(this.chosenFilter);//Refresh page
+              }))
+                
+            }else{
+              this.showError('Vendor is unavailable currently.')
+              this.loading.dismiss(null,null,'cart');
+              this.navCtrl.pop(); //go back to prev page.
+            }
+            this.userSub2.unsubscribe();
+          }))
            
-          }
-        })
+        }
+      })
       
     }else{
       this.showError('Unable to add to cart as you have not confirm your previous purchase');
       this.router.navigate(['/tabs/tab2']);
-    }
-    
+    }   
   }
 
   //Student

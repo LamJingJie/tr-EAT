@@ -58,32 +58,77 @@ historySub:Subscription;
   }
 
   async verify(){
-    await this.presentLoadingConfirm();
-    var totalquantity = 0;
-    this.userService.updatePaid(this.user, false);
-    this.historyArray.forEach((res, index)=>{
-      //console.log(res['id'])
-      //console.log(this.userEmail);
-      //console.log(res);
-      //this.historyService.updateHistoryDate(this.user, res['id'], todayDate);
-      this.historyService.updateConfirmPay(this.user, res['id']);  //Change confirmpayment boolean to true
+
+    const alert1 = await this.alertCtrl.create({
+      message: 'Has ' + '<b>"' +this.user + '"</b>' + ' paid?' + '<br><br><br><br>' + 'Once accepted, it is irrevisible',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:async ()=>{
+            
+            await this.presentLoadingConfirm();
+            var totalquantity = 0;
+            this.userService.updatePaid(this.user, false);
+            this.historyArray.forEach((res, index)=>{
+              //console.log(res['id'])
+              //console.log(this.userEmail);
+              //console.log(res);
+              //this.historyService.updateHistoryDate(this.user, res['id'], todayDate);
+              this.historyService.updateConfirmPay(this.user, res['id']);  //Change confirmpayment boolean to true
         
-      //Get latest data for availquantity
-      //check if food has been deleted by admin
-      var foodDoc = this.firestore.collection('food').doc(res['foodid']);           
-      foodDoc.get().toPromise().then(foodDoc =>{                   
-        if(foodDoc.exists){
-          totalquantity = foodDoc.get('availquantity') + res['orderquantity'];
-          //console.log(totalquantity);
-          //Add orderquantity to respective food
-          this.foodService.updateAvailQuantity(res['foodid'], totalquantity);            
+              //Get latest data for availquantity
+              //check if food has been deleted by admin
+              var foodDoc = this.firestore.collection('food').doc(res['foodid']);           
+              foodDoc.get().toPromise().then(foodDoc =>{                   
+                if(foodDoc.exists){
+                  totalquantity = foodDoc.get('availquantity') + res['orderquantity'];
+                  //console.log(totalquantity);
+                  //Add orderquantity to respective food
+                  this.foodService.updateAvailQuantity(res['foodid'], totalquantity);            
+                }
+              })
+            })
+            this.loading.dismiss(null,null,'vpay');
+            this.dismiss();
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
         }
-      })
-    })
+      ]
+    });
 
-    this.loading.dismiss(null,null,'vpay');
-    this.dismiss();
+    await alert1.present();
 
+
+
+  }
+
+  //Deny purchase from sponsors 
+  async deny(){
+    const alert1 = await this.alertCtrl.create({
+      message: 'Deny Purchase from ' + '<b>"' + this.user + '"</b>' + '? ' + '<br><br><br><br>' + 'Once denied, it is irrevisible',
+      buttons:[
+        {
+          text: 'Yes',
+          handler:()=>{
+            console.log("Deny");
+            //Delete unpaid from history database\
+
+            //Update sponsor 'paid' status back to false
+        
+          }
+        },
+        {
+          text: 'No',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await alert1.present();
+    
   }
 
   async presentLoadingConfirm(){

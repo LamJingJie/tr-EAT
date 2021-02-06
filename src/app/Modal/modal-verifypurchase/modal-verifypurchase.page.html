@@ -7,11 +7,15 @@
 </ion-header>
 
 <ion-content>
- 
-  
-  <ion-button style="width: 100%;" block (click)="verify()">Verify Purchase</ion-button>
 
   <div style="padding: 10px;">
+
+    <br>
+    <ion-button style='width: 90%; margin:auto;' shape="block" (click)="verify()">Verify Purchase</ion-button>
+    <br>
+    <ion-button style='width: 90%; margin:auto;' shape="block" (click)="deny()">Deny Purchase</ion-button>
+    <br>
+
     <h4 style="text-align: center;">Cart (Total: {{totalPriceAll | currency}})</h4>
     <div> 
       <ion-item *ngFor="let history of historyArray" style="display: flex;">
