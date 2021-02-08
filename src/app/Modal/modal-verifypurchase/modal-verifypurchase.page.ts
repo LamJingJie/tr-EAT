@@ -68,13 +68,17 @@ historySub:Subscription;
             
             await this.presentLoadingConfirm();
             var totalquantity = 0;
-            this.userService.updatePaid(this.user, false);
+            this.userService.updatePaid(this.user, false).catch((res=>{
+              this.showError(res);
+            }));
             this.historyArray.forEach((res, index)=>{
               //console.log(res['id'])
               //console.log(this.userEmail);
               //console.log(res);
               //this.historyService.updateHistoryDate(this.user, res['id'], todayDate);
-              this.historyService.updateConfirmPay(this.user, res['id']);  //Change confirmpayment boolean to true
+              this.historyService.updateConfirmPay(this.user, res['id']).catch((res=>{
+                this.showError(res);
+              }));  //Change confirmpayment boolean to true
         
               //Get latest data for availquantity
               //check if food has been deleted by admin
@@ -84,9 +88,13 @@ historySub:Subscription;
                   totalquantity = foodDoc.get('availquantity') + res['orderquantity'];
                   //console.log(totalquantity);
                   //Add orderquantity to respective food
-                  this.foodService.updateAvailQuantity(res['foodid'], totalquantity);            
+                  this.foodService.updateAvailQuantity(res['foodid'], totalquantity).catch((res=>{
+                    this.showError(res);
+                  }));            
                 }
-              })
+              }).catch((res=>{
+                this.showError(res);
+              }))
             })
             this.loading.dismiss(null,null,'vpay');
             this.dismiss();
@@ -99,7 +107,9 @@ historySub:Subscription;
       ]
     });
 
-    await alert1.present();
+    await alert1.present().catch((res=>{
+      this.showError(res);
+    }));
 
 
 
@@ -112,12 +122,23 @@ historySub:Subscription;
       buttons:[
         {
           text: 'Yes',
-          handler:()=>{
-            console.log("Deny");
-            //Delete unpaid from history database\
+          handler:async ()=>{
+            await this.presentLoadingDeny();
+            //Delete unpaid from history database
+            this.historyArray.forEach((val, index)=>{
+              console.log(val);
+              this.historyService.delHistory(this.user, val['id']).catch((res=>{
+                this.showError(res);
+              }))
+            })
 
             //Update sponsor 'paid' status back to false
-        
+            this.userService.updatePaid(this.user, false).catch((res=>{
+              this.showError(res);
+            }));
+
+            this.loading.dismiss(null,null,'dpay');
+            this.dismiss();
           }
         },
         {
@@ -127,7 +148,9 @@ historySub:Subscription;
       ]
     });
 
-    await alert1.present();
+    await alert1.present().catch((res=>{
+      this.showError(res);
+    }));
     
   }
 
@@ -140,6 +163,22 @@ historySub:Subscription;
     await loading3.present();
 
     //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+  }
+
+  async presentLoadingDeny(){
+    const loading3 = await this.loading.create({
+      cssClass: 'my-custom-class',
+      message:'Denying purchase...',
+      id: 'dpay'
+    });
+    await loading3.present();
+
+    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+  }
+
+  async showError(error){
+    const toast = await this.toast.create({message: error, position: 'bottom', duration: 5000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 
   dismiss() {

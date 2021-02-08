@@ -148,11 +148,13 @@ export class Tab2Page {
 
   increaseAmt(quantity, cartid){
     //console.log(quantity);
-     //Check if sponsor has paid and prevent them from increasing current amt
+ 
  
       quantity = quantity + 1;
       this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
         this.calculate_total_price();
+      })).catch((res =>{
+        this.showError(res);
       }));
  
    
@@ -160,13 +162,15 @@ export class Tab2Page {
 
   decreaseAmt(quantity, cartid){
     //console.log(quantity);
-    //Check if sponsor has paid and prevent them from decreasing current amt
+  
 
       if(quantity > 1){
         //console.log(">1");
         quantity = quantity -1;
         this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
           this.calculate_total_price();
+        })).catch((res=>{
+          this.showError(res);
         }));
       }else{
         //console.log("<1");
@@ -186,11 +190,15 @@ export class Tab2Page {
     if(this.userRole === 'sponsor'){
       this.getCart().then(res=>{
         this.calculate_total_price();
-      });
+      }).catch((res=>{
+        this.showError(res);
+      }));
       this.checkIfPaid().then((res=>{
         if(res === true){
           this.getPending();
         }
+      })).catch((res=>{
+        this.showError(res);
       }));
     }
    
@@ -403,8 +411,12 @@ export class Tab2Page {
            //console.log("Yes")
            //console.log(this.receiptData.orderid);
            //Remove orderid from user db to empty string
-           this.userService.updateOrderId(this.userEmail, "");
-           this.orderService.updateComplete(this.receiptData.orderid);
+           this.userService.updateOrderId(this.userEmail, "").catch((res=>{
+             this.showError(res);
+           }));
+           this.orderService.updateComplete(this.receiptData.orderid).catch((res=>{
+             this.showError(res);
+           }));
           }
         },
         {
@@ -429,6 +441,8 @@ export class Tab2Page {
              //console.log("Food Removed!");
              this.calculate_total_price();
              
+           })).catch((res=>{
+             this.showError(res);
            }))
           }
         },

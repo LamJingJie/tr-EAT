@@ -96,8 +96,10 @@ export class Tab5Page {
     this.sponsorSubscription = this.userService.getOnlySponsor_Unverfied().subscribe((res=>{
       res.forEach((res,index)=>{
         this.verify_count = this.verify_count + 1;
+       
       })
     }))
+
   }
 
   async leavePopup(){

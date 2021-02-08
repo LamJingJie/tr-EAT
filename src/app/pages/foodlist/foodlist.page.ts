@@ -405,7 +405,7 @@ paid: boolean = false;
       })
       
     }else{
-      this.showError('Unable to add to cart as you have not confirm your previous purchase');
+      this.showError('Unable to add to cart as the admin has not confirmed your previous purchase');
       this.router.navigate(['/tabs/tab2']);
     }   
   }

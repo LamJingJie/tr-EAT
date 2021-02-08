@@ -48,6 +48,11 @@ export class HistoryService {
     return this.firestore.collection("history").doc(email).collection('data').doc(id).update({date: date});
   }
 
+  //Delete history
+  delHistory(email, id){
+    return this.firestore.collection("history").doc(email).collection('data').doc(id).delete();
+  }
+
  
 
 }

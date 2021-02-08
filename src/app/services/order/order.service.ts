@@ -50,7 +50,7 @@ export class OrderService {
 
   }
 
-  //Then change the orders instead of using canteenid, store its canteenname and colors instead when completed
+  //Students has collected the order and so, order is completed
   updateComplete(id){
     return this.firestore.collection('orders').doc(id).update({completed: true});
   }
