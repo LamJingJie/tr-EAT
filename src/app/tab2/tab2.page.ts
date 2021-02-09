@@ -192,6 +192,9 @@ export class Tab2Page {
 
 
   async ionViewWillEnter(){
+    
+    this.userEmail = await this.storage.get('email');
+    this.userRole = await this.storage.get('role');
 
     if(this.userRole === 'sponsor'){
       this.getCart().then(res=>{

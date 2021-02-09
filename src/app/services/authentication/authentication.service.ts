@@ -27,6 +27,7 @@ export class AuthenticationService {
   checkAdmin: boolean = false;
   checkAdmin2: boolean = false;
 
+
  // user: User[] = []
 //  users: User[] = [];
  // newUser: User = <User>{}
@@ -256,8 +257,14 @@ export class AuthenticationService {
 
           }else{
            
-            //this.router.navigateByUrl("login");
-            await this.navCtrl.navigateRoot("login");
+            //
+            //
+            //Used 'navigateByUrl' rather than 'navigateRoot' compared to the others in this function
+            //Reason: when user logs out, they will sign out as well and if 2 'navigateRoot' is runned,
+            //it will cause the page clicked afterwards, which in this case will be the signup page.
+            //it will result in the device back btn in the signup page to stop working.
+            this.router.navigateByUrl("login");
+            //await this.SignOut();
             console.log("Logged Out");  
             this.loading.dismiss(null, null, 'presentLoad');
            
@@ -342,9 +349,12 @@ export class AuthenticationService {
       })*/
       console.log("Log out")
       //this.router.navigateByUrl("login");
-      this.navCtrl.navigateRoot('/login');
+
+      //alert('signout')
       this.ngFireAuth.signOut();
+      this.navCtrl.navigateRoot("login");
       this.loading.dismiss(null, null, 'presentLoad2');
+      
      
    }
 
