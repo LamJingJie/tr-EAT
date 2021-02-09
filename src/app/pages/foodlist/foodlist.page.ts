@@ -555,11 +555,14 @@ paid: boolean = false;
 
   //Get food based on which filter user chose
   filterFood(filter){
+    
     //console.log(filter);
     //console.log(this.userRole);
 
     //For sponsors and vendor
     if(this.userRole === 'sponsor' || this.userRole === 'vendor'|| this.userRole === 'admin'){
+      this.foodM.clear(); //reset hashmap
+      
       this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res =>{
 
         this.foodlistArray = res;

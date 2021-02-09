@@ -76,9 +76,19 @@ export class Tab2Page {
   
     }
 
-  ngOnInit(){
+  async ngOnInit(){
     
-    
+    this.userEmail = await this.storage.get('email');
+    this.userRole = await this.storage.get('role');
+    //console.log(this.userRole)
+
+    if(this.userRole === 'student'){
+      this.getReceipt();
+    }
+
+    if(this.userRole === 'vendor'){
+      this.getOrders();
+    }
 
   }
 
@@ -183,10 +193,6 @@ export class Tab2Page {
 
   async ionViewWillEnter(){
 
-    this.userEmail = await this.storage.get('email');
-    this.userRole = await this.storage.get('role');
-    //console.log(this.userRole)
-
     if(this.userRole === 'sponsor'){
       this.getCart().then(res=>{
         this.calculate_total_price();
@@ -202,16 +208,6 @@ export class Tab2Page {
       }));
     }
    
-   
-    if(this.userRole === 'student'){
-      this.getReceipt();
-    }
-
-    if(this.userRole === 'vendor'){
-      this.getOrders();
-    }
-    
-
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
@@ -265,7 +261,7 @@ export class Tab2Page {
         //console.log("Empty orderid");
       }
      
-     // console.log(this.receiptData);
+      //console.log(this.receiptData);
  
     }))
   }
@@ -372,7 +368,7 @@ export class Tab2Page {
     });
     await loading3.present();
 
-    //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
+    
   }
 
   calculate_total_price(){
@@ -495,21 +491,6 @@ export class Tab2Page {
     if(this.foodSub){
       this.foodSub.unsubscribe();
     }
-    if(this.getStallNameSubscription){
-      this.getStallNameSubscription.unsubscribe();
-    }
-    if(this.orderSubscription){
-      this.orderSubscription.unsubscribe();
-    }
-    if(this.receiptSubscription){
-      this.receiptSubscription.unsubscribe();
-    }
-    if(this.vendorOrderSub){
-      this.vendorOrderSub.unsubscribe();
-    }
-    if(this.canteenSub){
-      this.canteenSub.unsubscribe();
-    }
     if(this.getPaidBoolean){
       this.getPaidBoolean.unsubscribe();
     }
@@ -524,7 +505,23 @@ export class Tab2Page {
     
   }
   ngOnDestroy(){
-    console.log("Destroy");
+    //console.log("Destroy");
+    if(this.receiptSubscription){
+      this.receiptSubscription.unsubscribe();
+    }
+    if(this.orderSubscription){
+      this.orderSubscription.unsubscribe();
+    }
+    if(this.canteenSub){
+      this.canteenSub.unsubscribe();
+    }
+    if(this.getStallNameSubscription){
+      this.getStallNameSubscription.unsubscribe();
+    }
+    if(this.vendorOrderSub){
+      this.vendorOrderSub.unsubscribe();
+    }
+
   }
 
   

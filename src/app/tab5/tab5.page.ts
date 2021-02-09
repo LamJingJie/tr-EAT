@@ -15,6 +15,7 @@ import { ModalAddvendorPage } from 'src/app/pages/adminaddvendor/modal-addvendor
 
 
 
+
 @Component({
   selector: 'app-tab5',
   templateUrl: 'tab5.page.html',
@@ -25,15 +26,16 @@ export class Tab5Page {
   sponsorSubscription: Subscription;
   verify_count: number;
   constructor(private authService: AuthenticationService, private modalCtrl: ModalController, private alertCtrl: AlertController,
-    private router: Router, private platform: Platform, private navCtrl: NavController, private userService: UserService) {
+    private router: Router, private platform: Platform, private navCtrl: NavController, private userService: UserService,
+    private storage: Storage) {
      
     
       
     }
 
-    ngOnInit(){
-     
-    }
+  ngOnInit(){
+    this.countVerify();
+  }
 
   ionViewWillEnter(){
     
@@ -43,7 +45,7 @@ export class Tab5Page {
       });
     }
 
-    this.countVerify();
+    
   }
 
   ionViewWillLeave(){
@@ -53,9 +55,7 @@ export class Tab5Page {
         this.customBackBtnSubscription.unsubscribe();
       }   
     }
-    if(this.sponsorSubscription){
-      this.sponsorSubscription.unsubscribe();
-    } 
+     
   }
 
   ionViewDidLeave(){
@@ -63,7 +63,9 @@ export class Tab5Page {
   }
 
   ngOnDestroy(){
-   
+    if(this.sponsorSubscription){
+      this.sponsorSubscription.unsubscribe();
+    }
   }
        
   
@@ -98,6 +100,7 @@ export class Tab5Page {
         this.verify_count = this.verify_count + 1;
        
       })
+      this.storage.set('count', this.verify_count);
     }))
 
   }

@@ -29,6 +29,7 @@ import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
 import { CalendarModule } from 'ion2-calendar';
 
 import { Clipboard } from '@ionic-native/clipboard/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
@@ -61,6 +62,7 @@ import Pickr from '@simonwep/pickr';
     Market,
     Clipboard,
     AppAvailability,
+    LocalNotifications,
     CartTotalCostPipe,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

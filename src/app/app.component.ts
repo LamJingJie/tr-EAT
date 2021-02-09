@@ -6,8 +6,10 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { Storage } from '@ionic/storage';
 import { UserService } from 'src/app/services/user/user.service';
-
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,8 @@ import { UserService } from 'src/app/services/user/user.service';
 export class AppComponent {
   //users: User[] = [];
   currentRole: any;
+  sponsorSubscription: Subscription;
+  verify_count: number;
  
 
   constructor(
@@ -29,22 +33,27 @@ export class AppComponent {
     public ngFireAuth: AngularFireAuth,
     private userService: UserService,
     private authService: AuthenticationService,
+    private localNotifications: LocalNotifications,
+    private storage: Storage
   ) {
   
     this.initializeApp();
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(async () => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
 
-          //Will check if user is authorized
-          this.authService.checkAuth();
-      
-      
+        //Will check if user is authorized
+        this.authService.checkAuth();
+ 
     });
 
     }
+
+
+
+
 
 }

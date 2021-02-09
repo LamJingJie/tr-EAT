@@ -31,6 +31,10 @@ export class FoodService {
     return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
   }
 
+  getAllFood(){
+    return this.firestore.collection('food').valueChanges({idField: 'id'});
+  }
+
   
 
 
@@ -56,6 +60,10 @@ export class FoodService {
     }else{
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true).where('availquantity', '>', 0)).valueChanges({idField:'id'});
     }
+  }
+
+  getRedeemableFood_ALL(){
+    return this.firestore.collection('food', ref=> ref.where('availquantity', '>', 0)).valueChanges({idField: 'id'});
   }
 
   async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){

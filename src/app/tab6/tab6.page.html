@@ -1,0 +1,75 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-title>
+        Foods
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content [fullscreen]="true">
+
+    <div style="position: absolute; right:0; padding: 10px;">
+      <ion-button (click)='aboutus_modal()'></ion-button>
+    </div>
+    
+    <img id="Logo" src="./assets/Logo.png" />
+    <img class="Footer" id="TYN" src="./assets/TYN.png"/>
+    <img id="RICE" src="./assets/RICE.png"/>
+
+
+    <div>
+      <ion-searchbar animated cancelButtonText="Cancel" showCancelButton="focus"
+       placeholder="Enter food name" showcancelbutton="Cancel" (ionInput)="getItems($event)">
+      </ion-searchbar>
+    </div>
+  
+
+    <!--Food data shown to sponsors and vendor and admin-->
+    <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
+      <ion-card *ngFor = "let food of foodlist | keyvalue;">
+       <div style="text-align: left; padding:8px; display: inline-block; "><img style="height:90px; width: 90px;" src={{food.value.image}}/></div>
+       <div style="display:inline-block; text-align: left; padding: 5px;">
+         <ion-card-subtitle style="font-size: 10px;">${{food.value.foodprice}}</ion-card-subtitle>
+         <ion-card-subtitle style="font-size: 13px;"> {{food.value.foodname}} - {{food.value.canteen}}: {{food.value.stall}} </ion-card-subtitle><br>
+       </div>
+   
+ 
+         <button *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
+      
+         <!--Increase and decrease amount to be added to cart-->
+         <div *ngIf="userRole === 'sponsor'">
+           <ion-button (click)="deductAmt(food.value.id)">-1</ion-button>
+           {{food.key | cartitemcount: valueArray | async}}
+           <ion-button (click)="addAmt(food.value.id)">+1</ion-button>
+         </div>
+       </ion-card>
+         
+       <p *ngIf="foodlist.length == 0">No Food Retrieved</p>
+     </div>
+
+     <!--Food data shown to students-->
+ <div *ngIf="userRole === 'student' ">
+  <ion-card   *ngFor = "let food1 of redeemfoodArray">
+    <ion-item>
+      
+      <div class="image-cropper">
+      <img id="fdimg" width="100%" src = {{food1.image}} />
+    </div>
+
+      {{food1.foodname}} - {{food1.foodprice | currency}} - {{food1.availquantity}}
+
+      <ion-button  *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMade === false" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid, food1.image)" style="display: inline-block" size="small" color="dark">REDEEM</ion-button>
+    </ion-item>  
+  </ion-card>
+   <!--Shown for students-->
+    <p *ngIf="redeemfoodArray.length ==0">No Food Retrieved</p>
+
+ </div>
+  
+    
+   
+   
+ 
+  
+  </ion-content>
+  

@@ -234,7 +234,8 @@ export class AuthenticationService {
                 this.userListed = await this.userService.getOne((await this.ngFireAuth.currentUser).email).subscribe(async res =>{
                   //console.log(res['listed']);
                   if(res['listed'] === true){
-                    await this.router.navigateByUrl("tabs");
+                    await this.navCtrl.navigateRoot("tabs");
+                    //await this.router.navigateByUrl("tabs");
                     console.log("Logged In")
                     this.loading.dismiss(null, null, 'presentLoad');
                   }else{
@@ -247,20 +248,16 @@ export class AuthenticationService {
         
             }else{
         
-              console.log("Admin nvr add new accounts")
+              console.log("Email Unverified")
               await this.SignOut();
                 
               this.loading.dismiss(null, null, 'presentLoad');
             }
 
           }else{
-    
-            //Used this instead of "navigateRoot" because for reasons unknown if its navigateRoot to its own page, 
-            //on the following page after that, its back btn will be disabled (^.^) and it gets buggy. Basically a mess and
-            //Im not willing to spent another 5hrs of my life debugging
            
-            this.router.navigateByUrl("login");
-            //await this.navCtrl.navigateRoot("login");
+            //this.router.navigateByUrl("login");
+            await this.navCtrl.navigateRoot("login");
             console.log("Logged Out");  
             this.loading.dismiss(null, null, 'presentLoad');
            
@@ -279,7 +276,8 @@ export class AuthenticationService {
               }else{
                 //To be run when app is booted up for admin users
                 await this.loading.dismiss(null, null, 'presentLoad');
-                await this.router.navigateByUrl("tabs");
+                await this.navCtrl.navigateRoot("tabs");
+                //await this.router.navigateByUrl("tabs");
                 console.log("Add, Delete user account!");
               }
             
@@ -313,7 +311,7 @@ export class AuthenticationService {
    //Sign Out and remove from localStorage
     async SignOut(){
       await this.presentLoading2();
-      console.log("Sign out")
+      //console.log("Sign out")
       await this.storage.remove('role');
       await this.storage.remove('email');
       await this.storage.remove('adminusage');
@@ -343,7 +341,8 @@ export class AuthenticationService {
         this.loading.dismiss(null, null, 'presentLoad2');
       })*/
       console.log("Log out")
-      this.router.navigateByUrl("login");
+      //this.router.navigateByUrl("login");
+      this.navCtrl.navigateRoot('/login');
       this.ngFireAuth.signOut();
       this.loading.dismiss(null, null, 'presentLoad2');
      

@@ -12,7 +12,7 @@ import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
 import { HttpClientModule, HttpClient } from '@angular/common/http'; 
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
-
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 
 
@@ -63,7 +63,7 @@ colorLoop: any;
   constructor(private canteenService: CanteenService, private alertCtrl: AlertController, private router: Router,
     public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
     public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient, private platform: Platform,
-    private foodService: FoodService, private modalCtrl: ModalController ) {
+    private foodService: FoodService, private modalCtrl: ModalController, private localNotifications: LocalNotifications ) {
     this.data = true;
     
     this.canteenSub = canteenService.getAll().subscribe((data) => {
@@ -82,9 +82,9 @@ colorLoop: any;
   }
 
 
-  ngOnInit(){
-
-    
+  async ngOnInit(){
+    this.userRole = await this.storage.get('role');
+    //console.log("init")
     
   }
 
@@ -127,6 +127,7 @@ colorLoop: any;
     if(this.canteenSub){
       this.canteenSub.unsubscribe();
     }
+    //console.log("destroy")
 
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){
@@ -136,19 +137,18 @@ colorLoop: any;
     
   }
 
-  ionViewWillEnter(){
+  async ionViewWillEnter(){
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
     
-    this.storage.get('role').then(res=>{
-      //console.log("email tab1: " + res);
-      this.userRole = res;
-      
-    });
+   
+
   }
+
+
 
   async leavePopup(){
     

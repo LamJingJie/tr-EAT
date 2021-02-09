@@ -42,8 +42,7 @@ export class Tab3Page {
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
     private cartService: CartService, private historyService: HistoryService, private canteenService: CanteenService) {}
 
-
-  async ionViewWillEnter(){
+  async ngOnInit(){
     this.orderArray = [];
     this.userEmail = await this.storage.get('email');
     this.userRole = await this.storage.get('role');
@@ -59,6 +58,11 @@ export class Tab3Page {
     if(this.userRole === 'student'){
       this.getPastOrders();
     }
+  }
+
+
+  async ionViewWillEnter(){
+    
 
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
@@ -66,21 +70,14 @@ export class Tab3Page {
       });
     }
   }
+  
   ionViewWillLeave(){
     if (this.platform.is('android')) {
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   
     } 
-    if(this.completedOrderSub){
-      this.completedOrderSub.unsubscribe();
-    }
-    if(this.historysub){
-      this.historysub.unsubscribe();
-    }
-    if(this.pastOrderSub){
-      this.pastOrderSub.unsubscribe();
-    }
+    
   }
 
   getPastOrders(){
@@ -193,6 +190,15 @@ export class Tab3Page {
       if(this.customBackBtnSubscription){
         this.customBackBtnSubscription.unsubscribe();
       }   
+    }
+    if(this.completedOrderSub){
+      this.completedOrderSub.unsubscribe();
+    }
+    if(this.historysub){
+      this.historysub.unsubscribe();
+    }
+    if(this.pastOrderSub){
+      this.pastOrderSub.unsubscribe();
     } 
   }
  
