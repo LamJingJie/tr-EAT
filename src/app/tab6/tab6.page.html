@@ -29,10 +29,10 @@
   </ion-refresher>
     
     <!--Food data shown to sponsors and vendor and admin-->
-    <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
+    <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'"  >
       
 
-      <ion-card *ngFor = "let food of foodlist | keyvalue;">
+      <ion-card class='food_container' *ngFor = "let food of foodlist | keyvalue;">
         <div *ngIf ="food.value.userlisted === true && food.value.userdeleted === false && food.value.canteendeleted === false">
           <div style="text-align: left; padding:8px; display: inline-block; "><img style="height:90px; width: 90px;" src={{food.value.image}}/></div>
           <div style="display:inline-block; text-align: left; padding: 5px;">
@@ -57,10 +57,10 @@
      </div>
 
      <!--Food data shown to students-->
- <div *ngIf="userRole === 'student'">
+ <div *ngIf="userRole === 'student'" >
    
 
-  <ion-card *ngFor = "let food1 of foodlist">
+  <ion-card  class='food_container' *ngFor = "let food1 of foodlist">
     <ion-item *ngIf="food1.userlisted === true && food1.userdeleted === false && food1.canteendeleted === false">
       
       <div class="image-cropper">

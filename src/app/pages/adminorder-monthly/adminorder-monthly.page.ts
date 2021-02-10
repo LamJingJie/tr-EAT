@@ -79,11 +79,12 @@ export class AdminorderMonthlyPage implements OnInit {
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController) {
 
-      this.get6Months(this.today);
+      
      }
 
   ionViewWillEnter(){
-    this.vendorSubscription = this.userService.getOnlyVendor().subscribe((res=>{
+    this.get6Months(this.today);
+    this.vendorSubscription = this.userService.getVendor().subscribe((res=>{
       this.count = 0;
       //console.log(res);
       this.vendorArray = res;

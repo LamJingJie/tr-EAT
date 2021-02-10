@@ -93,3 +93,12 @@
     width: auto;
     border-radius: 10%;  
   }
+
+
+
+
+//remove margin from food so that after filtering, remaining food will not be shown anywhere else other than at the top
+.food_container{
+    margin: 0;
+    padding: 0;
+}

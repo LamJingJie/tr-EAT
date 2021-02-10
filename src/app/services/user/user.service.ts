@@ -74,6 +74,11 @@ export class UserService {
     return this.firestore.collection('users', ref => ref.where('role', '==',"vendor").where('listed', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }
 
+  //For adminorder-monthly and adminorder-weekly. To see every user no mattering if its unlisted or deleted
+  getVendor(){
+    return this.firestore.collection('users', ref=> ref.where('role','==','vendor')).valueChanges({idField:'id'});
+  }
+
   getVendorBasedOnCanteen(canteen){
     return this.firestore.collection('users', ref => ref.where('role' , '==', 'vendor').where('canteenID', '==', canteen).where('listed', '==', true).where('deleted', '==', false)).valueChanges({idField: 'id'});
   }

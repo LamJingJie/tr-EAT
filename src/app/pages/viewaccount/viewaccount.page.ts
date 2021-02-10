@@ -47,12 +47,13 @@ export class ViewaccountPage implements OnInit {
    }
 
    ionViewWillEnter(){
-    this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {
-      this.userData = data;
-    });
+   
    }
 
   ngOnInit() {
+    this.userSubscription = this.userService.getAll(this.currentRole).subscribe((data) => {
+      this.userData = data;
+    });
   }
 
   changeRole(role){
@@ -84,16 +85,16 @@ export class ViewaccountPage implements OnInit {
   }
 
   ionViewWillLeave(){
-    if(this.userSubscription){
-      this.userSubscription.unsubscribe();
-    }
+   
     if(this.userSubscription2){
       this.userSubscription2.unsubscribe();
     }
   }
 
   ngOnDestroy(){
-   
+    if(this.userSubscription){
+      this.userSubscription.unsubscribe();
+    }
   }
 
   openStampAlert(stamp){
