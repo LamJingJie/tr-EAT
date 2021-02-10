@@ -9,8 +9,9 @@
 </ion-header>
 
 <ion-content>
- 
-  <ion-segment scrollable (ionChange)="dateChanged($event)" value={{todayVar}}>
+  
+  <!--Use ngModal to ensure first segment btn is checked. For some reason the previous version stopped working and so had to change-->
+  <ion-segment scrollable (ionChange)="dateChanged($event)" [(ngModel)]="segmentModel" >
     <ion-segment-button value ={{todayVar}}>
       <ion-label>{{todayVar | date: 'dd MMM'}}</ion-label>
     </ion-segment-button>
@@ -78,7 +79,7 @@
               </div>
              
               <div id="date">
-                {{o.date?.toDate() | date: 'mediumTime'}}
+                {{o.datecompleted?.toDate() | date: 'mediumTime'}}
               </div>
               
             </div>

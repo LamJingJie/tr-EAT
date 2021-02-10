@@ -70,7 +70,8 @@ export class AdminordersPage implements OnInit {
   orderSubscription: Subscription;
   vendorSubscription: Subscription;
 
-
+  onload:boolean = false;
+  segmentModel: any;
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
@@ -86,6 +87,7 @@ export class AdminordersPage implements OnInit {
      //Today Date
      this.todayVar = this.today.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
      this.today.setHours(0,0,0,0); //Start
+     this.segmentModel = this.todayVar //ensure that the segment is checked for today's date
      //console.log("tday: " + this.todayVar);
      this.today2.setFullYear( this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
      this.today2.setHours(23,59,59,999); //End
@@ -151,23 +153,21 @@ export class AdminordersPage implements OnInit {
   }
 
   ionViewWillEnter(){
+    this.onload = true; //prevent ionChange from executing until finish executing getOrders function
     this.get7Days(this.today);
    
     this.vendorSubscription = this.userService.getVendor().subscribe((res=>{
-      this.count = 0;
+      
       //console.log(res);
       this.vendorArray = res;
       //console.log(this.vendorArray);
-      res.forEach((res=>{
-        //console.log(res.id);
-        this.vendorM.set(res.id, this.count);
-        this.vendorM2.set(this.count, res.id);
-        this.count ++
-        
-      }))
-     }))
+      
+      this.getOrders(this.today, this.today2, this.vendorArray).then((res=>{
+        this.onload = false;
+      }));
 
-    this.getOrders(this.today, this.today2);
+
+     }))
 
   }
 
@@ -181,49 +181,60 @@ export class AdminordersPage implements OnInit {
   //orders that i retrieved check against this particiulat vendor
   //then plug them to the correct element
 
-  getOrders(date1, date2){
-    
-    this.newOrderArray = [];
-    //console.log(date1)
-    //console.log(date2)
-
-    this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
-      //console.log(res);
-      //this.newOrderArray = res;
-      //console.log(this.newOrderArray);
+  getOrders(date1, date2, vendorArray: any[]){
+    return new Promise(async (resolve, reject)=>{
+      this.newOrderArray = [];
+      //console.log(date1)
+      //console.log(date2)
   
-      //this.newOrderArray.length;
- 
-      let keys = Array.from(this.vendorM.keys());
-      this.vendorArray2 = keys;
-      //console.log(this.newVendorArray);
-
-
-      res.map((currElement, index)=>{
- 
-        //console.log("Current Iteration: " + index);
-        //console.log("Current Element: " + currElement['foodname']);
-        this.currentindex = this.vendorM.get(currElement['vendorID']);
-        //console.log("Vendor Key from hashmap: " + this.currentindex);
-        //this.vendorM1.set(this.currentindex, currElement);
-
-        //Checks whether this array exists and is set to an array or not. I also not rlly sure how this works but hey it works
-        this.newOrderArray[this.currentindex] = this.newOrderArray[this.currentindex] || []; 
-      
-        this.newOrderArray[this.currentindex].unshift(currElement);
-
+      this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
+        //console.log(res);
+        //this.newOrderArray = res;
         //console.log(this.newOrderArray);
-      });
-      
-      //console.log("Finish");
-      
-      //console.log(this.newOrderArray);
-
-      this.orderSubscription.unsubscribe();
-     
-      this.getTotalCost();
-    }))
-
+    
+        //this.newOrderArray.length;
+        this.count = 0;
+        vendorArray.forEach((res=>{
+          //console.log(res.id);
+          this.vendorM.set(res.id, this.count);
+          this.vendorM2.set(this.count, res.id);
+          this.count ++
+          
+        }))
+        let keys = Array.from(this.vendorM.keys());
+        this.vendorArray2 = keys;
+        //console.log(this.newVendorArray);
+  
+  
+        res.map((currElement, index)=>{
+   
+          //console.log("Current Iteration: " + index);
+          //console.log("Current Element: " + currElement['foodname']);
+          this.currentindex = this.vendorM.get(currElement['vendorID']);
+          //console.log("Vendor Key from hashmap: " + this.currentindex);
+          //this.vendorM1.set(this.currentindex, currElement);
+  
+          //Checks whether this array exists and is set to an array or not. I also not rlly sure how this works but hey it works
+          this.newOrderArray[this.currentindex] = this.newOrderArray[this.currentindex] || []; 
+        
+          this.newOrderArray[this.currentindex].unshift(currElement);
+  
+          //console.log(this.newOrderArray);
+        });
+        
+        //console.log("Finish");
+        
+        //console.log(this.newOrderArray);
+  
+        this.orderSubscription.unsubscribe();
+       
+        this.getTotalCost();
+        resolve("Loaded");
+      }))
+  
+    })
+    
+   
      
      /* let vendorM = new Map();
     this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
@@ -294,44 +305,47 @@ export class AdminordersPage implements OnInit {
     //console.log(this.todayVar.toString());
     switch(event.detail.value){
       case this.todayVar.toString():{
-        this.getOrders(this.today, this.today2);
-        console.log("Today");
+        if(this.onload === false){
+          this.getOrders(this.today, this.today2, this.vendorArray);
+          console.log("Today");
+          
+        }
         break;
       }
 
       case this.ytdVar.toString():{
         console.log("Yesterday");
-        this.getOrders(this.ytd, this.ytd2);
+        this.getOrders(this.ytd, this.ytd2, this.vendorArray);
         break;
       }
         
       case this.ytdMinus1Var.toString():{
         console.log("Yesterday -1");
-        this.getOrders(this.ytdMinus1, this.ytdMinus1_2);
+        this.getOrders(this.ytdMinus1, this.ytdMinus1_2, this.vendorArray);
         break;
       }
         
       case this.ytdMinus2Var.toString():{
         console.log("Yesterday -2");
-        this.getOrders(this.ytdMinus2, this.ytdMinus2_2);
+        this.getOrders(this.ytdMinus2, this.ytdMinus2_2, this.vendorArray);
         break;
       }
         
       case this.ytdMinus3Var.toString():{
         console.log("Yesterday -3");
-        this.getOrders(this.ytdMinus3, this.ytdMinus3_2);
+        this.getOrders(this.ytdMinus3, this.ytdMinus3_2, this.vendorArray);
         break;
       }
         
       case this.ytdMinus4Var.toString():{
         console.log("Yesterday -4");
-        this.getOrders(this.ytdMinus4, this.ytdMinus4_2);
+        this.getOrders(this.ytdMinus4, this.ytdMinus4_2, this.vendorArray);
         break;
       }       
 
       case this.ytdMinus5Var.toString():{
         console.log("Yesterday -5");
-        this.getOrders(this.ytdMinus5, this.ytdMinus5_2);
+        this.getOrders(this.ytdMinus5, this.ytdMinus5_2, this.vendorArray);
         break;
       }  
 

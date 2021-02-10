@@ -65,6 +65,8 @@ export class Tab2Page {
   historyData: any[] = [];
   totalcostall: number;
 
+  today: Date;
+
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
     private authService: AuthenticationService, private router: Router, private navCtrl:NavController,  
     private toast: ToastController,private orderService: OrderService, private keyvalue: KeyValuePipe,
@@ -407,13 +409,14 @@ export class Tab2Page {
         {
           text: 'Yes',
           handler:()=>{
+            this.today = new Date();
            //console.log("Yes")
            //console.log(this.receiptData.orderid);
            //Remove orderid from user db to empty string
            this.userService.updateOrderId(this.userEmail, "").catch((res=>{
              this.showError(res);
            }));
-           this.orderService.updateComplete(this.receiptData.orderid).catch((res=>{
+           this.orderService.updateComplete(this.receiptData.orderid, this.today).catch((res=>{
              this.showError(res);
            }));
           }

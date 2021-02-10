@@ -34,15 +34,20 @@
 
 
     <div id="txtlabelposition">
-     <ion-card-title id ="foodname">
-      {{order.foodname}}  x{{order.orderquantity || 1}}
+     <ion-card-title id ="foodname" style="display: flex;">
+       <div style="flex: 1;">
+        {{order.foodname}}  x{{order.orderquantity || 1}}
+       </div>
+      <div id="locate" style="color: #737373; font-weight: 500;">
+        Ordered: {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
+      </div>
      </ion-card-title>
      <ion-card-subtitle id="locate" style="display: flex;">
        <div style="flex: 1;">
         {{order.stallname}} . {{order.canteenname}}
        </div>
        <div>
-        {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
+        Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm'}}
        </div>
       
      </ion-card-subtitle>

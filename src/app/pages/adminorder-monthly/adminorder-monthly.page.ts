@@ -14,6 +14,7 @@ import { ModalController, PickerController } from '@ionic/angular';
 import {PickerOptions} from '@ionic/core';
 import {CalendarModalPage} from 'src/app/Modal/calendar-modal/calendar-modal.page';
 
+
 @Component({
   selector: 'app-adminorder-monthly',
   templateUrl: './adminorder-monthly.page.html',
@@ -24,7 +25,7 @@ export class AdminorderMonthlyPage implements OnInit {
   //Vendor
   vendorSubscription: Subscription;
   count: number;
-  vendorArray: any =[]; //Store all the vendors
+  vendorArray: any[] =[]; //Store all the vendors
   vendorArray2: any[] =[]; //store keys from hashmap in vendorM
 
   vendorM = new Map();
@@ -74,6 +75,11 @@ export class AdminorderMonthlyPage implements OnInit {
   ytdMinus4Var: any = new Date();
 
 
+  onload:boolean = false;
+
+  segmentModel:any;
+
+
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
@@ -83,28 +89,28 @@ export class AdminorderMonthlyPage implements OnInit {
      }
 
   ionViewWillEnter(){
+    this.onload = true; //prevent ionChange from executing until finish executing getOrders function
     this.get6Months(this.today);
+    
     this.vendorSubscription = this.userService.getVendor().subscribe((res=>{
-      this.count = 0;
-      //console.log(res);
+      
       this.vendorArray = res;
-      //console.log(this.vendorArray);
-      res.forEach((res=>{
-        //console.log(res.id);
-        this.vendorM.set(res.id, this.count);
-        this.vendorM2.set(this.count, res.id);
-        this.count ++
-        
-      }))
+      
+      
+      this.getOrders(this.today, this.tmr, this.vendorArray).then((res=>{
+        this.onload = false;
+      }));
+     
      }))
-
-    this.getOrders(this.today, this.tmr);
+   
+   
   }
   ngOnInit() {
   }
 
+
+
   get6Months(date123: Date){
-    
     //console.log(date123);
     //console.log(date123.getFullYear())
 
@@ -116,7 +122,8 @@ export class AdminorderMonthlyPage implements OnInit {
     //This month
     this.todayVar = this.today.setFullYear(date123.getFullYear(), date123.getMonth(), 1);
     this.today.setHours(0,0,0,0);
-    //console.log("tday: " + this.today);
+    this.segmentModel = this.todayVar //ensure that the segment is checked for today's date
+    //console.log("tday: " + this.todayVar + "Segment: " + this.segmentModel);
 
     
     //Last Month
@@ -150,47 +157,57 @@ export class AdminorderMonthlyPage implements OnInit {
 
  }
 
- getOrders(date1, date2){
-  this.newOrderArray = [];
-  //console.log(date1)
-  //console.log(date2);
-    
-  this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((res=>{
-    //console.log(res);
-    //this.newOrderArray = res;
-    //console.log(this.newOrderArray);
-  
-    //this.newOrderArray.length;
- 
-    let keys = Array.from(this.vendorM.keys());
-    this.vendorArray2 = keys;
-    //console.log(this.newVendorArray);
-
-
-    res.map((currElement, index)=>{
- 
-      //console.log("Current Iteration: " + index);
-      //console.log("Current Element: " + currElement['foodname']);
-      this.currentindex = this.vendorM.get(currElement['vendorID']);
-      //console.log("Vendor Key from hashmap: " + this.currentindex);
-      //this.vendorM1.set(this.currentindex, currElement);
-
-      //Checks whether this array exists and is set to an array or not. I also not rlly sure how this works but hey it works
-      this.newOrderArray[this.currentindex] = this.newOrderArray[this.currentindex] || []; 
+ getOrders(date1, date2, vendorArray: any[]){
+  return new Promise(async (resolve, reject)=>{
+    this.newOrderArray = [];
+    //console.log(date1)
+    //console.log(date2);
       
-      this.newOrderArray[this.currentindex].unshift(currElement);
-
+    this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((res=>{
+      //console.log(res);
+      //this.newOrderArray = res;
       //console.log(this.newOrderArray);
-    });
-      
-    //console.log("Finish");
-      
-    //console.log(this.newOrderArray);
-
-    this.orderSubscription.unsubscribe();
+      this.count = 0;
+      //this.newOrderArray.length;
+      vendorArray.forEach((vendorres=>{
+        this.vendorM.set(vendorres.id, this.count);
+        this.vendorM2.set(this.count, vendorres.id);
+        this.count ++
+      }))
+      let keys = Array.from(this.vendorM.keys());
+      this.vendorArray2 = keys;
      
-    this.getTotalCost();
-  }))
+      //console.log(this.vendorArray2);
+   
+     
+  
+      res.map((currElement, index)=>{
+   
+        //console.log("Current Iteration: " + index);
+        //console.log("Current Element: " + currElement['foodname']);
+        this.currentindex = this.vendorM.get(currElement['vendorID']);
+        //console.log("Vendor Key from hashmap: " + this.currentindex);
+        //this.vendorM1.set(this.currentindex, currElement);
+  
+        //Checks whether this array exists and is set to an array or not. I also not rlly sure how this works but hey it works
+        this.newOrderArray[this.currentindex] = this.newOrderArray[this.currentindex] || []; 
+        
+        this.newOrderArray[this.currentindex].unshift(currElement);
+  
+        //console.log(this.newOrderArray);
+      });
+        
+      //console.log("Finish");
+        
+      //console.log(this.newOrderArray);
+  
+      this.orderSubscription.unsubscribe();
+       
+      this.getTotalCost();
+      resolve("Loaded");
+    }))
+  })
+ 
  }
 
  getTotalCost(){
@@ -221,41 +238,45 @@ export class AdminorderMonthlyPage implements OnInit {
 }
 
   dateChanged(event){
-
+    //console.log(event);
     switch(event.detail.value){
       case this.todayVar.toString():{
-        console.log("this month");
-        this.getOrders(this.today, this.tmr);
+        
+        if(this.onload === false){
+          console.log("this month");
+          this.getOrders(this.today, this.tmr, this.vendorArray);
+        }
+        
         break;
       }
 
       case this.ytdVar.toString():{
         console.log("last month");
-      this.getOrders(this.ytd, this.today);
+        this.getOrders(this.ytd, this.today, this.vendorArray);
         break;
       }
         
       case this.ytdMinus1Var.toString():{
         console.log("2 months ago");
-        this.getOrders(this.ytdMinus1, this.ytd);
+        this.getOrders(this.ytdMinus1, this.ytd, this.vendorArray);
         break;
       }
         
       case this.ytdMinus2Var.toString():{
         console.log("3 months ago");
-        this.getOrders(this.ytdMinus2, this.ytdMinus1);
+        this.getOrders(this.ytdMinus2, this.ytdMinus1, this.vendorArray);
         break;
       }
         
       case this.ytdMinus3Var.toString():{
         console.log("4 months ago");
-        this.getOrders(this.ytdMinus3, this.ytdMinus2);
+        this.getOrders(this.ytdMinus3, this.ytdMinus2, this.vendorArray);
         break;
       }
         
       case this.ytdMinus4Var.toString():{
         console.log("5 months ago");
-        this.getOrders(this.ytdMinus4, this.ytdMinus3);
+        this.getOrders(this.ytdMinus4, this.ytdMinus3, this.vendorArray);
         break;
       }       
 

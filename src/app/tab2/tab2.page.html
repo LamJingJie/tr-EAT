@@ -144,7 +144,7 @@
 
   <!--Show latest orders from students that is pending-->
   <div *ngIf="userRole === 'vendor'">
-    <div *ngIf="vendorOrderArray.length == 0">Uncompleted orders will be shown here</div>
+    <div *ngIf="vendorOrderArray.length == 0">Uncompleted/Pending orders will be shown here</div>
     <ion-card *ngFor="let order of vendorOrderArray">
 
         <!--Redemption order ID-->
@@ -159,7 +159,7 @@
 
         <!--Date-->
         <div>
-          {{order.date?.toDate() | date: 'mediumTime'}}
+          {{order.date?.toDate() | date: 'dd/MM/yyy H:mm'}}
         </div>
 
         <!---Customer--->

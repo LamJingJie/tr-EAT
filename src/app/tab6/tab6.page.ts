@@ -47,8 +47,8 @@ export class Tab6Page {
   canteenSub: Subscription;
 
 
-  today: Date = new Date();
-  today2: Date = new Date();
+  today: Date; 
+  today2: Date; 
 
   userRole: string;
   userEmail: string;
@@ -70,7 +70,7 @@ export class Tab6Page {
   verify_count: number;
 
   paid: boolean;
-  ordersMade: boolean; //for students, true if they have made any orders today, false if not.
+  ordersMadeTday: boolean; //for students, true if they have made any orders today, false if not.
 
   orderid: string;
   stampsLeft: number;
@@ -112,6 +112,8 @@ export class Tab6Page {
 
   async ionViewWillEnter(){
 
+    this.today = new Date();
+    this.today2 = new Date();
     this.today.setHours(0,0,0,0); //Start
     this.today2.setHours(23,59,59,999); //End
 
@@ -124,9 +126,9 @@ export class Tab6Page {
         //console.log(res);
         //Empty, means no orders made by students and so redeem btn is activated
         if(res.length == 0){
-            this.ordersMade = false;
+            this.ordersMadeTday = false;
         }else{
-            this.ordersMade = true;
+            this.ordersMadeTday = true;
         }
         }))
     }
@@ -215,7 +217,7 @@ export class Tab6Page {
             })
             this.foodlist = res;
             this.loadedfoodlist = res;
-            //console.log(this.foodlist);
+            console.log(this.foodlist);
             this.foodRedemSub.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
         }))
     }
@@ -415,10 +417,10 @@ export class Tab6Page {
             
                             //Increase food popularity
                             this.foodService.updatePopularity(id, popularity);
-            
+                            this.getFoodList(); //refresh
                             //Get orders id and update student's 'orderid' field to that
                             await this.userService.updateOrderId(this.userEmail, res.id);
-            
+                            
                             //Go to cart page to show receipt of redeemed food
                             this.router.navigate(['/tabs/tab2']);
       

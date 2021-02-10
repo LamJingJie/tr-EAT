@@ -84,8 +84,8 @@ cartM2 = new Map();
 
 number: number;
 
-today: Date = new Date();
-today2: Date = new Date();
+today: Date;
+today2: Date;
 ordersMade: boolean; //for students, true if they have made any orders today, false if not.
 
 paid: boolean = false;
@@ -140,6 +140,8 @@ paid: boolean = false;
 
   async ionViewWillEnter(){
 
+    this.today = new Date();
+    this.today2 = new Date();
     this.today.setHours(0,0,0,0); //Start
     this.today2.setHours(23,59,59,999); //End
     

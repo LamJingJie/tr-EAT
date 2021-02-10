@@ -105,7 +105,6 @@ export class Tab4Page {
       this.stamps = res['stampLeft'];
       //console.log(res);
 
-      this.userSub.unsubscribe();
     }))
   }
 
