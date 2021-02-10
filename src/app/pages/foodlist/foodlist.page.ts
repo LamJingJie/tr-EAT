@@ -349,7 +349,7 @@ paid: boolean = false;
   }
 
   //Student
-  async RedeemFood(id,  foodname, foodprice: number, vendorid, image){
+  async RedeemFood(id,  foodname, foodprice: number, vendorid){
   
     var food_name = foodname;
     
@@ -382,6 +382,9 @@ paid: boolean = false;
                     this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
                       var availquantity = res['availquantity'];
                       var popularity = res['popularity'];
+                      var foodprice: number = res['foodprice'];
+                      var foodname = res['foodname'];
+                      var image = res['image'];
 
                       //console.log(availquantity);
 

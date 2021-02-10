@@ -69,7 +69,7 @@
 
       {{food1.foodname}} - {{food1.canteen}}: {{food1.stall}} - {{food1.foodprice | currency}} - {{food1.availquantity}}
 
-      <ion-button  *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMade === false" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)" style="display: inline-block" size="small" color="dark">REDEEM</ion-button>
+      <ion-button  *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMadeTday === false" (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)" style="display: inline-block" size="small" color="dark">REDEEM</ion-button>
     </ion-item>  
   </ion-card>
    <!--Shown for students-->
