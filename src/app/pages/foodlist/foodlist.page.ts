@@ -266,74 +266,10 @@ paid: boolean = false;
    
   }
 
-
-  /*getKeysCart(){
-    let keys = Array.from(this.cartM.keys());
-    let values = Array.from(this.cartM.values());
-    this.CartkeysArray = keys;
-    this.CartvalueArray = values;
-    //this.getFoodPrice();
-    //console.log(this.CartvalueArray);
-    //console.log(this.CartvalueArray);
-  }*/
-
-
-
-  //Do not touch. Because I have no idea how this even worked.
-  /*getFoodPrice(){
-    
-    var keysArray = this.keyvalue.transform(this.CartkeysArray);
-    //console.log(keysArray);
-
-    //console.log(keys);
-   
-    keysArray.map((currElement, index)=>{
-     
-      //[0] is the foodid
-      //[1] is the food price
-      //[2] is the order quantity
-      this.foodService.getFoodById(currElement.value).pipe(first()).subscribe((res=>{
-        
-        
-        this.storefoodpriceArray[currElement.key] = this.storefoodpriceArray[currElement.value] || [];
-        this.storefoodpriceArray[currElement.key].push(currElement.value);  //[0]
-        this.storefoodpriceArray[currElement.key].push(res['foodprice']); //[1]
-        //console.log(this.cartM2.entries());
-        //var int = parseInt(currElement.key);
-        var int = Number(currElement.key);
-        this.storefoodpriceArray[currElement.key].push(this.cartM2.get(int)); //[2]
-        console.log(this.storefoodpriceArray);
-        
-        //Calculation of total cost for each food
-        this.storefoodpriceArray.forEach((res, index)=>{
-      
-
-          this.foodtotalprice[index] = this.foodtotalprice[index] || [];
-          var totalcostperfood = res[1] * res[2];
-         
-          this.foodtotalprice[index] = totalcostperfood;
-          //console.log(this.foodtotalprice);
-        })
-
-        //Calculate total cost
-        this.totalPriceAll = 0;
-        this.foodtotalprice.forEach((res=>{
-          
-          //console.log(res);
-          this.totalPriceAll = this.totalPriceAll + res;
-         
-        }))
-        //console.log(this.totalPriceAll);
-      }))
-    })
-   
-  }*/
-
   ionViewDidEnter(){
     
   }
 
- 
 
   addAmt(foodid){
    // console.log(foodid);

@@ -43,12 +43,16 @@ export class Tab6Page {
   cartSubscription: Subscription;
   redeemSub: Subscription;
   userSub: Subscription;
+  userSub3: Subscription;
+  canteenSub: Subscription;
+
 
   today: Date = new Date();
   today2: Date = new Date();
 
   userRole: string;
   userEmail: string;
+  search_text: string;
 
   foodM = new Map();
   cartM = new Map();
@@ -87,8 +91,7 @@ export class Tab6Page {
     async ngOnInit(){
         //console.log("Init")
         
-        this.today.setHours(0,0,0,0); //Start
-        this.today2.setHours(23,59,59,999); //End
+       
 
         this.userEmail = await this.storage.get('email');
         this.userRole = await this.storage.get('role');
@@ -98,16 +101,7 @@ export class Tab6Page {
         if(this.userRole === 'student'){
             this.getStudentData();
 
-            //Check if current user has made any orders today
-            this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
-                //console.log(res);
-                //Empty, means no orders made by students and so redeem btn is activated
-                if(res.length == 0){
-                    this.ordersMade = false;
-                }else{
-                    this.ordersMade = true;
-                }
-                }))
+           
         }
   
         if(this.userRole === 'sponsor'){
@@ -117,6 +111,26 @@ export class Tab6Page {
     }
 
   async ionViewWillEnter(){
+
+    this.today.setHours(0,0,0,0); //Start
+    this.today2.setHours(23,59,59,999); //End
+
+    this.userEmail = await this.storage.get('email');
+    this.userRole = await this.storage.get('role');
+
+    if(this.userRole === 'student'){
+       //Check if current user has made any orders today
+       this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
+        //console.log(res);
+        //Empty, means no orders made by students and so redeem btn is activated
+        if(res.length == 0){
+            this.ordersMade = false;
+        }else{
+            this.ordersMade = true;
+        }
+        }))
+    }
+
     
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
@@ -151,13 +165,19 @@ export class Tab6Page {
             res.forEach((res,index)=>{
               //console.log(res.id);
               this.foodM.set(res.id, this.count); //Store each food with count = 1
-              this.userService.getOne(res['userid']).pipe(first()).subscribe((userres=>{
+              this.userSub3 = this.userService.getOne(res['userid']).subscribe((userres=>{
                   this.foodlist[index].stall = userres['stallname'];
                   this.loadedfoodlist[index].stall = userres['stallname'];
+                  this.foodlist[index].userlisted = userres['listed'];
+                  this.loadedfoodlist[index].userlisted = userres['listed'];
+                  this.foodlist[index].userdeleted = userres['deleted'];
+                  this.loadedfoodlist[index].userdeleted = userres['deleted'];
                   //get canteen name
-                  this.canteenService.getCanteenbyid(userres['canteenID']).pipe(first()).subscribe((canteenres=>{
+                  this.canteenSub = this.canteenService.getCanteenbyid(userres['canteenID']).subscribe((canteenres=>{
                       this.foodlist[index].canteen = canteenres['canteenname'];
                       this.loadedfoodlist[index].canteen = canteenres['canteenname'];
+                      this.foodlist[index].canteendeleted = canteenres['deleted'];
+                      this.loadedfoodlist[index].canteendeleted = canteenres['deleted'];
                   }))       
               }))       
             })
@@ -173,8 +193,29 @@ export class Tab6Page {
     if(this.userRole === 'student'){
          //For students
          this.foodRedemSub = this.foodService.getRedeemableFood_ALL().subscribe((res =>{
-            this.redeemfoodArray = res;
-            //console.log(this.redeemfoodArray);
+            
+            res.forEach((res, index)=>{
+              //get stall name
+              this.userSub3 = this.userService.getOne(res['userid']).subscribe((userres=>{
+                this.foodlist[index].stall = userres['stallname'];
+                this.loadedfoodlist[index].stall = userres['stallname'];
+                this.foodlist[index].userlisted = userres['listed'];
+                this.loadedfoodlist[index].userlisted = userres['listed'];
+                this.foodlist[index].userdeleted = userres['deleted'];
+                this.loadedfoodlist[index].userdeleted = userres['deleted'];
+                //get canteen name
+                this.canteenSub = this.canteenService.getCanteenbyid(userres['canteenID']).subscribe((canteenres=>{
+                    this.foodlist[index].canteen = canteenres['canteenname'];
+                    this.loadedfoodlist[index].canteen = canteenres['canteenname'];
+                    this.foodlist[index].canteendeleted = canteenres['deleted'];
+                    this.loadedfoodlist[index].canteendeleted = canteenres['deleted'];
+                }))       
+              })) 
+              
+            })
+            this.foodlist = res;
+            this.loadedfoodlist = res;
+            //console.log(this.foodlist);
             this.foodRedemSub.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
         }))
     }
@@ -182,7 +223,7 @@ export class Tab6Page {
   }
 
   initializeItems(){
-      //Set the filtered value to the main array list
+      //Reset items
       this.foodlist = this.loadedfoodlist;
   }
 
@@ -196,7 +237,8 @@ export class Tab6Page {
 
     // if the value is an empty string don't filter the items and show all foods again
     if (!q) {
-        this.getFoodList();
+      //console.log("Empty");
+        //this.getFoodList();
         return;
     }else{
         //refreshes the cart amount for hashmap to keep consistency on which food that is currently present
@@ -217,12 +259,12 @@ export class Tab6Page {
       
     });
     this.getKeys();
-    this.changeRef.detectChanges()
-    console.log(q, this.foodlist.length);
+    this.changeRef.detectChanges();
+    //console.log(q, this.foodlist.length);
   }
 
   addAmt(foodid){
-     console.log(foodid);
+     //console.log(foodid);
      var amt = this.foodM.get(foodid);
      amt = amt + 1;
      //console.log(this.currentAmt);
@@ -232,7 +274,7 @@ export class Tab6Page {
    }
  
    deductAmt(foodid){
-     console.log(foodid);
+     //console.log(foodid);
      var amt = this.foodM.get(foodid);
      if(amt > 1){
        amt = amt - 1;
@@ -272,6 +314,7 @@ export class Tab6Page {
             if(listed === true){
               this.cartService.addToCart(foodid, this.userEmail, userres['canteenID'], amountOrdered, vendorid).then((res=>{
                 this.CartshowSuccess(foodname123);
+                this.getFoodList(); //refresh
                 //this.calculateTotalCost(); 
                 this.loading.dismiss(null,null,'cart');
               })).catch((err=>{
@@ -310,7 +353,7 @@ export class Tab6Page {
 
 
   //Student
-  async RedeemFood(id,  foodname, foodprice: number, vendorid, image){
+  async RedeemFood(id,  foodname, foodprice: number, vendorid){
   
     var food_name = foodname;
     
@@ -344,6 +387,9 @@ export class Tab6Page {
                     this.redeemSub = this.foodService.getFoodById(id).subscribe((res=>{
                       var availquantity = res['availquantity'];
                       var popularity = res['popularity'];
+                      var foodprice: number = res['foodprice'];
+                      var foodname = res['foodname'];
+                      var image = res['image'];
 
                       //console.log(availquantity);
 
@@ -405,6 +451,7 @@ export class Tab6Page {
               }
             }).catch(err=>{
               this.showError(err);
+              this.getFoodList(); //refresh
               this.loading.dismiss(null,null,'redeem');
             })
           }
@@ -416,6 +463,14 @@ export class Tab6Page {
       ]
     });
     await alert1.present();    
+  }
+
+  //Refresh
+  doRefresh(event){
+    if(event.target.complete()){
+      this.getFoodList();
+      this.search_text = ""//Reset search bar
+    }
   }
 
 
@@ -437,6 +492,15 @@ export class Tab6Page {
     }
     if(this.getfoodSubscription2){
         this.getfoodSubscription2.unsubscribe();
+    }
+    if(this.checkOrderSubscription){
+      this.checkOrderSubscription.unsubscribe();
+    }
+    if(this.canteenSub){
+      this.canteenSub.unsubscribe();
+    }
+    if(this.userSub3){
+      this.userSub3.unsubscribe();
     }
  
   
@@ -462,9 +526,7 @@ export class Tab6Page {
     if(this.studentDataSub){
         this.studentDataSub.unsubscribe();
     }
-    if(this.checkOrderSubscription){
-        this.checkOrderSubscription.unsubscribe();
-    }
+    
     if(this.getPaid){
         this.getPaid.unsubscribe();
     }

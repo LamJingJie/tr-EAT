@@ -84,7 +84,7 @@ export class UserService {
   
 
   deleteUser(id){
-    return this.firestore.collection('users').doc(id).update({deleted: true});
+    return this.firestore.collection('users').doc(id).update({deleted: true, listed: false});
   }
 
 

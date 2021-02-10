@@ -55,6 +55,6 @@ export class CanteenService {
   }
 
   getAll() {
-    return this.firestore.collection('canteen').valueChanges({ idField: 'id' });
+    return this.firestore.collection('canteen', ref => ref.where('deleted', '==', false)).valueChanges({ idField: 'id' });
   }
 }
