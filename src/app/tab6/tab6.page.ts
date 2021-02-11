@@ -112,38 +112,42 @@ export class Tab6Page {
 
   async ionViewWillEnter(){
 
-    this.today = new Date();
-    this.today2 = new Date();
-    this.today.setHours(0,0,0,0); //Start
-    this.today2.setHours(23,59,59,999); //End
-
     this.userEmail = await this.storage.get('email');
     this.userRole = await this.storage.get('role');
-
     if(this.userRole === 'student'){
-       //Check if current user has made any orders today
-       this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
-        //console.log(res);
-        //Empty, means no orders made by students and so redeem btn is activated
-        if(res.length == 0){
-            this.ordersMadeTday = false;
-        }else{
-            this.ordersMadeTday = true;
-        }
-        }))
+      this.checkOrders();
     }
-
     
+
     if (this.platform.is('android')) { 
       this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
         this.leavePopup();
       });
     }
 
-
-
    
   }
+
+  checkOrders(){
+    this.today = new Date();
+    this.today2 = new Date();
+    this.today.setHours(0,0,0,0); //Start
+    this.today2.setHours(23,59,59,999); //End
+
+    
+      //Check if current user has made any orders today
+      this.checkOrderSubscription = this.orderService.checkOrders(this.userEmail, this.today, this.today2).subscribe((res=>{
+       //console.log(res);
+       //Empty, means no orders made by students and so redeem btn is activated
+       if(res.length == 0){
+           this.ordersMadeTday = false;
+       }else{
+           this.ordersMadeTday = true;
+       }
+       }))
+
+  }
+
   checkIfPaid(){
     this.getPaid = this.userService.getOne(this.userEmail).subscribe((res=>{
       this.paid = res['paid'];
@@ -193,6 +197,7 @@ export class Tab6Page {
     }
 
     if(this.userRole === 'student'){
+
          //For students
          this.foodRedemSub = this.foodService.getRedeemableFood_ALL().subscribe((res =>{
             
@@ -470,6 +475,8 @@ export class Tab6Page {
   //Refresh
   doRefresh(event){
     if(event.target.complete()){
+      this.checkOrderSubscription.unsubscribe();
+      this.checkOrders();
       this.getFoodList();
       this.search_text = ""//Reset search bar
     }
