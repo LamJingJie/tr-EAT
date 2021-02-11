@@ -159,11 +159,14 @@ export class AdminorderMonthlyPage implements OnInit {
 
  getOrders(date1, date2, vendorArray: any[]){
   return new Promise(async (resolve, reject)=>{
-    this.newOrderArray = [];
+
     //console.log(date1)
     //console.log(date2);
       
     this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((res=>{
+      this.newOrderArray = [];
+      this.vendorM.clear();
+      this.vendorM2.clear();
       //console.log(res);
       //this.newOrderArray = res;
       //console.log(this.newOrderArray);
@@ -178,8 +181,6 @@ export class AdminorderMonthlyPage implements OnInit {
       this.vendorArray2 = keys;
      
       //console.log(this.vendorArray2);
-   
-     
   
       res.map((currElement, index)=>{
    
@@ -196,8 +197,6 @@ export class AdminorderMonthlyPage implements OnInit {
   
         //console.log(this.newOrderArray);
       });
-        
-      //console.log("Finish");
         
       //console.log(this.newOrderArray);
   

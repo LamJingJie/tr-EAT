@@ -78,7 +78,7 @@ export class AdminordersPage implements OnInit {
     private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
     private pickerCtrl: PickerController) {
    
-     
+  
       
      }
 
@@ -183,11 +183,13 @@ export class AdminordersPage implements OnInit {
 
   getOrders(date1, date2, vendorArray: any[]){
     return new Promise(async (resolve, reject)=>{
-      this.newOrderArray = [];
+      
       //console.log(date1)
       //console.log(date2)
-  
       this.orderSubscription = this.orderService.getAllOrders(date1, date2).subscribe((res=>{
+        this.newOrderArray = [];
+        this.vendorM.clear();
+        this.vendorM2.clear();
         //console.log(res);
         //this.newOrderArray = res;
         //console.log(this.newOrderArray);
