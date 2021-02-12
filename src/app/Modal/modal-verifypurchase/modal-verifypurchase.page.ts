@@ -67,11 +67,12 @@ historySub:Subscription;
           handler:async ()=>{
             
             await this.presentLoadingConfirm();
-            var totalquantity = 0;
+            
             this.userService.updatePaid(this.user, false).catch((res=>{
               this.showError(res);
             }));
             this.historyArray.forEach((res, index)=>{
+              var totalquantity = 0;
               //console.log(res['id'])
               //console.log(this.userEmail);
               //console.log(res);
