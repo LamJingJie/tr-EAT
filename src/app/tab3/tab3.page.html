@@ -38,7 +38,7 @@
        <div style="flex: 1;">
         {{order.foodname}}  x{{order.orderquantity || 1}}
        </div>
-      <div id="locate" style="color: #737373; font-weight: 500;">
+      <div *ngIf="userRole === 'student' || userRole === 'vendor'" id="locate" style="color: #737373; font-weight: 500;">
         Ordered: {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
       </div>
      </ion-card-title>
@@ -46,10 +46,12 @@
        <div style="flex: 1;">
         {{order.stallname}} . {{order.canteenname}}
        </div>
-       <div>
+       <div *ngIf="userRole === 'student' || userRole === 'vendor'">
         Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm'}}
        </div>
-      
+       <div *ngIf="userRole === 'sponsor'">
+        {{order.date?.toDate() | date: 'dd/MM/yyy H:mm'}}
+       </div>
      </ion-card-subtitle>
    </div>
  
