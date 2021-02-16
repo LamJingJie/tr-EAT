@@ -391,7 +391,7 @@ export class Tab2Page {
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
           //console.log(this.totalPriceAll);
   
-          
+          this.foodSub.unsubscribe();
         }))
       
       })
