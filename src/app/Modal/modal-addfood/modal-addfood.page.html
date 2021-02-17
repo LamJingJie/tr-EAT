@@ -1,32 +1,35 @@
 <ion-header>
   <ion-toolbar>
     <ion-title slot="start">Add Food</ion-title>
-    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
+    </ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
-  <form [formGroup] = "addfood_form" (ngSubmit)="addFood(addfood_form.value)">
+  <form [formGroup]="addfood_form" (ngSubmit)="addFood(addfood_form.value)">
     <ion-card>
       <ion-item>
         <ion-input type="text" formControlName="foodname" placeholder="Enter food name"></ion-input>
-        <ion-icon *ngIf="foodname.invalid && (foodname.dirty || foodname.touched)" name ="alert-circle" color="danger"></ion-icon>
+        <ion-icon *ngIf="foodname.invalid && (foodname.dirty || foodname.touched)" name="alert-circle" color="danger">
+        </ion-icon>
       </ion-item>
     </ion-card>
 
-    <ion-card >
+    <ion-card>
       <ion-item>
         <ion-input type="number" formControlName="foodprice" placeholder="Food Price"></ion-input>
-        <ion-icon *ngIf="foodprice.invalid && (foodprice.dirty || foodprice.touched)" name ="alert-circle" color="danger"></ion-icon>
+        <ion-icon *ngIf="foodprice.invalid && (foodprice.dirty || foodprice.touched)" name="alert-circle"
+          color="danger"></ion-icon>
       </ion-item>
     </ion-card>
 
     <ion-card>
       <ion-item>
         <ion-label floating>Halal</ion-label>
-        <ion-select value="true" (ionChange)="changeHalal($event)" >
-          <ion-select-option  value="true">True</ion-select-option>
+        <ion-select value="true" (ionChange)="changeHalal($event)">
+          <ion-select-option value="true">True</ion-select-option>
           <ion-select-option value="false">False</ion-select-option>
         </ion-select>
       </ion-item>
@@ -35,33 +38,45 @@
     <ion-card>
       <ion-item>
         <ion-label floating>Vegetarian</ion-label>
-        <ion-select  value="true" (ionChange)="changeVeg($event)" >
-          <ion-select-option  value="true">True</ion-select-option>
+        <ion-select value="true" (ionChange)="changeVeg($event)">
+          <ion-select-option value="true">True</ion-select-option>
           <ion-select-option value="false">False</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-card>
 
+
+    <ion-card>
+      <ion-item class="ion-no-padding">
+        <ion-label> Select Cuisine </ion-label>
+        <ion-button (click)="selectCuisine($event)">
+          <ion-icon name="create-outline"> </ion-icon>
+          Edit Cuisine Choice
+        </ion-button>
+      </ion-item>
+    </ion-card>
+
+
     <ion-card>
       <ion-item>
         <div id="center">
-          <img src = "{{files}}" alt='image' width='50%' *ngIf="files != null"/>
+          <img src="{{files}}" alt='image' width='50%' *ngIf="files != null" />
         </div>
 
       </ion-item>
-      <ion-item >
+      <ion-item>
         <div id="centerv2">
 
-           <ion-button color="success" shape="round" size="small" >
-          <span>Select Image</span>
-          <input id="files"type="file" formControlName="foodimage" (change)="onFileSelected($event)" />
-        </ion-button>
+          <ion-button color="success" shape="round" size="small">
+            <span>Select Image</span>
+            <input id="files" type="file" formControlName="foodimage" (change)="onFileSelected($event)" />
+          </ion-button>
 
         </div>
       </ion-item>
     </ion-card>
 
-    <ion-button type="submit" [disabled] = "!addfood_form.valid">Proceed</ion-button>
+    <ion-button type="submit" [disabled]="!addfood_form.valid">Proceed</ion-button>
 
   </form>
 

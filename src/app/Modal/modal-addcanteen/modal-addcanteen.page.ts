@@ -1,16 +1,19 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController, ToastController } from '@ionic/angular';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CanteenService } from 'src/app/services/canteen/canteen.service';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { v4 as uuidv4 } from 'uuid';
-
 import '@simonwep/pickr/dist/themes/classic.min.css';   // 'classic' theme
 import '@simonwep/pickr/dist/themes/monolith.min.css';  // 'monolith' theme
 import '@simonwep/pickr/dist/themes/nano.min.css';      // 'nano' theme
 import Pickr from '@simonwep/pickr';
+
+//Database Imports
+import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { v4 as uuidv4 } from 'uuid';
+
+//Services Imports
+import { CanteenService } from 'src/app/services/canteen/canteen.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 export interface MyData {
   name: string;
@@ -27,19 +30,15 @@ export interface MyData {
 export class ModalAddcanteenPage implements OnInit {
 
   canteen: any = [];
-
   currentAccount: string;
   canteenForm: FormGroup;
   selectedFile: any;
   filename: any;
   files: any;
-
   colorChose: any;
+  colorLoop: any;
 
-
-colorLoop: any;
-
-  sliderConfig={
+  sliderConfig = {
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: false,
@@ -70,46 +69,50 @@ colorLoop: any;
     //     this.router.navigate(["/login"]);
     //   }
     // });
+
+    //Code for Color Picker, chooses the theme that will be displayed in the firestore 
     const pickr = Pickr.create({
       el: '.color-picker',
       theme: 'classic', // or 'monolith', or 'nano'
-  
+
       components: {
-  
-          // Main components
-          preview: true,
-          opacity: true,
-          hue: true,
-  
-          // Input / output Options
-          interaction: {
-              hex: true,
-              rgba: true,
-              hsla: true,
-              hsva: true,
-              cmyk: true,
-              input: true,
-              clear: false,
-              save: true
-          }
+
+        // Main components
+        preview: true,
+        opacity: true,
+        hue: true,
+
+        // Input / output Options
+        interaction: {
+          hex: true,
+          rgba: true,
+          hsla: true,
+          hsva: true,
+          cmyk: true,
+          input: true,
+          clear: false,
+          save: true
+        }
       }
-  });
+    });
 
-  //await pickr.show();
+    //await pickr.show();
 
-  //Instances on when the color picker is opened
-  pickr.on('save', (...args) => {
-    let colorChosen = args[0].toRGBA();
-    
-    this.colorChose = colorChosen.toString();
-    console.log(this.colorChose);
-    //(<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
-    pickr.hide();
-  });
-    
+    //Instances on when the color picker is opened
+    pickr.on('save', (...args) => {
+      let colorChosen = args[0].toRGBA();
+
+      this.colorChose = colorChosen.toString();
+      console.log(this.colorChose);
+      //(<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
+      pickr.hide();
+    });
+
   }
 
+  //This function is to get image from files and post it on the modal in the AddCanteen 
   //Get Image Name
+  /*
   onFileSelected(event) {
     this.selectedFile = event.target.files[0];
     this.filename = event.target.files[0].name + event.timeStamp;
@@ -128,9 +131,9 @@ colorLoop: any;
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
-  }
+  }*/
 
-
+  //Function synced from canteenService, posts the data to firestore 
   async submitCanteen(data) {
     await this.startLoader();
     this.canteenService.addCanteen(

@@ -1,32 +1,37 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { AlertController, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
-import { Storage } from '@ionic/storage';
 import { PopoverController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
-import { OrderService } from 'src/app/services/order/order.service';
+import { Storage } from '@ionic/storage';
+import { ModalController, PickerController } from '@ionic/angular';
 import { rejects } from 'assert';
 import { KeyValuePipe } from '@angular/common';
 import { CartTotalCostPipe } from 'src/app/pages/foodlist/cart-total-cost.pipe';
-import { ModalController, PickerController } from '@ionic/angular';
-import { FoodService } from 'src/app/services/food/food.service';
-import { CartService } from 'src/app/services/cart/cart.service';
-import { CanteenService } from 'src/app/services/canteen/canteen.service';
-import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
+
+//Database Imports
+import { Observable, Subscription } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
+
+//Services Imports
+import { UserService } from 'src/app/services/user/user.service';
+import { FoodService } from 'src/app/services/food/food.service';
+import { CartService } from 'src/app/services/cart/cart.service';
+import { OrderService } from 'src/app/services/order/order.service';
+import { CanteenService } from 'src/app/services/canteen/canteen.service';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+
+//Component and Modal Imports
+import { CategoryfilterComponent } from 'src/app/component/categoryfilter/categoryfilter.component';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
-
 @Component({
-  selector: 'app-foodlist',
-  templateUrl: './foodlist.page.html',
-  styleUrls: ['./foodlist.page.scss'],
+  selector: 'app-category',
+  templateUrl: './category.page.html',
+  styleUrls: ['./category.page.scss'],
 })
-export class FoodlistPage implements OnInit {
+export class CategoryPage implements OnInit {
   foodSubscription: Subscription;
   getfoodSubscription: Subscription;
 
@@ -39,7 +44,6 @@ export class FoodlistPage implements OnInit {
   getPaid: Subscription;
 
   checkOrderSubscription: Subscription;
-
 
   userSub: Subscription;
   userSub2: Subscription;
@@ -78,17 +82,17 @@ export class FoodlistPage implements OnInit {
   stampsLeft: number;
   orderid: any;
 
-
   foodM = new Map();
   cartM = new Map();
   cartM2 = new Map();
 
   number: number;
-
   currentAccount: any
 
   //Changes made below
   favs: any;
+  condition: any;
+  favouritedlist: any;
 
   today: Date;
   today2: Date;
@@ -96,26 +100,37 @@ export class FoodlistPage implements OnInit {
 
   paid: boolean = false;
 
-
-  constructor(private userService: UserService, private authService: AuthenticationService, private router: Router,
-    private navCtrl: NavController, private alertCtrl: AlertController, private toast: ToastController,
-    private orderService: OrderService, private keyvalue: KeyValuePipe, private modalCtrl: ModalController,
-    private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, private foodService: FoodService,
-    private popoverCtrl: PopoverController, private storage: Storage, private cartService: CartService,
-    private carttotalcostpipe: CartTotalCostPipe, private firestore: AngularFirestore, private loading: LoadingController,
+  constructor(private userService: UserService,
+    private authService: AuthenticationService,
+    private router: Router,
+    private navCtrl: NavController,
+    private alertCtrl: AlertController,
+    private toast: ToastController,
+    private orderService: OrderService,
+    private keyvalue: KeyValuePipe,
+    private modalCtrl: ModalController,
+    private pickerCtrl: PickerController,
+    private activatedRoute: ActivatedRoute,
+    private foodService: FoodService,
+    private popoverCtrl: PopoverController,
+    private storage: Storage,
+    private cartService: CartService,
+    private carttotalcostpipe: CartTotalCostPipe,
+    private firestore: AngularFirestore,
+    private loading: LoadingController,
     private canteenService: CanteenService) {
-
     this.chosenFilter = 'all'
     this.count = 1;
     this.currentAmt = 1;
-
   }
 
   async ngOnInit() {
     //changes here 
     this.currentAccount = await this.storage.get('email')
+
     //console.log("ngOnInit");
     this.getfoodSubscription = this.activatedRoute.queryParams.subscribe(params => {
+
       this.stall = params.stall;
       this.vendor = params.vendor;
       this.canteen = params.canteenid;
@@ -123,35 +138,32 @@ export class FoodlistPage implements OnInit {
       //console.log(this.vendor);
     });
 
+    //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
     this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
       this.favs = data.map((x) => x.foodid)
-      console.log(this.favs)
+      //console.log(this.favs)
 
       for (var i = 0; i < this.foodlistArray.length; i++) {
         for (var j = 0; j < this.favs.length; j++) {
           if (this.foodlistArray[i].id === this.favs[i]) {
-            console.log("true")
+            //console.log("true")
             this.foodlistArray[i].favourites = true
-            console.log(this.foodlistArray[i])
+            //console.log(this.foodlistArray[i])
           }
           else { this.foodlistArray[i].favourites = false }
         }
       }
-      console.log(this.foodlistArray)
+      //console.log(this.foodlistArray)
     })
-
 
   }
 
   async aboutus_modal() {
-
     const modal = await this.modalCtrl.create({
       component: ModalAboutusPage,
       cssClass: 'modal_aboutus_class'
     });
     await modal.present();
-
-
   }
 
   cartPage() {
@@ -168,7 +180,6 @@ export class FoodlistPage implements OnInit {
     //console.log(this.canteen);
     this.userEmail = await this.storage.get('email');
     this.calculateTotalCost();
-
 
     this.userRole = await this.storage.get('role');
     this.filterFood(this.chosenFilter);
@@ -209,7 +220,6 @@ export class FoodlistPage implements OnInit {
 
 
 
-
   calculateTotalCost() {
     this.cartArray = [];
     //Set hashmap keys
@@ -232,12 +242,10 @@ export class FoodlistPage implements OnInit {
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
           //console.log(this.totalPriceAll);
 
-
         }))
 
         this.countCart = this.countCart + 1;
       })
-
 
       /* res.forEach((res=>{
          //console.log(res);
@@ -247,12 +255,8 @@ export class FoodlistPage implements OnInit {
          count = count + 1;
          
        }))*/
-
-
       this.cartSubscription.unsubscribe();
-
       //this.getKeysCart();
-
     }))
   }
 
@@ -291,25 +295,18 @@ export class FoodlistPage implements OnInit {
 
   }
 
-
   addAmt(foodid) {
-    // console.log(foodid);
     var amt = this.foodM.get(foodid);
     amt = amt + 1;
-    //console.log(this.currentAmt);
     this.foodM.set(foodid, amt);
-    //console.log(this.foodM.entries());
     this.getKeys();
   }
 
   deductAmt(foodid) {
-    //console.log(foodid);
     var amt = this.foodM.get(foodid);
     if (amt > 1) {
       amt = amt - 1;
-      //console.log(this.currentAmt);
       this.foodM.set(foodid, amt);
-      //console.log(this.foodM.entries());
       this.getKeys();
     }
 
@@ -367,26 +364,24 @@ export class FoodlistPage implements OnInit {
     }
   }
 
-  //Changes made 
+  //Changes Here
+  //These codes is for getting and retrieving based on favourites
   async addFoodbyFavourites(foodid) {
-    (await this.firestore.collection('favourites')
-    .doc(this.currentAccount)).collection('data')
-    .doc(foodid).set({ foodid: foodid })
-    .then((res) => { console.log(res); }).catch((err) => { console.log(err) });
-
+    (await this.firestore.collection('favourites').doc(this.currentAccount))
+      .collection('data').doc(foodid).set({ foodid: foodid }).then((res) => { console.log(res); }).catch((err) => { console.log(err) });
   }
 
   async deleteFoodbyFavourites(foodid) {
-    console.log(foodid);
-    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
-
+    //console.log(foodid);
+    (await this.firestore.collection('favourites').doc(this.currentAccount))
+      .collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
   }
 
   async getFoodbyfavourites(userid) {
-    console.log(userid);
+    //console.log(userid);
     return this.firestore.collection("favourites").doc(userid).collection("data").valueChanges();
   }
-  //changes end 
+  //Changes End
 
   //Student
   async RedeemFood(id, foodname, foodprice: number, vendorid) {
@@ -506,9 +501,7 @@ export class FoodlistPage implements OnInit {
       id: 'redeem'
     });
     await loading3.present();
-
     //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
-
   }
 
   async presentLoadCart() {
@@ -518,11 +511,8 @@ export class FoodlistPage implements OnInit {
       id: 'cart'
     });
     await loading3.present();
-
     //await loading.onDidDismiss(); //Automatically close when duration is up, other dismiss doesnt do it
-
   }
-
 
   async CartshowSuccess(foodname) {
     const toast = await this.toast.create({ message: '"' + foodname + '"' + ' has been added to cart.', position: 'bottom', duration: 5000, buttons: [{ text: 'ok', handler: () => { console.log('Cancel clicked'); } }] });
@@ -544,10 +534,11 @@ export class FoodlistPage implements OnInit {
     if (this.userRole === 'sponsor' || this.userRole === 'vendor' || this.userRole === 'admin') {
       this.foodM.clear(); //reset hashmap
 
-      this.filterfoodSubscription = this.foodService.getFoodBasedOnStallNFilter(this.vendor, filter).subscribe((res => {
+      this.filterfoodSubscription = this.foodService.getFoodBasedOnCuisineNFilter(filter).subscribe((res => {
 
         this.foodlistArray = res;
-        //console.log(this.foodlistArray);
+
+        console.log(this.foodlistArray);
         res.forEach((res => {
           //console.log(res.id);
           this.foodM.set(res.id, this.count); //Store each food with count = 1
@@ -558,7 +549,6 @@ export class FoodlistPage implements OnInit {
         this.filterfoodSubscription.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
     }
-
 
     //For students
     if (this.userRole === 'student') {
@@ -571,8 +561,6 @@ export class FoodlistPage implements OnInit {
     }
   }
 
-
-
   getKeys() {
     let keys = Array.from(this.foodM.keys());
     let values = Array.from(this.foodM.values());
@@ -583,7 +571,7 @@ export class FoodlistPage implements OnInit {
   //Filter button
   async filter(ev) {
     const popover = await this.popoverCtrl.create({
-      component: FoodfilterComponent,
+      component: CategoryfilterComponent,
       event: ev,
       translucent: true,
       componentProps: { chosenFilter: this.chosenFilter },
@@ -616,9 +604,6 @@ export class FoodlistPage implements OnInit {
     this.navCtrl.pop();
   }
 
-
   ngOnDestroy() {
-
   }
-
 }

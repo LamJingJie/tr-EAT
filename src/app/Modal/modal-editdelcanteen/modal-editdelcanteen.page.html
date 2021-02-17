@@ -17,15 +17,8 @@
       </ion-item>
     </ion-card>
 
-    <!--Need to display the color code as well-->
-    <ion-card>
-      <ion-item>
-        <div id="center">
-          <img src="{{canteen.image}}" alt='image' width="50%;" *ngIf="files == null" />
-          <img src="{{files}}" alt='image' width='50%' *ngIf="files != null" />
-        </div>
-
-      </ion-item>
+    <!--Commented off Codes below is for the edit canteen based on images-->
+    <!--
       <ion-item>
         <div id="centerv2">
           <ion-button color="success" shape="round" size="small">
@@ -33,8 +26,20 @@
             <input id="files" type="file" (change)="onFileSelected($event)" />
           </ion-button>
         </div>
+      </ion-item>-->
+
+    <!--Below is the code for choosing a different color for the canteens to be displayed-->
+    <ion-card>
+      <ion-item>
+        <div>
+          <ion-label> Choose Canteen colour: </ion-label>
+        </div>
+        <div>
+          <ion-button class="color-picker">Color Picker</ion-button>
+        </div>
       </ion-item>
     </ion-card>
+
     <ion-input hidden formControlName="mergedName" value={{canteen.mergedName}}>{{canteen.mergedName}}</ion-input>
     <ion-button type="submit">Confirm</ion-button>
   </form>

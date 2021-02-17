@@ -14,17 +14,18 @@
     <ion-card *ngFor="let ct of canteen">
       <div class='allusers'>
         Canteen: {{ct.canteenname}} <br>
-        Deleted: {{ct.deleted}}
+        Archived: {{ct.deleted}}
       </div>
-      
-      <!--Uncomment bottom code to display image from firestore-->
-      <!--<img src="{{ct.image}}" alt="image">--> 
+
+
+      <!--<img src="{{ct.image}}" alt="image">-->
       <ion-button (click)="editCanteen(ct.id)">Edit</ion-button>
       <ion-button (click)="deleteCanteenPopUp(ct.id, ct.mergedname)">Delete</ion-button>
-      <ion-button (click)="changeCanteenPopUp(ct.id, ct.deleted)">UpdateDeleted</ion-button>
+      <!--Archive button does a "Soft Delete", it just removes itself from app, but its content is still in the firestore-->
+      <ion-button (click)="changeCanteenPopUp(ct.id, ct.deleted)">Archive</ion-button>
     </ion-card>
     <p *ngIf="canteen.length == 0; then pass; else fail"></p>
-    
+
   </div>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
@@ -32,4 +33,3 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
-

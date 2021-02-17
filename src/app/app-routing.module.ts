@@ -13,59 +13,60 @@ const routes: Routes = [
   },
   {
     path: 'signup',
-    loadChildren: () => import('./pages/signup/signup.module').then( m => m.SignupPageModule)
+    loadChildren: () => import('./pages/signup/signup.module').then(m => m.SignupPageModule)
   },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login/login.module').then(m => m.LoginPageModule)
   },
 
 
   //Below are all modals
   {
     path: 'adminaddvendor',
-    loadChildren: () => import('./pages/adminaddvendor/modal-addvendor.module').then( m => m.ModalAddvendorPageModule)
+    loadChildren: () => import('./pages/adminaddvendor/modal-addvendor.module').then(m => m.ModalAddvendorPageModule)
   },
 
   {
     path: 'modal-addfood/:account',
-    loadChildren: () => import('./Modal/modal-addfood/modal-addfood.module').then( m => m.ModalAddfoodPageModule)
+    loadChildren: () => import('./Modal/modal-addfood/modal-addfood.module').then(m => m.ModalAddfoodPageModule)
   },
   {
     path: 'modal-editdelfood/:id',
-    loadChildren: () => import('./Modal/modal-editdelfood/modal-editdelfood.module').then( m => m.ModalEditdelfoodPageModule)
+    loadChildren: () => import('./Modal/modal-editdelfood/modal-editdelfood.module').then(m => m.ModalEditdelfoodPageModule)
   },
 
 
- 
+
   {
     path: 'calendar-modal',
-    loadChildren: () => import('./Modal/calendar-modal/calendar-modal.module').then( m => m.CalendarModalPageModule)
+    loadChildren: () => import('./Modal/calendar-modal/calendar-modal.module').then(m => m.CalendarModalPageModule)
   },
   {
     path: 'modal-verifychckout',
-    loadChildren: () => import('./Modal/modal-verifychckout/modal-verifychckout.module').then( m => m.ModalVerifychckoutPageModule)
+    loadChildren: () => import('./Modal/modal-verifychckout/modal-verifychckout.module').then(m => m.ModalVerifychckoutPageModule)
   },
   {
     path: 'modal-addcanteen',
-    loadChildren: () => import('./Modal/modal-addcanteen/modal-addcanteen.module').then( m => m.ModalAddcanteenPageModule)
+    loadChildren: () => import('./Modal/modal-addcanteen/modal-addcanteen.module').then(m => m.ModalAddcanteenPageModule)
   },
   {
     path: 'modal-editdelcanteen/:id',
-    loadChildren: () => import('./Modal/modal-editdelcanteen/modal-editdelcanteen.module').then( m => m.ModalEditdelcanteenPageModule)
+    loadChildren: () => import('./Modal/modal-editdelcanteen/modal-editdelcanteen.module').then(m => m.ModalEditdelcanteenPageModule)
   },
   {
     path: 'modal-aboutus',
-    loadChildren: () => import('./Modal/modal-aboutus/modal-aboutus.module').then( m => m.ModalAboutusPageModule)
-  },  {
+    loadChildren: () => import('./Modal/modal-aboutus/modal-aboutus.module').then(m => m.ModalAboutusPageModule)
+  },
+  {
     path: 'modal-verifypurchase',
-    loadChildren: () => import('./Modal/modal-verifypurchase/modal-verifypurchase.module').then( m => m.ModalVerifypurchasePageModule)
+    loadChildren: () => import('./Modal/modal-verifypurchase/modal-verifypurchase.module').then(m => m.ModalVerifypurchasePageModule)
   },
 
-  
-
- 
-
+  {
+    path: 'category',
+    loadChildren: () => import('./pages/category/category.module').then(m => m.CategoryPageModule)
+  },
 
 
 
@@ -79,4 +80,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

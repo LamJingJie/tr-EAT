@@ -24,10 +24,11 @@ export class ModalAddfoodPage implements OnInit {
   files: any;
   currentHalal: boolean;
   currentVeg: boolean;
+  currentCuisine: any;
 
   constructor(private modalCtrl: ModalController, private fb: FormBuilder, private userService: UserService, private foodService: FoodService
     , private activatedRoute: ActivatedRoute, private navCtrl: NavController, private storage: AngularFireStorage,
-    private toast: ToastController, private loading: LoadingController) {
+    private toast: ToastController, private alertController: AlertController, private loading: LoadingController) {
 
       this.currentHalal = true;
       this.currentVeg = true;
@@ -78,7 +79,7 @@ export class ModalAddfoodPage implements OnInit {
     await this.presentAddFoodLoading();
    // console.log(this.currentAcc)
    this.foodService.addFood(this.addfood_form.value['foodname'], this.addfood_form.value['foodprice'], this.currentHalal,
-    this.currentAcc, this.currentVeg,this.selectedFile, this.filename).then(res=>{
+    this.currentAcc, this.currentVeg,this.selectedFile, this.filename, this.currentCuisine).then(res=>{
       this.loading.dismiss(null,null,'addFoodAdmin');
       this.showSuccess();
       this.dismiss();
@@ -88,6 +89,61 @@ export class ModalAddfoodPage implements OnInit {
       this.showError(error);
     })
   }
+
+
+  // THESES ARE MY STUPID CHANGES
+  //create function for Cuisine Choices
+  async selectCuisine() {
+    const alert = this.alertController
+      .create({
+        
+        header: "Select Cuisine:",
+        inputs: [{
+          name: 'box 1',
+          type: 'checkbox',
+          label: 'Asian',
+          value: 'Asian',
+          checked: false, 
+        },
+        {
+          name: 'box 2',
+          type: 'checkbox',
+          label: 'Western',
+          value: 'Western',
+          checked: false, 
+        },
+        {
+          name: 'box 3',
+          type: 'checkbox',
+          label: 'Malay',
+          value: 'Malay',
+          checked: false, 
+        },
+        {
+          name: 'box 4',
+          type: 'checkbox',
+          label: 'Others',
+          value: 'Others',
+          checked: false, 
+        },
+      ],
+        buttons: [
+          { text: "Cancel", role: "cancel" },
+          {
+            text: "Confirm",
+            handler: (alertData) => {
+              this.currentCuisine = alertData
+              
+              console.log(alertData)  
+              
+            },
+          },
+        ],
+      })
+
+      .then((alert) => alert.present());
+      }
+
 
   //Get Image Name
   onFileSelected(event){

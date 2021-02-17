@@ -33,9 +33,9 @@ files: any;
 
 editfood_form: FormGroup; 
 foodSubscription: Subscription;
+  currentCuisine: any;
   constructor(private activatedRoute: ActivatedRoute, private fb:FormBuilder, private navCtrl:NavController, private loading: LoadingController
-    , private foodService: FoodService, private toast: ToastController, public ngFireAuth: AngularFireAuth,
-    private modalCtrl: ModalController) { 
+    , private foodService: FoodService, private toast: ToastController, public ngFireAuth: AngularFireAuth,private modalCtrl: ModalController, private alertController: AlertController) { 
 
        //Edit Vendor Food Form
        this.editfood_form = this.fb.group({
@@ -78,6 +78,7 @@ foodSubscription: Subscription;
       this.foodData = res;
       this.currentHalal = this.foodData.halal;
       this.currentVeg = this.foodData.vegetarian;
+      this.currentCuisine = this.foodData.cuisinename;
       //console.log(this.foodData);
       this.foodSubscription.unsubscribe(); //Prevent constant refresh by students or sponsors due to the constant updates to the db
     });
@@ -100,7 +101,7 @@ foodSubscription: Subscription;
     //  console.log(this.id);
     //console.log("EMPTY IMAGE");
       this.foodService.editFoodNoImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
-      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid)
+      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid, this.currentCuisine)
       .then(res=>{
         this.loading.dismiss(null, null, 'editFoodAdmin');
         this.dismiss();
@@ -119,7 +120,7 @@ foodSubscription: Subscription;
     //  console.log(this.foodData.userid);
      // console.log(this.id);
       this.foodService.editFoodWithImg(this.editfood_form.value['foodname'], this.editfood_form.value['foodprice'], this.editfood_form.value['availquantity'],
-      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid, this.image, this.filename, this.editfood_form.value['mergedName'])
+      this.editfood_form.value['halal'], this.editfood_form.value['vegetarian'], this.foodData.userid, this.foodid, this.image, this.filename, this.editfood_form.value['mergedName'], this.currentCuisine)
       .then(res=>{
         this.loading.dismiss(null, null, 'editFoodAdmin');
         this.dismiss();
@@ -131,6 +132,60 @@ foodSubscription: Subscription;
       })
     }
   }
+
+  //Changes Start
+  async selectCuisine() {
+    const alert = this.alertController
+      .create({
+        
+        header: "Select Cuisine:",
+        inputs: [{
+          name: 'box 1',
+          type: 'checkbox',
+          label: 'Asian',
+          value: 'Asian',
+          checked: false, 
+        },
+        {
+          name: 'box 2',
+          type: 'checkbox',
+          label: 'Western',
+          value: 'Western',
+          checked: false, 
+        },
+        {
+          name: 'box 3',
+          type: 'checkbox',
+          label: 'Malay',
+          value: 'Malay',
+          checked: false, 
+        },
+        {
+          name: 'box 4',
+          type: 'checkbox',
+          label: 'Others',
+          value: 'Others',
+          checked: false, 
+        },
+      ],
+        buttons: [
+          { text: "Cancel", role: "cancel" },
+          {
+            text: "Confirm",
+            handler: (alertData) => {
+              this.currentCuisine = alertData
+              
+              console.log(alertData)  
+              
+            },
+          },
+        ],
+      })
+
+      .then((alert) => alert.present());
+      }
+
+      //Changes END
 
   onFileSelected(event){
     //Main section to be used when editing

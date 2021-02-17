@@ -1,0 +1,38 @@
+<p>
+  <!--This is the Filtering by names in the filter button in Category Page-->
+  <ion-card id="selectedFilter" *ngIf="filter === 'all'" (click)="selectFilter('all')">
+    Selected ALL
+  </ion-card>
+  <ion-card id="notSelectedFilter" *ngIf="filter !== 'all'" (click)="selectFilter('all')">
+    ALL
+  </ion-card>
+
+  <ion-card id="selectedFilter" *ngIf="filter === 'Asian'" (click)="selectFilter('Asian')">
+    Selected Asian
+  </ion-card>
+  <ion-card id="notSelectedFilter" *ngIf="filter !== 'Asian'" (click)="selectFilter('Asian')">
+    Asian
+  </ion-card>
+
+  <ion-card id="selectedFilter" *ngIf="filter === 'Western'" (click)="selectFilter('Western')">
+    Selected Western
+  </ion-card>
+  <ion-card id="notSelectedFilter" *ngIf="filter !== 'Western'" (click)="selectFilter('Western')">
+    Western
+  </ion-card>
+
+  <ion-card id="selectedFilter" *ngIf="filter === 'Malay'" (click)="selectFilter('Malay')">
+    Selected Malay
+  </ion-card>
+  <ion-card id="notSelectedFilter" *ngIf="filter !== 'Malay'" (click)="selectFilter('Malay')">
+    Malay
+  </ion-card>
+
+  <ion-card id="selectedFilter" *ngIf="filter === 'Others'" (click)="selectFilter('Others')">
+    Selected Others
+  </ion-card>
+  <ion-card id="notSelectedFilter" *ngIf="filter !== 'halal'" (click)="selectFilter('Others')">
+    Others
+  </ion-card>
+
+</p>

@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>foodlist</ion-title>
+    <ion-title>Category List</ion-title>
     <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
     </ion-icon>
   </ion-toolbar>
@@ -17,17 +17,15 @@
 
 
   <div id="intro">
-    <div class="font" style="font-size: 20px;">Welcome to</div>
-    <div class="font" style="font-size: 25px;"> Vendor:{{stall}} </div>
+    <div class="font" style="font-size: 20px;">Welcome to Category Page</div>
   </div>
-
   <br>
   <br>
 
   <!----Filter button---->
   <div class='subtop'>
     <div id="top">
-      <div class="subtitle" style="position: relative; ">Items Available</div>
+      <div class="subtitle" style="position: relative; ">Items Available:</div>
       <div style="text-align: right; position: relative; margin-left: 140px;">
         <ion-button style="margin-right: 15px;" (click)="filter($event)" shape="round" size="small">
           <ion-icon name="funnel-outline"></ion-icon> Filter
@@ -50,7 +48,6 @@
         <button *ngIf="food.value.favourites ">Favourited</button>
       </div>
 
-
       <button *ngIf="userRole === 'sponsor'"
         (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
 
@@ -64,8 +61,6 @@
 
     <p *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</p>
   </div>
-
-
 
   <!--Food data shown to students-->
   <div *ngIf="userRole === 'student' ">
@@ -85,19 +80,12 @@
     </ion-card>
     <!--Shown for students-->
     <p *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" Food Retrieved</p>
-
   </div>
-
-
-
-
-
 
   <!---Cart to be shown at the bottom of the screen, only for sponsors to see--->
   <ion-button id="cart_bottom" (click)="cartPage()" *ngIf="userRole === 'sponsor'">
     <ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount
       inside {{countCart}}</ion-badge>
   </ion-button>
-
 
 </ion-content>

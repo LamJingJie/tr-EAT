@@ -20,53 +20,78 @@ export class FoodService {
 
 
   //Get Respective Food for vendors
-  getRespectiveFood(acc){
+  getRespectiveFood(acc) {
     //console.log(acc);
-    return this.firestore.collection('food', ref => ref.where('userid', '==', acc)).valueChanges({idField: 'id'});
+    return this.firestore.collection('food', ref => ref.where('userid', '==', acc)).valueChanges({ idField: 'id' });
   }
 
   //Get 1 Food
-  getFoodById(id){
-    
-    return this.firestore.collection('food').doc(id).valueChanges({idField: 'id'});
+  getFoodById(id) {
+
+    return this.firestore.collection('food').doc(id).valueChanges({ idField: 'id' });
   }
 
-  getAllFood(){
-    return this.firestore.collection('food').valueChanges({idField: 'id'});
+  getAllFood() {
+    return this.firestore.collection('food').valueChanges({ idField: 'id' });
   }
 
-  
 
 
-  getFoodBasedOnStall(vendor){
-    return this.firestore.collection('food', ref => ref.where('userid', '==', vendor)).valueChanges({idField: 'id'});
+
+  getFoodBasedOnStall(vendor) {
+    return this.firestore.collection('food', ref => ref.where('userid', '==', vendor)).valueChanges({ idField: 'id' });
   }
 
   //When user wants to filter
-  getFoodBasedOnStallNFilter(vendor, filter){
+  getFoodBasedOnStallNFilter(vendor, filter) {
     //console.log(vendor);
-   // console.log(filter);
-    if(filter === 'all'){
+    // console.log(filter);
+    if (filter === 'all') {
       return this.getFoodBasedOnStall(vendor);
-    }else{
-      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true)).valueChanges({idField:'id'});
+    } else {
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter, '==', true)).valueChanges({ idField: 'id' });
     }
   }
+
+  //CHANGES MADE
+  //To filter food based on cuisine types
+  getFoodBasedOnCuisineNFilter(cuisinename) {
+    if (cuisinename === 'all') {
+      return this.firestore.collection('food').valueChanges({ idField: 'id' });
+    } else {
+      return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename)).valueChanges({ idField: 'id' });
+    }
+  }
+
+  //This function adds food in favourite collection
+  async addFoodbyFavourites(foodid, userid) {
+    return this.firestore.collection('favourites').add({ foodid: foodid, userid: userid });
+  }
+
+  getFoodbyfavourites(userid) {
+    return this.firestore.collection("favourites").doc(userid).collection("data").valueChanges();
+
+  }
+
+  deleteFoodbyfavourites(foodid, userid) {
+    return this.firestore.collection('favourites').doc(userid).collection("data").doc(foodid).delete();
+  }
+  //CHANGES END
 
   //Get food that has availquantity in it to be shown for students to redeem
-  getRedeemableFoodNFilter(vendor, filter){
-    if(filter === 'all'){
-      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('availquantity', '>', 0)).valueChanges({idField: 'id'});
-    }else{
-      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter,'==',true).where('availquantity', '>', 0)).valueChanges({idField:'id'});
+  getRedeemableFoodNFilter(vendor, filter) {
+    if (filter === 'all') {
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+    } else {
+      return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
     }
   }
 
-  getRedeemableFood_ALL(){
-    return this.firestore.collection('food', ref=> ref.where('availquantity', '>', 0)).valueChanges({idField: 'id'});
+  getRedeemableFood_ALL() {
+    return this.firestore.collection('food', ref => ref.where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
   }
 
-  async addFood(foodname, foodprice:number, halal: boolean, userid, vegetarian:boolean, image, filename){
+  async addFood(foodname, foodprice: number, halal: boolean, userid, vegetarian: boolean, image, filename, cuisinename) {
     //console.log(image);
     var storageURL = 'Food Images/';
     var mergedName = filename + userid + foodname + foodprice;
@@ -75,28 +100,30 @@ export class FoodService {
     //console.log(storageRef);
     var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
     //console.log(downloadURL); 
-    
-    return this.firestore.collection('food').add({availquantity: 0, foodname: foodname, foodprice: foodprice, halal: halal, 
-    userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, popularity: 0});
+
+    return this.firestore.collection('food').add({
+      availquantity: 0, foodname: foodname, foodprice: foodprice, halal: halal,
+      userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, popularity: 0, cuisinename: cuisinename
+    });
   }
 
-  deleteFood(id, mergedName){
+  deleteFood(id, mergedName) {
     this.storage.ref('Food Images/' + mergedName).delete(); //Delete previous food image
     return this.firestore.collection('food').doc(id).delete();
   }
 
   //Delete food respective to the vendor
-  deleteFoodVendorEmail(email){
+  deleteFoodVendorEmail(email) {
     //console.log(email);
-    return new Promise((resolve, reject) =>{
-      this.food = this.firestore.collection('food', ref => ref.where('userid','==',email)).get().subscribe(res=>{
-     
-        res.forEach(doc=>{
+    return new Promise((resolve, reject) => {
+      this.food = this.firestore.collection('food', ref => ref.where('userid', '==', email)).get().subscribe(res => {
+
+        res.forEach(doc => {
           try {
             var mergedName = doc.get('mergedName')
             //console.log(mergedName);
             this.storage.ref('Food Images/' + mergedName).delete(); //Delete previous food image
-            doc.ref.delete(); 
+            doc.ref.delete();
           } catch (error) {
             //If there's any error in deleting, exit and return error message
             reject(error);
@@ -109,47 +136,51 @@ export class FoodService {
   }
 
   //When admin didn't select any images to update/edit
-  editFoodNoImg(foodname, foodprice:number, availquantity:number, halal:boolean, vegetarian:boolean, userid, id){
-    
-    return this.firestore.collection('food').doc(id).update({availquantity:availquantity, foodname: foodname, foodprice:foodprice,
-      halal: halal, userid:userid, vegetarian: vegetarian})
+  editFoodNoImg(foodname, foodprice: number, availquantity: number, halal: boolean, vegetarian: boolean, userid, id, cuisinename) {
+
+    return this.firestore.collection('food').doc(id).update({
+      availquantity: availquantity, foodname: foodname, foodprice: foodprice,
+      halal: halal, userid: userid, vegetarian: vegetarian, cuisinename: cuisinename
+    })
   }
 
   //When admin has select an image to update/edit
-  async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal:boolean, vegetarian:boolean, userid, id, image, filename, mergedName1){
- 
-      this.storage.ref('Food Images/' + mergedName1).delete(); //Delete previous food image
-    
-      var storageURL = 'Food Images/';
-      var mergedName = filename + userid + foodname + foodprice;
-  
-      var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
-      var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
+  async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal: boolean, vegetarian: boolean, userid, id, image, filename, mergedName1, cuisinename) {
 
-  
-      return this.firestore.collection('food').doc(id).update({availquantity: availquantity, foodname: foodname, foodprice: foodprice,
-      halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName})
+    this.storage.ref('Food Images/' + mergedName1).delete(); //Delete previous food image
 
-    
-    
-   
+    var storageURL = 'Food Images/';
+    var mergedName = filename + userid + foodname + foodprice;
+
+    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
+    var downloadURL = await this.storage.ref('Food Images/' + mergedName).getDownloadURL().toPromise();
+
+
+    return this.firestore.collection('food').doc(id).update({
+      availquantity: availquantity, foodname: foodname, foodprice: foodprice,
+      halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, cuisinename: cuisinename
+    })
+
+
+
+
   }
 
   //When student redeem any food
-  decreaseAvailQuantity(id, quantity: number){
-    return this.firestore.collection('food').doc(id).update({availquantity: quantity});
+  decreaseAvailQuantity(id, quantity: number) {
+    return this.firestore.collection('food').doc(id).update({ availquantity: quantity });
   }
 
   //When sponsor pay
-  updateAvailQuantity(id, quantity: number){
-    return this.firestore.collection('food').doc(id).update({availquantity: quantity})
+  updateAvailQuantity(id, quantity: number) {
+    return this.firestore.collection('food').doc(id).update({ availquantity: quantity })
   }
 
   //When student redeem food
-  updatePopularity(id, popularity: number){
-    return this.firestore.collection('food').doc(id).update({popularity: popularity})
+  updatePopularity(id, popularity: number) {
+    return this.firestore.collection('food').doc(id).update({ popularity: popularity })
   }
 
-  
+
 
 }

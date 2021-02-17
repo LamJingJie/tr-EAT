@@ -1,119 +1,148 @@
 <ion-header [translucent]="true">
-    <ion-toolbar>
-      <ion-title>
-        Home
-      </ion-title>
-    </ion-toolbar>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"/>
-    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-  </ion-header>
-  
-  <ion-content [fullscreen]="true">
-    <!---About us-->
-    <div style="position: absolute; right:0; padding: 10px;">
-      <ion-button (click)='aboutus_modal()'></ion-button>
-    </div>
+  <ion-toolbar>
+    <ion-title>
+      Home
+    </ion-title>
+  </ion-toolbar>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+</ion-header>
 
-    <img id="Logo" src="./assets/Logo.png" />
-    <img class="Footer" id="TYN" src="./assets/TYN.png"/>
-    <img id="RICE" src="./assets/RICE.png"/>
-  
-    <!---About us-->
-   
-    <div id = "intro">
+<ion-content [fullscreen]="true">
+  <!---About us-->
+  <div style="position: absolute; right:0; padding: 10px;">
+    <ion-button (click)='aboutus_modal()'></ion-button>
+  </div>
+
+  <img id="Logo" src="./assets/Logo.png" />
+  <img class="Footer" id="TYN" src="./assets/TYN.png" />
+  <img id="RICE" src="./assets/RICE.png" />
+
+  <!---About us-->
+
+  <div id="intro">
     <h1>Hello</h1>
     <h4>Would you like a tr-EAT?</h4>
   </div>
-  
-    <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
-   
-      <div class=section>
-      <div class=subtitle ><h6>Canteens</h6></div>
-      <!---Canteen Carousel--->
-      <div id = "ctncarousel">
-        <ion-slides [options]="sliderConfig" class="slider">
-        
-          <ion-slide id="slide">
-            <ion-card class='canteen'(click)="ChosenCanteen('ALL')">
-              <div id="btnClick">
-              <img class="img" src="./assets/All_logoimg.png"/>
-              </div>
-            </ion-card>
-            </ion-slide>
+
+  <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
+
+  <div class=section>
+    <div class=subtitle>
+      <h6>Canteens</h6>
+    </div>
+    <!---Canteen Carousel--->
+    <div id="ctncarousel">
+      <ion-slides [options]="sliderConfig" class="slider">
+
+        <ion-slide id="slide">
+          <ion-card class='canteen' (click)="ChosenCanteen('ALL')">
+            <div id="btnClick">
+              <img class="img" src="./assets/All_logoimg.png" />
+            </div>
+          </ion-card>
+        </ion-slide>
 
 
-              <ion-slide  *ngFor="let ct of canteen" id="slide">
-                  <ion-card  *ngIf = "ct.deleted == false" class='canteen' (click)="ChosenCanteen(ct.id)" [style.background-color]="ct.color">
-                    <div id="btnClick">
-                <!--Uncomment the line below to see image carousell-->
-                 <!-- <img class="img2" src={{ct.image}}/>-->
-                <!--<img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>-->
-                 <div id="canteen_txt">
+        <ion-slide *ngFor="let ct of canteen" id="slide">
+          <ion-card *ngIf="ct.deleted == false" class='canteen' (click)="ChosenCanteen(ct.id)"
+            [style.background-color]="ct.color">
+            <div id="btnClick">
+              <!--Uncomment the line below to see image carousell-->
+              <!-- <img class="img2" src={{ct.image}}/>-->
+              <!--<img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>-->
+              <div id="canteen_txt">
                 {{ct.canteenname}}
+
+              </div>
+            </div>
+          </ion-card>
+        </ion-slide>
+      </ion-slides>
+    </div>
+  </div>
+
+  <!--Changes HERE-->
+  <div class=section2>
+    <div class=subtitle>
+      <h6>Categories/Cuisines</h6>
+    </div>
+    <!---Cuisine Carousel--->
+    <div id="cuisinecarousel">
+      <ion-slides [options]="sliderConfig" class="slider">
+
+        <ion-slide id="slide">
+          <ion-card class='cuisines' (click)="ChosenCuisines('ALL')">
+            <div id="btnClick">
+              <img class="img" src="./assets/All_logoimg.png" />
+            </div>
+          </ion-card>
+        </ion-slide>
+
+        <!--<ion-slide  *ngFor="let cn of cuisinename" id="slide">
+                  <ion-card  *ngIf = "cn.deleted == false" class='cuisines' (click)="ChosenCuisines(cn.id)" [style.background-color]="cn.color">
+                    <div id="btnClick">
+                Uncomment the line below to see image carousell
+                  <img class="img2" src={{ct.image}}/>
+                <img style="position: absolute; z-index: -2; left: 0%; right:0%; height: 100%; width: 100%;" src={{ct.image}}/>
+                 <div id="canteen_txt">
+                {{cn.cuisinename}}
                 
                 </div>
               </div>
           </ion-card>
-          </ion-slide>
-  
-        </ion-slides>
-      </div>
+          </ion-slide>-->
+      </ion-slides>
     </div>
-
-
+  </div>
 
   <!--- <div *ngFor = "let ct of canteen">
       {{ct.canteenname}} - {{ct.color}}
       <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>
     </div>-->
-     
-     <!--Popular choice Carousel-->
-     <div class="section">
-     
-    </div>
-   
-    
 
+  <!--Popular choice Carousel-->
+  <div class="section">
+  </div>
 
   <!--Only show for students-->
-   <div id="recentcarousel" *ngIf="userRole == 'student'">
-    <div class=subtitle ><h6>Your Recent Order</h6></div><br>
-    <ion-slides [options]="sliderConfigx" >
+  <div id="recentcarousel" *ngIf="userRole == 'student'">
+    <div class=subtitle>
+      <h6>Your Recent Order</h6>
+    </div><br>
+    <ion-slides [options]="sliderConfigx">
       <ion-slide>
-        <ion-card  class= 'listcard'>
-         <div id ="coverimg">
-          <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-          <img class="coverpic" src="./assets/FoodIMG.png" />
-         </div>
-  
-         <div id="txtlabelposition">
-          <ion-card-title id ="foodname">
-            Food Name
-          </ion-card-title>
-          <ion-card-subtitle id="locate">
-            Sch . Canteen
-          </ion-card-subtitle>
-        </div>
-      
+        <ion-card class='listcard'>
+          <div id="coverimg">
+            <img class="coverpic" src="./assets/CanteenClrLabel.png" />
+            <img class="coverpic" src="./assets/FoodIMG.png" />
+          </div>
+
+          <div id="txtlabelposition">
+            <ion-card-title id="foodname">
+              Food Name
+            </ion-card-title>
+            <ion-card-subtitle id="locate">
+              Sch . Canteen
+            </ion-card-subtitle>
+          </div>
+
         </ion-card>
       </ion-slide>
     </ion-slides>
   </div>
-
-
 
   <!--
       <p *ngIf = "canteen.length == 0; then pass; else fail"></p>
       <ng-template #pass> Loading...</ng-template>
       <ng-template #fail> Loaded</ng-template>-->
 
-
   <!--<div *ngFor = "let ct of canteen">
       {{ct.id}} - {{ct.color}}
       <div [style.background-color] = "ct.color" style="width: 100%; height: 100px;"></div>
     </div>-->
-    
-    <!--<ion-button class="color-picker">Color Picker</ion-button>
+
+  <!--<ion-button class="color-picker">Color Picker</ion-button>
      <ion-card class="colorshown">Color shown here</ion-card>
      
      <ion-button (click)="SignOut()">Log Out</ion-button>-->

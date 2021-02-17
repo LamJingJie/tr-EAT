@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, Platform } from '@ionic/angular'; 
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
-import {CanteenService} from '../services/canteen/canteen.service';
+import { CanteenService } from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from '../services/user/user.service';
@@ -9,9 +9,9 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
-import { HttpClientModule, HttpClient } from '@angular/common/http'; 
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { OrderService } from 'src/app/services/order/order.service';
-import { FoodService  } from 'src/app/services/food/food.service';
+import { FoodService } from 'src/app/services/food/food.service';
 import { first } from 'rxjs/operators';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
@@ -32,13 +32,14 @@ export class Tab4Page {
   userSub: Subscription;
   canteenSubscription: Subscription;
   userSub2: Subscription;
-  foodSub:Subscription;
+  foodSub: Subscription;
+  fav: any;
 
   orderArray: any[] = [];
   //top5_orderArray: any[] = [];
   foodArray: any[] = [];
 
-  sliderConfigx={
+  sliderConfigx = {
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: true,
@@ -47,40 +48,54 @@ export class Tab4Page {
   }
 
 
-  constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController, 
+  constructor(private platform: Platform, private router: Router, private alertCtrl: AlertController,
     private authService: AuthenticationService, private storage: Storage, private userService: UserService,
-    private orderService: OrderService, private canteenService: CanteenService, private foodService: FoodService, private modalCtrl: ModalController) {}
+    private orderService: OrderService, private canteenService: CanteenService, private foodService: FoodService, private modalCtrl: ModalController, private firestore: AngularFirestore,) { }
 
-  async ngOnInit(){
-    this.currentAccount = await this.storage.get('email')
+  async ngOnInit() {
+    this.currentAccount = await this.storage.get('email');
+    this.currentRole = await this.storage.get('role');
 
-    this.currentRole =  await this.storage.get('role');
-
-    if(this.currentRole == 'vendor'){
+    if (this.currentRole == 'vendor') {
       this.getVendorFood();
     }
 
-    if(this.currentRole == 'student'){
+    if (this.currentRole == 'student') {
       this.getStamps();
     }
   }
-  async ionViewWillEnter(){
-    
 
-    if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+  async ionViewWillEnter() {
+
+    if (this.platform.is('android')) {
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601, () => {
         this.leavePopup();
       });
     }
-  }      
 
+    //Changes below
+    console.log(this.currentAccount);
+    this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.fillfav(data);
+    })
+  }
+  fillfav(data) {
+    this.fav = [];
+    data.forEach((element: any) => {
+      this.foodService.getFoodById(element.foodid).subscribe((res) => {
+        console.log(res)
+        this.fav.push(res)
+      })
+    });
+  }
+  //Changes End
 
-  async aboutus_modal(){
+  async aboutus_modal() {
     //Unsubscribe back btn
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
+      }
     }
 
     const modal = await this.modalCtrl.create({
@@ -89,35 +104,33 @@ export class Tab4Page {
     });
     await modal.present();
 
-    await modal.onWillDismiss().then(res=>{
+    await modal.onWillDismiss().then(res => {
       //Resubscribes back btn
-      if (this.platform.is('android')) { 
-        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+      if (this.platform.is('android')) {
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601, () => {
           this.leavePopup();
         });
       }
     })
-
   }
 
-  getStamps(){
-    this.userSub = this.userService.getOne(this.currentAccount).subscribe((res=>{
+  getStamps() {
+    this.userSub = this.userService.getOne(this.currentAccount).subscribe((res => {
       this.stamps = res['stampLeft'];
       //console.log(res);
-
     }))
   }
 
-  getVendorFood(){
-    this.foodSub = this.foodService.getFoodBasedOnStall(this.currentAccount).subscribe((res=>{
-      this.foodArray= res;
+  getVendorFood() {
+    this.foodSub = this.foodService.getFoodBasedOnStall(this.currentAccount).subscribe((res => {
+      this.foodArray = res;
       //console.log(this.foodArray);
-      this.foodArray.forEach((val, index)=>{
+      this.foodArray.forEach((val, index) => {
         //Get canteen id
-        this.userSub2 = this.userService.getOne(this.currentAccount).subscribe((userres=>{
+        this.userSub2 = this.userService.getOne(this.currentAccount).subscribe((userres => {
           var canteenid = userres['canteenID'];
           //Get canteen name and color
-          this.canteenSubscription = this.canteenService.getCanteenbyid(canteenid).subscribe((canteenres=>{
+          this.canteenSubscription = this.canteenService.getCanteenbyid(canteenid).subscribe((canteenres => {
             this.foodArray[index].canteenname = canteenres['canteenname'];
             this.foodArray[index].canteencolor = canteenres['color'];
           }))
@@ -127,34 +140,36 @@ export class Tab4Page {
 
     //console.log(this.foodArray);
   }
+  //NEed to fix refreshing of profile   
+  async deleteFoodbyFavourites(foodid) {
+    console.log(foodid);
+    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
 
- 
+  }
 
-  SignOut(){
+  SignOut() {
     this.authService.SignOut();
   }
 
-  ionViewWillLeave(){
+  ionViewWillLeave() {
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
-    if(this.orderSubscription){
+      }
+    }
+    if (this.orderSubscription) {
       this.orderSubscription.unsubscribe();
     }
-    
-
   }
 
-  async leavePopup(){
-    
+  async leavePopup() {
+
     const alert1 = await this.alertCtrl.create({
       message: 'Close the application?',
-      buttons:[
+      buttons: [
         {
           text: 'Yes',
-          handler:()=>{
+          handler: () => {
             navigator['app'].exitApp();
           }
         },
@@ -168,28 +183,25 @@ export class Tab4Page {
     await alert1.present();
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
+      }
+    }
 
-    if(this.userSub){
+    if (this.userSub) {
       this.userSub.unsubscribe();
     }
-    if(this.foodSub){
+    if (this.foodSub) {
       this.foodSub.unsubscribe();
     }
-    if(this.canteenSubscription){
+    if (this.canteenSubscription) {
       this.canteenSubscription.unsubscribe();
     }
-    
-    if(this.userSub2){
+
+    if (this.userSub2) {
       this.userSub2.unsubscribe();
     }
   }
-  
- 
-
 }

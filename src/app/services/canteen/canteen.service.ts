@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { ToastController } from '@ionic/angular';
-import firebase from 'firebase';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -24,9 +23,9 @@ export class CanteenService {
   async addCanteen(canteenName, color,) {
     console.log(canteenName, color)
     return this.firestore.collection('canteen').add({
-      canteenname : canteenName,
+      canteenname: canteenName,
       color: color,
-      deleted : false
+      deleted: false
     });
   }
 
@@ -41,17 +40,17 @@ export class CanteenService {
   }
 
   //Edit canteen
-  async editCanteenWithImg(canteenName, id, image, filename, oldname) {
-    this.storage.ref('Canteen Images/' + oldname).delete(); //Delete previous food image
-    var storageURL = 'Canteen Images/'; 
+  async editCanteenWithColour(canteenname, id, image, filename, oldname, color) {
+    // this.storage.ref('Canteen Images/' + oldname).delete(); //Delete previous food image
+    //var storageURL = 'Canteen Images/'; 
     var mergedName = filename + id;
-    var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
-    var downloadURL = await this.storage.ref('Canteen Images/' + mergedName).getDownloadURL().toPromise();
-    return this.firestore.collection('canteen').doc(id).update({ id: id, image: downloadURL, mergedName: mergedName })
+    //var storageRef = await this.storage.ref(storageURL).child(mergedName).put(image);
+    //var downloadURL = await this.storage.ref('Canteen Images/' + mergedName).getDownloadURL().toPromise();
+    return this.firestore.collection('canteen').doc(id).update({ id: id, mergedName: mergedName, color: color })
   }
   //This is for the change deleted field in canteen collection
-  Update(id, deleted){
-    this.firestore.collection('canteen').doc(id).update({deleted:deleted})
+  Update(id, deleted) {
+    this.firestore.collection('canteen').doc(id).update({ deleted: deleted })
   }
 
   getAll() {

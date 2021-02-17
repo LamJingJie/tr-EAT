@@ -25,12 +25,26 @@ const routes: Routes = [
               {
                 path: 'foodlist',
                 loadChildren: () => import('../pages/foodlist/foodlist.module').then( m => m.FoodlistPageModule)
-              }
+              },
+              
             ]
             
           },
+          {
+            path: 'category',
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('../pages/category/category.module').then( m => m.CategoryPageModule)
+              },
+              
+            ]
+            
+          },
+
         ]
        
+        
       },
 
       //Cart

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, Platform } from '@ionic/angular'; 
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { NavigationExtras, Router } from '@angular/router';
-import {CanteenService} from '../services/canteen/canteen.service';
+import { CanteenService } from '../services/canteen/canteen.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from '../services/user/user.service';
@@ -10,12 +10,9 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { AngularFireAuth } from "@angular/fire/auth";
 import { Storage } from '@ionic/storage';
 import { Subscription } from 'rxjs';
-import { HttpClientModule, HttpClient } from '@angular/common/http'; 
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
-
-
-
 
 @Component({
   selector: 'app-tab1',
@@ -24,26 +21,24 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 })
 
 export class Tab1Page {
-//users: User[] = [];
-userRole: any;
-userEmail: any;
-test: any = [];
-canteenSub: Subscription;
-customBackBtnSubscription: Subscription;
-canteen: any = [];
-data: boolean;
+  //users: User[] = [];
+  userRole: any;
+  userEmail: any;
+  test: any = [];
+  canteenSub: Subscription;
+  foodSub: Subscription;
+  customBackBtnSubscription: Subscription;
+  canteen: any = [];
+  cuisinename: any = [];
+  data: boolean;
 
+  test1: Subscription;
+  test2: Subscription;
 
+  colorChose: any;
+  colorLoop: any;
 
-test1:Subscription;
-test2: Subscription;
-
-colorChose: any;
-
-
-colorLoop: any;
-
-  sliderConfig={
+  sliderConfig = {
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: false,
@@ -51,7 +46,7 @@ colorLoop: any;
     roundLengths: true
   }
 
-  sliderConfigx={
+  sliderConfigx = {
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: false,
@@ -61,39 +56,39 @@ colorLoop: any;
 
 
   constructor(private canteenService: CanteenService, private alertCtrl: AlertController, private router: Router,
-    public authService: AuthenticationService,private  userService: UserService,public afStore: AngularFirestore,
+    public authService: AuthenticationService, private userService: UserService, public afStore: AngularFirestore,
     public ngFireAuth: AngularFireAuth, private storage: Storage, private http: HttpClient, private platform: Platform,
-    private foodService: FoodService, private modalCtrl: ModalController, private localNotifications: LocalNotifications ) {
+    private foodService: FoodService, private modalCtrl: ModalController, private localNotifications: LocalNotifications) {
     this.data = true;
-    
+
     this.canteenSub = canteenService.getAll().subscribe((data) => {
       this.canteen = data;
     });
+    //Changes added 
+    this.foodSub = foodService.getAllFood().subscribe((data) => {
+      this.cuisinename = data;
+      //Changes ended
+    });
 
-
-   // this.userRole = this.authService.currentUserRole();
-   // this.userEmail = this.authService.currentUserEmail();
+    // this.userRole = this.authService.currentUserRole();
+    // this.userEmail = this.authService.currentUserEmail();
     //alert(this.userRole);
     //alert(this.userEmail);
-
-    
- // console.log("Local Storage vendor: " + localStorage.getItem('vendor'));
-    
+    // console.log("Local Storage vendor: " + localStorage.getItem('vendor'));
   }
 
-
-  async ngOnInit(){
+  async ngOnInit() {
     this.userRole = await this.storage.get('role');
     //console.log("init")
-    
+
   }
 
-  async aboutus_modal(){
+  async aboutus_modal() {
     //Unsubscribe back btn
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
+      }
     }
 
     const modal = await this.modalCtrl.create({
@@ -102,10 +97,10 @@ colorLoop: any;
     });
     await modal.present();
 
-    await modal.onWillDismiss().then(res=>{
+    await modal.onWillDismiss().then(res => {
       //Resubscribes back btn
-      if (this.platform.is('android')) { 
-        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+      if (this.platform.is('android')) {
+        this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601, () => {
           this.leavePopup();
         });
       }
@@ -113,51 +108,45 @@ colorLoop: any;
 
   }
 
-
-
-
-  ChosenCanteen(canteenid){
+  ChosenCanteen(canteenid) {
     //console.log(canteenid);
-    let navigationExtras: NavigationExtras = { queryParams: {canteenid: canteenid } };    
+    let navigationExtras: NavigationExtras = { queryParams: { canteenid: canteenid } };
     this.router.navigate(['/tabs/tab1/vendors'], navigationExtras);
-    
   }
 
-  ngOnDestroy(){
-    if(this.canteenSub){
+  ChosenCuisines() {
+    this.router.navigate(['/tabs/tab1/category']);
+  }
+
+  ngOnDestroy() {
+    if (this.canteenSub) {
       this.canteenSub.unsubscribe();
     }
     //console.log("destroy")
 
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
-    
+      }
+    }
   }
 
-  async ionViewWillEnter(){
-    if (this.platform.is('android')) { 
-      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601,() => {
+  async ionViewWillEnter() {
+    if (this.platform.is('android')) {
+      this.customBackBtnSubscription = this.platform.backButton.subscribeWithPriority(601, () => {
         this.leavePopup();
       });
     }
-    
-   
 
   }
+  async leavePopup() {
 
-
-
-  async leavePopup(){
-    
     const alert1 = await this.alertCtrl.create({
       message: 'Close the application?',
-      buttons:[
+      buttons: [
         {
           text: 'Yes',
-          handler:()=>{
+          handler: () => {
             navigator['app'].exitApp();
           }
         },
@@ -171,17 +160,13 @@ colorLoop: any;
     await alert1.present();
   }
 
-  ionViewWillLeave(){
+  ionViewWillLeave() {
     if (this.platform.is('android')) {
-      if(this.customBackBtnSubscription){
+      if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
-      }   
-    } 
-   
+      }
+    }
   }
-
-
-
 }
 
 

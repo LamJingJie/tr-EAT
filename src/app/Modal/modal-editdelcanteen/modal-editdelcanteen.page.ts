@@ -1,15 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
-import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import Pickr from '@simonwep/pickr';
+
+//Database Imports
 import { Subscription } from 'rxjs';
+import { AngularFireAuth } from "@angular/fire/auth";
+
+//Modal Imports 
+import { ModalAddfoodPage } from 'src/app/Modal/modal-addfood/modal-addfood.page';
+
+//Service Imports
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { FoodService } from 'src/app/services/food/food.service';
-import { ModalAddfoodPage } from 'src/app/Modal/modal-addfood/modal-addfood.page';
-import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
-import { AngularFireAuth } from "@angular/fire/auth";
-
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
   selector: 'app-modal-editdelcanteen',
@@ -21,6 +27,8 @@ export class ModalEditdelcanteenPage implements OnInit {
   @Input() id: any;
   image: string;
   canteen: any = [];
+  colorChose: any;
+  colorLoop: any;
 
   filestring: string;
   selectedFile: any;
@@ -63,11 +71,68 @@ export class ModalEditdelcanteenPage implements OnInit {
       this.oldImage = this.canteen.mergedname
       //console.log(this.canteen);
     });
+
+    const pickr = Pickr.create({
+      el: '.color-picker',
+      theme: 'classic', // or 'monolith', or 'nano'
+
+      components: {
+
+        // Main components
+        preview: true,
+        opacity: true,
+        hue: true,
+
+        // Input / output Options
+        interaction: {
+          hex: true,
+          rgba: true,
+          hsla: true,
+          hsva: true,
+          cmyk: true,
+          input: true,
+          clear: false,
+          save: true
+        }
+      }
+    });
+
+    //await pickr.show();
+
+    //Instances on when the color picker is opened
+    pickr.on('save', (...args) => {
+      let colorChosen = args[0].toRGBA();
+
+      this.colorChose = colorChosen.toString();
+      console.log(this.colorChose);
+      //(<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
+      pickr.hide();
+    });
+
+
   }
 
-
+  //Function that changes the different fields in the database
   async editCanteen() {
     await this.presentEditCanteenLoading();
+    this.canteenService.editCanteenWithColour(
+      this.editcanteen_form.value['canteenname'],
+      this.id,
+      this.image,
+      this.filename,
+      this.oldImage,
+      this.colorChose,
+    )
+      .then(res => {
+        this.loading.dismiss(null, null, 'editCanteenAdmin');
+        this.dismiss();
+        this.showSuccess();
+      }).catch((err) => {
+        this.loading.dismiss(null, null, 'editCanteenAdmin');
+        this.dismiss();
+        this.showError(err);
+      })
+
     //Check if there is any data inside those 2 variables. If there is data, it will imply that they have selected an image for update
     if (!this.image || !this.filename) {
       //  console.log(this.editfood_form.value['foodname']);
@@ -93,25 +158,11 @@ export class ModalEditdelcanteenPage implements OnInit {
       //   console.log(this.currentVeg);
       //  console.log(this.foodData.userid);
       // console.log(this.id);
-      this.canteenService.editCanteenWithImg(
-        this.editcanteen_form.value['canteenname'],
-        this.id,
-        this.image,
-        this.filename,
-        this.oldImage
-      )
-        .then(res => {
-          this.loading.dismiss(null, null, 'editCanteenAdmin');
-          this.dismiss();
-          this.showSuccess();
-        }).catch((err) => {
-          this.loading.dismiss(null, null, 'editCanteenAdmin');
-          this.dismiss();
-          this.showError(err);
-        })
+
     }
   }
 
+  /* This function is to edit or delete image from files 
   onFileSelected(event) {
     //Main section to be used when editing
     this.image = event.target.files[0];
@@ -131,7 +182,7 @@ export class ModalEditdelcanteenPage implements OnInit {
     reader.onerror = function (error) {
       console.log('Error: ', error);
     };
-  }
+  }*/
 
   async presentEditCanteenLoading() {
     const loading = await this.loading.create({
