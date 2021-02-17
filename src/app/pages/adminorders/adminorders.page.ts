@@ -166,8 +166,8 @@ export class AdminordersPage implements OnInit {
         this.onload = false;
       }));
 
-
-     }))
+      this.vendorSubscription.unsubscribe();
+     }))  
 
   }
 

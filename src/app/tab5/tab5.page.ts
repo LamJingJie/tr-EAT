@@ -94,8 +94,9 @@ export class Tab5Page {
 
   //Count and display how many sponsor users require their purchases to be verified
   countVerify(){
-    this.verify_count = 0;
+   
     this.sponsorSubscription = this.userService.getOnlySponsor_Unverfied().subscribe((res=>{
+      this.verify_count = 0;
       res.forEach((res,index)=>{
         this.verify_count = this.verify_count + 1;
        

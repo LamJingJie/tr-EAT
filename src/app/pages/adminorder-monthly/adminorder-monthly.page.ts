@@ -96,13 +96,12 @@ export class AdminorderMonthlyPage implements OnInit {
       
       this.vendorArray = res;
       
-      
       this.getOrders(this.today, this.tmr, this.vendorArray).then((res=>{
         this.onload = false;
       }));
-     
+      this.vendorSubscription.unsubscribe();
      }))
-   
+     
    
   }
   ngOnInit() {
@@ -158,16 +157,17 @@ export class AdminorderMonthlyPage implements OnInit {
  }
 
  getOrders(date1, date2, vendorArray: any[]){
+   console.log('order')
   return new Promise(async (resolve, reject)=>{
 
     //console.log(date1)
     //console.log(date2);
       
-    this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((res=>{
-      this.newOrderArray = [];
-      this.vendorM.clear();
-      this.vendorM2.clear();
-      //console.log(res);
+    this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((resMonth=>{
+      this.newOrderArray = [];  
+      //this.vendorM.clear();
+      //this.vendorM2.clear();
+      //console.log(resMonth);
       //this.newOrderArray = res;
       //console.log(this.newOrderArray);
       this.count = 0;
@@ -182,10 +182,11 @@ export class AdminorderMonthlyPage implements OnInit {
      
       //console.log(this.vendorArray2);
   
-      res.map((currElement, index)=>{
+      resMonth.map((currElement, index)=>{
    
         //console.log("Current Iteration: " + index);
         //console.log("Current Element: " + currElement['foodname']);
+        //console.log(currElement);
         this.currentindex = this.vendorM.get(currElement['vendorID']);
         //console.log("Vendor Key from hashmap: " + this.currentindex);
         //this.vendorM1.set(this.currentindex, currElement);
@@ -198,11 +199,12 @@ export class AdminorderMonthlyPage implements OnInit {
         //console.log(this.newOrderArray);
       });
         
-      //console.log(this.newOrderArray);
+      console.log(this.newOrderArray);
   
       this.orderSubscription.unsubscribe();
        
       this.getTotalCost();
+      console.log("calculate")
       resolve("Loaded");
     }))
   })
@@ -327,6 +329,16 @@ export class AdminorderMonthlyPage implements OnInit {
   }
 
   ionViewWillLeave(){
+    console.log("Leave")
+    if(this.orderSubscription){
+      this.orderSubscription.unsubscribe();
+    }
+    if(this.vendorSubscription){
+      this.vendorSubscription.unsubscribe();
+    }
+  }
+
+  ngOnDestroy(){
     if(this.orderSubscription){
       this.orderSubscription.unsubscribe();
     }
