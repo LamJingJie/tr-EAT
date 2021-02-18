@@ -49,6 +49,9 @@ export class CategoryPage implements OnInit {
   userSub2: Subscription;
   redeemSub: Subscription;
 
+  favFood1Sub: Subscription;
+  favFood2Sub: Subscription;
+
   vendor: any;
   stall: any;
   canteen: any;
@@ -100,6 +103,8 @@ export class CategoryPage implements OnInit {
 
   paid: boolean = false;
 
+  currentRole: any;
+
   constructor(private userService: UserService,
     private authService: AuthenticationService,
     private router: Router,
@@ -126,7 +131,8 @@ export class CategoryPage implements OnInit {
 
   async ngOnInit() {
     //changes here 
-    this.currentAccount = await this.storage.get('email')
+    this.currentAccount = await this.storage.get('email');
+    this.currentRole = await this.storage.get('role');
 
     //console.log("ngOnInit");
     this.getfoodSubscription = this.activatedRoute.queryParams.subscribe(params => {
@@ -138,23 +144,7 @@ export class CategoryPage implements OnInit {
       //console.log(this.vendor);
     });
 
-    //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
-    this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
-      this.favs = data.map((x) => x.foodid)
-      //console.log(this.favs)
-
-      for (var i = 0; i < this.foodlistArray.length; i++) {
-        for (var j = 0; j < this.favs.length; j++) {
-          if (this.foodlistArray[i].id === this.favs[i]) {
-            //console.log("true")
-            this.foodlistArray[i].favourites = true
-            //console.log(this.foodlistArray[i])
-          }
-          else { this.foodlistArray[i].favourites = false }
-        }
-      }
-      //console.log(this.foodlistArray)
-    })
+    
 
   }
 
@@ -367,14 +357,28 @@ export class CategoryPage implements OnInit {
   //Changes Here
   //These codes is for getting and retrieving based on favourites
   async addFoodbyFavourites(foodid) {
-    (await this.firestore.collection('favourites').doc(this.currentAccount))
-      .collection('data').doc(foodid).set({ foodid: foodid }).then((res) => { console.log(res); }).catch((err) => { console.log(err) });
+    (await this.firestore.collection('favourites')
+    .doc(this.currentAccount)).collection('data')
+    .doc(foodid).set({ foodid: foodid })
+    .then((res) => { console.log(res);
+ 
+        this.filterFood(this.chosenFilter);//refresh
+     })
+    .catch((err) => { console.log(err) });
+  }
+
+  deleteFav(foodid){
+    console.log(foodid);
+    this.deleteFoodbyFavourites(foodid);
   }
 
   async deleteFoodbyFavourites(foodid) {
     //console.log(foodid);
     (await this.firestore.collection('favourites').doc(this.currentAccount))
-      .collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
+      .collection('data').doc(foodid).delete().then((res) => {
+        this.filterFood(this.chosenFilter); //refresh
+         console.log(res); 
+       }).catch((err) => { console.log(err) });
   }
 
   async getFoodbyfavourites(userid) {
@@ -538,13 +542,38 @@ export class CategoryPage implements OnInit {
 
         this.foodlistArray = res;
 
-        console.log(this.foodlistArray);
+        //console.log(this.foodlistArray);
         res.forEach((res => {
           //console.log(res.id);
           this.foodM.set(res.id, this.count); //Store each food with count = 1
 
         }))
         this.getKeys();
+
+        //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
+    this.favFood1Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.favs = data.map((x) => x.foodid)
+      //console.log(this.favs)
+
+      for (var i = 0; i < this.foodlistArray.length; i++) {
+             
+        console.log(this.foodlistArray[i].id)
+        for (var j = 0; j < this.favs.length; j++) {
+          
+          console.log(this.favs[j])
+          if (this.foodlistArray[i].id === this.favs[j]) {
+            console.log("true")
+            this.foodlistArray[i].favourites = true
+            break;
+            //console.log(this.foodlistArray[i])
+          }
+          else { this.foodlistArray[i].favourites = false }
+        }
+        //console.log(this.redeemfoodArray[i].id)
+      }
+        //console.log(this.foodlistArray)
+     this.favFood1Sub.unsubscribe();
+    })
         //console.log(this.foodM.entries());
         this.filterfoodSubscription.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
@@ -553,13 +582,45 @@ export class CategoryPage implements OnInit {
     //For students
     if (this.userRole === 'student') {
       //For students
-      this.foodRedemSub = this.foodService.getRedeemableFoodNFilter(this.vendor, filter).subscribe((res => {
+     // console.log(filter);
+      
+      this.foodRedemSub = this.foodService.getRedeemableFoodNFilter2(filter).subscribe((res => {
+        console.log(res);
+        
         this.redeemfoodArray = res;
-        //console.log(this.redeemfoodArray);
+       // console.log(this.redeemfoodArray);
+        this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+          this.favs = data.map((x) => x.foodid)
+          console.log(this.favs)
+         
+    
+            for (var i = 0; i < this.redeemfoodArray.length; i++) {
+             
+              console.log(this.redeemfoodArray[i].id)
+              for (var j = 0; j < this.favs.length; j++) {
+                
+                console.log(this.favs[j])
+                if (this.redeemfoodArray[i].id === this.favs[j]) {
+                  console.log("true")
+                  this.redeemfoodArray[i].favourites = true
+                  break;
+                  //console.log(this.foodlistArray[i])
+                }
+                else { this.redeemfoodArray[i].favourites = false }
+              }
+              //console.log(this.redeemfoodArray[i].id)
+            }
+            //console.log(this.redeemfoodArray)
+            this.favFood2Sub.unsubscribe();
+         
+        })
+        
         this.foodRedemSub.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
     }
   }
+
+
 
   getKeys() {
     let keys = Array.from(this.foodM.keys());

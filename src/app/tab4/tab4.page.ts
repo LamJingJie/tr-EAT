@@ -31,18 +31,20 @@ export class Tab4Page {
   orderSubscription: Subscription;
   userSub: Subscription;
   canteenSubscription: Subscription;
+  favSub: Subscription;
   userSub2: Subscription;
   foodSub: Subscription;
   fav: any;
+  fav2: Subscription;
 
   orderArray: any[] = [];
   //top5_orderArray: any[] = [];
   foodArray: any[] = [];
 
-  sliderConfigx = {
-    spaceBetween: 1,
+  sliderConfigx={
+    spaceBetween: .5,
     setWrapperSize: true,
-    centeredSlides: true,
+    centeredSlides: false,
     slidesPerView: 1.5,
     roundLengths: true
   }
@@ -72,19 +74,20 @@ export class Tab4Page {
         this.leavePopup();
       });
     }
-
+    this.currentAccount = await this.storage.get('email');
     //Changes below
-    console.log(this.currentAccount);
-    this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+    //console.log(this.currentAccount);
+     this.favSub = this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
       this.fillfav(data);
     })
   }
   fillfav(data) {
     this.fav = [];
     data.forEach((element: any) => {
-      this.foodService.getFoodById(element.foodid).subscribe((res) => {
+      this.fav2 = this.foodService.getFoodById(element.foodid).pipe(first()).subscribe((res) => {
         console.log(res)
         this.fav.push(res)
+       
       })
     });
   }
@@ -156,6 +159,9 @@ export class Tab4Page {
       if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
       }
+    }
+    if(this.favSub){
+      this.favSub.unsubscribe();
     }
     if (this.orderSubscription) {
       this.orderSubscription.unsubscribe();

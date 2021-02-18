@@ -78,6 +78,7 @@ export class VendorsPage implements OnInit {
   getAllVendors(){
     this.AllVendorSubscription = this.userService.getOnlyVendor().subscribe((res =>{
       this.vendorArray = res;
+      //console.log(res);
     }))
   }
 

@@ -1,31 +1,28 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Stalls</ion-title>
     <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content style="padding:10px">
-  <div style="position: absolute; right:0; padding: 10px;">
+ <!-- <div style="position: absolute; right:0; padding: 10px;">
     <ion-button (click)='aboutus_modal()'></ion-button>
-  </div>
+  </div>-->
   
   <img id="Logo" src="./assets/Logo.png" />
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
-  <div id = "intro">
-    <h4>Welcome to</h4>
-    <h1 *ngIf="canteen_chosen ==='ALL'">TP Canteens</h1>
-    <h1 *ngIf ="canteen_chosen !== 'ALL'">{{canteen_name}}</h1>
-  </div>
+    <div id = "intro">
+      <div style="font-family: 'Segoe UI';font-size: 25px;font-weight: 650;"*ngIf="canteen_chosen ==='ALL'">TP Canteens</div>  
+      <div style="font-family: 'Segoe UI';font-size: 25px;font-weight: 650;"*ngIf ="canteen_chosen !== 'ALL'">{{canteen_name}}</div> 
+    </div>
 
-  
   <!--Show all the stores-->
-  <ion-card *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
+  <div style="padding:5px; padding-bottom: 0px;">
+  <ion-card style="padding-top: 5px; padding-left: 8px;padding-right: 8px;padding-bottom: 0;" *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
+    <img class="coverimg" src= {{vendor.stallimage}} alt='image'/>
     
-    <img style="padding:7px;padding-bottom: 0%;"src={{vendor.stallimage}} alt='image'/>
-    <ion-card-header>
       <ion-card-title id="vendorname">
         {{vendor.stallname}}
         </ion-card-title>
@@ -38,10 +35,10 @@
   <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
 </ion-content>-->
       
-    </ion-card-header>
+    
   </ion-card>
 
-  <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
-
+  <div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="vendorArray.length === 0"><i>[Error Msg] "No stall retrieved"</i></div>
+</div>
 
 </ion-content>

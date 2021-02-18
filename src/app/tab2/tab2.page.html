@@ -1,100 +1,81 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Orders
-    </ion-title>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <div style="position: absolute; right:0; padding: 10px;">
+  <!--<div style="position: absolute; right:0; padding: 10px;">
     <ion-button (click)='aboutus_modal()'></ion-button>
-  </div>
-  
+  </div>-->
   <img id="Logo" src="./assets/Logo.png" />
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
- 
+  
 
   <!--Only sponsors will see this-->
   <div *ngIf="userRole ==='sponsor'">
+    <div id = "intro">
+    <div style="font-family: 'Segoe UI';font-size: 22px;font-weight: bold;">YOUR CART</div>
+    </div>
     
-    <div style="text-align: center;">
-      <h5><b>IMPORTANT</b></h5>
-      <p>Do sent to <b>+65 <b (click)="copy('12345678')"id="clipboard">12345678</b></b> during payment.</p>
-      <p>After payment, you have to wait for the admin to verify that you have paid before you can purchase again.</p>
-    </div>
 
-    <!---Cart here--->
-    <div *ngIf="paid === false">
-      <h5>YOUR CART</h5>
-      <ion-card>
-        <ion-item  *ngFor="let cart of cartArray">
-
-          <!--Quantity-->
-          <div>
-            <ion-icon name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
-            {{cart.orderquantity}}
-            <ion-icon name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
-          </div>
-
-          <!--Food name-->
-          <div>
-            {{cart.foodname}}
-          </div>
-
-          <!--Price-->
-          <div>
-            Price:  {{cart.totalfoodprice | currency}}
-          </div>
-
+  <!---Cart here--->
+  <ion-card>
+    
+    <div style="font-family: 'Segoe UI';font-size: 12px;font-weight:550;padding: 30px;padding-bottom: 0px; padding-top: 15px;">
+      <div style="display: inline-block;padding-left: 18px;">
+        Qty
+      </div>
       
+      <div style="display: inline-block;padding-left: 30px;">
+           Food Item(s)
+      </div>
+  
+      <div style="display: inline-block;padding-left: 100px;">
+        Price
+      </div>
+      </div>
+
+    <ion-item style="padding-left:5px;padding-right: 5px;" *ngFor="let cart of cartArray">
+
+      <!--Quantity-->
+      <div style="padding-right:20px;vertical-align:middle;">
+        <ion-icon style="padding-right: 10px;" name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)">-</ion-icon>
+       <b>{{cart.orderquantity}}</b>
+        <ion-icon style="padding-left: 5px;" name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+      </div>
+
+      <!--Food name-->
+      <div>
+        <div style="font-family: 'Segoe UI';width:160px;font-size: 15px;font-weight:550;"> {{cart.foodname}}</div>
+      </div>
+
+      <!--Price-->
+      <div>
+        <div style="font-family: 'Segoe UI';font-size: 15px;font-weight:550;"> {{cart.totalfoodprice | currency}} </div>
+      </div>
      
-        </ion-item>
+    </ion-item>
+    
 
-        <!--Total Price-->
-        <ion-item>
-          <div>
-            Total {{totalPriceAll | currency}}
-          </div>
-        </ion-item>
+     <!--Total Price-->
+    <ion-item>
+      <div style="font-family: 'Segoe UI';font-size: 18px;font-weight:bold;display: inline;padding-top: 20px;padding-bottom: 20px;margin-left: 85px;">
+        Total <div style="font-size: 20px;font-weight: bold;padding-left: 90px;display: inline;"> {{totalPriceAll | currency}} </div>
+      </div>
+    </ion-item>
+  </ion-card>
 
-        <!--Payment selection-->
-        <ion-select value="OCBC" (ionChange)="changePaymentMtd($event.detail.value)">
-          <ion-select-option value="OCBC">OCBC - PAYNOW</ion-select-option>
-          <ion-select-option value ="UOB">UOB - PAYNOW</ion-select-option>
-          <ion-select-option value="DBS">DBS - PAYLAH</ion-select-option>
-        </ion-select>
-      </ion-card>
-      <!--Payment here-->
-      <ion-button *ngIf="totalPriceAll !== 0 && paid === false" [disabled]="disabled === true" (click)="proceedPayment()">Proceed W Payment</ion-button>
-    </div>
+  <!--Payment selection-->
+  <ion-card>
+   <div style="padding-left: 15px;padding-top: 5px;font-weight: 550;"> Payment Method </div>
+  <ion-select style="font-weight: 550;color: black;" value="PAYNOW" (ionChange)="changePaymentMtd($event.detail.value)">
+    <ion-select-option value="PAYNOW">PAYNOW</ion-select-option>
+    <ion-select-option value="PAYLAH">PAYLAH</ion-select-option>
+  </ion-select>
+</ion-card>
 
-
-    <div *ngIf="paid === true">
-      <h5>Previous Purchase Cart</h5>
-      <ion-card>
-        <ion-item *ngFor="let history of historyData" style="display:flex;">
-          <div style="flex: 1;">
-            {{history.foodname}}
-          </div>
-          <div style="flex: 2;">
-           quantity: {{history.orderquantity}}
-          </div>
-          <div style="flex: 2; display:flex; justify-content: flex-end;">
-            Price: {{history.totalcost | currency}}
-          </div>
-        </ion-item>
-        <ion-item>
-          Total: {{totalcostall | currency}}
-        </ion-item>
-      </ion-card>
-
-      <!--Payment confirmation-->
-      <!--<ion-button *ngIf="paid === true" [disabled]="disabled === true" (click)="paymentMade()">Confirmation of Payment Made</ion-button>-->
-    </div>
-
+  <!--Payment here-->
+  <ion-button color="primary" style="padding-left:15px;padding-right: 15px; font-weight: bold;"*ngIf="totalPriceAll !== 0" [disabled]="disabled === true" (click)="proceedPayment()" expand="block">Proceed W Payment</ion-button>
   </div>
   
 
@@ -102,15 +83,12 @@
 
   <!--When student click on redeem, the receipt will be shown here-->
   <div *ngIf="userRole === 'student'">
-
-    <div *ngIf="receiptData.orderid === ''">
-      Food that is pending collection after redeeming, will be shown here. You are only entitled to <b>1 Redemption</b> per day.
-    </div>
+    <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="receiptData.orderid === ''"><i>[Error Msg]Collection verification page: No Food has been redeemed</i></div>
+   
 
     <div *ngIf="receiptData.orderid !==''">
  
-      <div id="Headertxt">REDEEMPTION SUCCESSFUL!</div>
-      <div style="padding: 5px;"></div>
+      <div id="Headertxt" style="padding:10px;padding-bottom: 5px;">REDEEMPTION SUCCESSFUL!</div>
       <ion-card style="background-color: #FFE7E7;">
         <div style="padding: 20px;"></div>
        <div class="headercnt">
@@ -144,29 +122,33 @@
 
   <!--Show latest orders from students that is pending-->
   <div *ngIf="userRole === 'vendor'">
-    <div *ngIf="vendorOrderArray.length == 0">Uncompleted/Pending orders will be shown here</div>
+      <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="vendorOrderArray.length == 0"><i>[Error Msg]Uncompleted orders will be shown here</i></div>
     <ion-card *ngFor="let order of vendorOrderArray">
-
+    <div style="padding: 8px;">
         <!--Redemption order ID-->
-        <div>
-          #{{order.id}}
-        </div>       
-      
+        <div style="padding-top: 5px;padding-bottom: 5px;">
+         Order ID:
+         <div style="font-size: 17px;font-weight: 550;padding-left: 10px;" >#{{order.id}}</div>
+        </div>  
+
+       <!---Customer--->
+       <div style="padding-top: 5px;padding-bottom: 5px;">
+        <div style="font-weight: 500;font-size: 15px;">Ordered By:</div>
+     <div style="font-size: 17px;font-weight: 550;padding-left: 10px" >{{order.userID}}</div>
+      </div>
+
         <!--Food name-->
-        <div>
-          {{order.foodname}}
+        <div style="padding-top: 5px;padding-bottom: 5px;">
+          Food Ordered:
+          <div style="font-size: 15px;font-weight: 550;padding-left: 10px" >{{order.foodname}}</div>
         </div>
 
+       
         <!--Date-->
-        <div>
-          {{order.date?.toDate() | date: 'dd/MM/yyy H:mm'}}
+        <div style="padding-top: 5px;padding-bottom: 5px;">
+          <div style="font-size: 15px;font-weight: 500; float:right;" >{{order.date?.toDate() | date: 'mediumTime'}}</div>
         </div>
-
-        <!---Customer--->
-        <div>
-          {{order.userID}}
-        </div>
-     
+    </div>
     </ion-card>
 
   </div>

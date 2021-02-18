@@ -30,18 +30,20 @@
      max-width: 52%;
      opacity: .25;
  }
-
-
-
- 
- .coverpic{
-    height: 150px!important;
-    width: auto;
+ .subtitle{
+    font-family: "Segoe UI";
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+    position: relative;
+    left: 8%;
 }
-
 #txtlabelposition{
     text-align: left;
     margin: 10px;
+    padding: 10px;
+    padding-bottom: 1px;
 }
 #foodname{
     font-size: 16px;
@@ -51,4 +53,5 @@
     font-size: 12px;
     font-family: 'Segoe UI';
     margin-top: 2px;
+    display: flex;
 }

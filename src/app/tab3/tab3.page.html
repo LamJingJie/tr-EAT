@@ -4,58 +4,68 @@
 
 <ion-content [fullscreen]="true">
 
-  <div style="position: absolute; right:0; padding: 10px;">
+  <!--<div style="position: absolute; right:0; padding: 10px;">
     <ion-button (click)='aboutus_modal()'></ion-button>
-  </div>
+  </div>-->
 
 
   <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">History</ion-title>
-    </ion-toolbar>
   </ion-header>
   
   <img id="Logo" src="./assets/Logo.png" />
-  <img class="Footer" id="TYN" src="./assets/TYN.png"/>
+  <img class="Footer" id="TYN" src="./assets/TYN.png"/>`
   <img id="RICE" src="./assets/RICE.png"/>
+<br>
+ <!-- <ion-card style="background-color: transparent;">-->
+  <!--  <div id ="coverimg">
+     <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+     <img class="coverpic"style="width:max-content;" src="./assets/FoodIMG.png" />
+    </div>-->
+    <div style="text-align:left;"class="subtitle">Past Transactions</div>
+  <div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="orderArray.length == 0"><i>[Error Msg] "Past completed transactions will be shown here"</i></div> 
+  <div style="padding-left:5px; padding-right: 5px;">
+  <ion-card *ngFor="let order of orderArray" style="background-color: white;box-shadow: 1;">
+    
+    
+    <div style="width:100%;padding:8px;padding-left: 13px;padding-right: 13px;">
+      <div style="float: left;width: 10%;">
+        <div style="width: 100%;height: 150px;border-top-left-radius:5px ;border-bottom-left-radius: 5px;" [style.background-color] = "order.canteencolor"></div>
+      </div>
 
-  <br>  
-  <br>
-  <ion-card style="background-color: transparent;">
-
-  <div *ngIf="orderArray.length == 0">Orders completed will be shown here</div>
-  <ion-card *ngFor="let order of orderArray" style="background-color: transparent;">
-    <div id ="coverimg"  style="display: flex;">
-      <div  class="coverpic" style="flex: 1;" [style.background-color] = "order.canteencolor"></div>
-      <div  style="flex: 10;">
-      <img class="coverpic" style=" width:max-content;"  src={{order.image}} />
+    <!--<ion-card style="background-color: white;">-->
+    <!--<div id ="coverimg">-->
+      <div style="float: left;width: 90%;">
+        <img style=" width:100%;height: 150px;border-bottom-right-radius: 5px;border-top-right-radius: 5px;" src={{order.image}} />
+      </div>
     </div>
-  </div>
-
-
+   
     <div id="txtlabelposition">
-     <ion-card-title id ="foodname" style="display: flex;">
-       <div style="flex: 1;">
+     <ion-card-title style="margin-top:134px; display:flex;"  id ="foodname">
+      <div style="flex: 1;">
         {{order.foodname}}  x{{order.orderquantity || 1}}
        </div>
       <div *ngIf="userRole === 'student' || userRole === 'vendor'" id="locate" style="color: #737373; font-weight: 500;">
-        Ordered: {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}
+       <div style="font-size: 10px; font-weight: 500;"> Ordered: {{order.date?.toDate() | date: 'dd/MM/yyyy H:mm'}}</div>
       </div>
      </ion-card-title>
-     <ion-card-subtitle id="locate" style="display: flex;">
+     <ion-card-subtitle id="locate">
        <div style="flex: 1;">
         {{order.stallname}} . {{order.canteenname}}
        </div>
-       <div *ngIf="userRole === 'student' || userRole === 'vendor'">
-        Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm'}}
+       <div *ngIf="userRole === 'student' || userRole === 'vendor'" >
+         
+       <div style="font-size: 10px; font-weight: 500;font-family: 'Segoe UI'; text-transform: capitalize;"> Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm' || pending }}</div>
        </div>
        <div *ngIf="userRole === 'sponsor'">
         {{order.date?.toDate() | date: 'dd/MM/yyy H:mm'}}
        </div>
-     </ion-card-subtitle>
-   </div>
- 
-   </ion-card>
-</ion-card>
+      </ion-card-subtitle>
+    </div>
+  
+    </ion-card >
+  </div>
 
-</ion-content>
+ </ion-content>
+ 
+      
+ 

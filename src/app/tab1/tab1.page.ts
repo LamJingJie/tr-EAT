@@ -50,7 +50,7 @@ export class Tab1Page {
     spaceBetween: 1,
     setWrapperSize: true,
     centeredSlides: false,
-    slidesPerView: 1.5,
+    slidesPerView: 1.7,
     roundLengths: true
   }
 
@@ -67,6 +67,7 @@ export class Tab1Page {
     //Changes added 
     this.foodSub = foodService.getAllFood().subscribe((data) => {
       this.cuisinename = data;
+      console.log(data);
       //Changes ended
     });
 

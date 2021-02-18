@@ -1,34 +1,43 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>modal-verifychckout</ion-title>
-  </ion-toolbar>
+ 
 </ion-header>
 
 <ion-content>
-  <h4>Confirmation of Payment</h4>
-
+  <h4 style="text-align: center;padding: 15px;padding-top: 25px;"><b>Confirmation of Payment</b></h4>
+<div style="padding-left: 10px;padding-right: 10px;">
   <ion-item *ngFor="let c of cart">
-    <div>
-      {{c.orderquantity}}x
-    </div>
-    <div>
-      {{c.foodname}}
-    </div>
-    <div>
-      {{c.individualfoodPrice | currency}}
-    </div>
+    <div style="margin-left: auto;margin-right:auto;font-weight: 500; font-family: 'Segoe UI';">
+      <div style="font-size: 15px;text-align: center;padding-top: 25px;">Order(s):</div>
+      <div style="padding-top: 10px; padding-bottom: 20px;">
+      <div style="display: inline-block;">
+        {{c.orderquantity}} x
+      </div>
+      
+      <div style="display: inline-block;padding-left: 25px;">
+        <b>{{c.foodname}}</b>
+      </div>
+      <div style="display: inline-block;padding-left: 20px;;">
+        {{c.individualfoodPrice | currency}}
+      </div>
+      </div>
+  </div>
+
   </ion-item>
 
-  <div>
-    Total: {{totalPriceAll | currency}}
+  <div style="text-align: center; padding-top: 40px;padding-bottom:20px ;font-size: 18px;">
+  <div style="padding-left: 10px;">
+   Total:  <b>   {{total | currency}}</b>
   </div>
-  <div>
-    Payment Method: {{paymentmethod}}
+  <div style="padding-left: 10px;">
+    Payment Method:<b>{{paymentmethod}}</b>
   </div>
+</div>
 
-  <ion-button *ngIf="totalPriceAll !== 0" (click)="pay()">
-    CONFIRM
+<div style="padding-left:10px ;padding-right: 10px;padding-top: 20px;padding-bottom: 20px;">
+  <ion-button *ngIf="totalPriceAll !== 0" (click)="pay()" expand=block>
+    <b>CONFIRM</b>
   </ion-button>
  
-
+</div>
+</div>
 </ion-content>

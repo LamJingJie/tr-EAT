@@ -80,10 +80,22 @@ export class FoodService {
 
   //Get food that has availquantity in it to be shown for students to redeem
   getRedeemableFoodNFilter(vendor, filter) {
+    console.log(filter)
     if (filter === 'all') {
+     
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
     } else {
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+    }
+  }
+
+  getRedeemableFoodNFilter2(filter) {
+    console.log(filter)
+    if (filter === 'all') {
+     
+      return this.firestore.collection('food', ref => ref.where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+    } else {
+      return this.firestore.collection('food', ref => ref.where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
     }
   }
 
@@ -106,6 +118,8 @@ export class FoodService {
       userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, popularity: 0, cuisinename: cuisinename
     });
   }
+
+
 
   deleteFood(id, mergedName) {
     this.storage.ref('Food Images/' + mergedName).delete(); //Delete previous food image

@@ -1,26 +1,21 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Profile
-    </ion-title>
-  </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <div style="position: absolute; right:0; padding: 10px;">
+<ion-content [fullscreen]="true" overflow-scroll="true">
+<!--  <div style="position: absolute; right:0; padding: 10px;">
     <ion-button (click)='aboutus_modal()'></ion-button>
-  </div>
-
+  </div>-->
+  
   <img id="Logo" src="./assets/Logo.png" />
-  <img class="Footer" id="TYN" src="./assets/TYN.png" />
-  <img id="RICE" src="./assets/RICE.png" />
-
+  <img class="Footer" id="TYN" src="./assets/TYN.png"/>
+  <img id="RICE" src="./assets/RICE.png"/>
+  
   <div class="image-cropper">
     <img id="profilepic" src="./assets/ProfileImg.png" class="rounded" />
   </div>
 
-  <div class="Footer" class="BGDrectangle">
-
+  <div class="Footer"class="BGDrectangle">
+    
     <div id="userinfo" class="Font">
       <div style="font-size: 20px;padding-top: 25px;"> Hello,</div>
       <div style="font-size: 23px;"> {{currentAccount}} </div>
@@ -28,97 +23,122 @@
     <br>
     <br>
 
-    <div class="wrapbtnrectangle">
-      <div id="btns">
-        <div class="btnprop" style="display:relative; position: relative; right: 3%;">
-          <div style="text-align: center;">
-            <img width="50%" style="padding-top: 3px;" src="./assets/ProfileImg.png" />
-            <p style="margin:auto; width: 95%;">UPDATE USER INFO</p>
-          </div>
+  <div class="wrapbtnrectangle">
+    <div id="btns">
+      <div class="btnprop" style="display:relative; position: relative; right: 3%;">
+        <div style="text-align: center;">
+        <img width="50%" style="padding-top: 3px;" src="./assets/ProfileImg.png"/>
+        <p style="margin:auto; width: 95%;">UPDATE USER INFO</p>
         </div>
-
-        <div class="btnprop" style="display:block;">
-          <div style="text-align: center;">
-            <img width="50%" style="padding-top: 3px;" src="./assets/FavStar.png" />
-            <p style="margin:auto; width: 95%;">Favourites</p>
-          </div>
-        </div>
-
-        <div class="btnprop" style="display:relative; position:relative; left:3%;" *ngIf="currentRole === 'student'">
-          <div style="text-align: center;">
-            <div
-              style="text-align: center;font-weight: bolder;font-family: 'Segoe UI'; font-size: 30px;color: #55559F;">
-              {{stamps}} </div>
-            <p style="margin:auto; width: 95%;">Redemption Left</p>
-          </div>
-        </div>
-
-        <!--<div class="btnroundedStamp" >-->
-        <!-- <img src="./assets/RLeft.png" />-->
-        <!-- <h4>{{stamps}}</h4>
-          <p>Redemption Left</p>
-        </div>-->
       </div>
-    </div>
-
-    <div *ngFor="let food of fav">
-      <ion-item>
-        <ion-button (click)="deleteFoodbyFavourites(food.id)">unfavourite</ion-button>
-        <div class="image-cropper">
-          <!--
-          <ion-button (click)="deleteFoodbyFavourites(food.id)">delete fav</ion-button>-->
-          <img id="fdimg" width="100%" src={{food.image}} />
+      
+      <div class="btnprop" style="display:block;">
+        <div style="text-align: center;">
+        <img width="50%" style="padding-top: 3px;" src="./assets/FavStar.png"/>
+        <p style="margin:auto; width: 95%;">Favourites</p>
         </div>
-        {{food.foodname}} - {{food.foodprice | currency}} - {{food.availquantity}}
-      </ion-item>
-    </div>
+        
+      </div>
 
+      <div class="btnprop" style="display:relative; position:relative; left:3%;"  *ngIf="currentRole === 'student'">
+        <div style="text-align: center;">
+        <div style="text-align: center;font-weight: bolder;font-family: 'Segoe UI'; font-size: 30px;color: #55559F;"> {{stamps}} </div>
+        <p style="margin:auto; width: 95%;">Redemption Left</p>
+        </div>
+      </div>
+      
+      <!--<div class="btnroundedStamp" >-->
+        <!-- <img src="./assets/RLeft.png" />--> 
+       <!-- <h4>{{stamps}}</h4>
+        <p>Redemption Left</p>
+      </div>-->
+  
+    </div>
+  </div>
+   
     <br>
     <!--Vendor foods-->
     <div *ngIf="currentRole === 'vendor'">
-      <div class=subtitle>
-        <h6>Your Foods</h6>
-      </div>
-      <!-- Rcent Order Carousel-->
-      <div id="RecOdr">
-        <ion-slides [options]="sliderConfigx">
+      <div style="padding-top: 24px;padding-left: 29px;font-weight: 500;font-size: 17px;font-family: 'Segoe UI';">Your Foods</div>
+    <!-- Rcent Order Carousel-->
+    <div id="RecOdr">
+      <ion-slides [options]="sliderConfigx" >    
+ 
+        <ion-slide *ngFor="let food of foodArray" style="margin-left: 10px;">
+        <ion-card style="background-color: transparent;box-shadow:1;">
 
-          <ion-slide *ngFor="let food of foodArray">
-            <ion-card style="background-color: transparent;box-shadow:2;">
-              <div id="coverimg" style="display: flex;">
-                <div class="coverpic" style="flex: 1;" [style.background-color]="food.canteencolor"></div>
+         <div id ="coverimg"  style="display: flex;">
+          <div  class="coverpic" style="flex: 1;" [style.background-color] = "food.canteencolor"></div>
 
-                <div style="flex: 9;">
-                  <img class="coverpic" src={{food.image}} />
-                </div>
-                <!-- <ion-slides [options]="sliderConfigx" >
-          
-          <ion-slide>
-          <ion-card style="background-color: transparent;">
-           <div id ="coverimg">
-            <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
-            <img class="coverpic" src="./assets/FoodIMG.png" />-->
-              </div>
+          <div  style="flex: 9;">
+            <img class="coverpic"  src={{food.image}} />
+          </div>
+     <!-- <ion-slides [options]="sliderConfigx" >
+        
+        <ion-slide>
+        <ion-card style="background-color: transparent;">
+         <div id ="coverimg">
+          <img class="coverpic" src="./assets/CanteenClrLabel.png"/>
+          <img class="coverpic" src="./assets/FoodIMG.png" />-->
+         </div>
+  
+         <div id="txtlabelposition">
+          <ion-card-title id ="foodname">
+            {{food.foodname}}
+          </ion-card-title>
+          <ion-card-subtitle id="locate">
+            <!--We do not have school data, only canteen and vendor stall name, so i will be displaying the canteen data here-->
+            {{food.canteenname}}
+          </ion-card-subtitle>
+        </div>
+      
+        </ion-card>
+        </ion-slide>
 
-              <div id="txtlabelposition">
-                <ion-card-title id="foodname">
-                  {{food.foodname}}
-                </ion-card-title>
-                <ion-card-subtitle id="locate">
-                  <!--We do not have school data, only canteen and vendor stall name, so i will be displaying the canteen data here-->
-                  {{food.canteenname}}
-                </ion-card-subtitle>
-              </div>
-
-            </ion-card>
-          </ion-slide>
-
-        </ion-slides>
-      </div>
+      </ion-slides>
     </div>
-    <ion-button style="padding-left: 15px; padding-right: 15px;border-radius:3%" color="dark" expand="block"
-      fill="solid" (click)="SignOut()">Log Out</ion-button>
-  </div>
-  <br>
 
+    </div>
+
+    <div style="padding-top: 24px;padding-left: 29px;font-weight: 500;font-size: 17px;font-family: 'Segoe UI';">Your Favourites</div>
+    <div id="RecOdr">
+      <ion-slides [options]="sliderConfigx" >    
+ 
+        <ion-slide *ngFor="let food of fav" style="margin-left: 10px;">
+        <ion-card style="background-color: transparent;box-shadow:1;">
+          <div id="coverimg">
+            <img class="coverpic" id="fdimg" width="100%" src={{food.image}} />
+          </div>
+          <div style="display:flex;">
+            <div style="flex:1; ">
+              <div style="width:100%; display:flex; font-weight: bold;">
+                {{food.foodname}}
+              </div>
+              <div style="width:100%; display:flex;">
+                {{food.foodprice | currency}}
+              </div>
+              <div style="width:100%; display:flex;">
+                Amt available: {{food.availquantity}}
+              </div>
+            </div>
+            <div>
+              <button style="background: transparent;" (click)='deleteFoodbyFavourites(food.id)' ><ion-icon  size="large" name="star-sharp"></ion-icon></button>
+            </div>
+          </div>
+
+        
+      
+        </ion-card>
+        </ion-slide>
+
+      </ion-slides>
+      </div>
+    
+
+  <br>
+  <ion-button style="padding-left: 15px; padding-right: 15px;border-radius:3%" color="dark" expand="block" fill="solid"  (click)="SignOut()"><b>Log Out</b></ion-button>
+    <br>
+</div>   
 </ion-content>
+
+

@@ -37,6 +37,7 @@
 
     //Format
     .section{
+        padding-top: 15px;
         padding: 5px;
     }
     .img{
@@ -48,8 +49,8 @@
     .subtitle{
         font-family: "Segoe UI";
 		font-style: normal;
-		font-weight: bold;
-        font-size: 18px;
+		font-weight: 550;
+        font-size: 1p7x;
         color: black;
         position: relative;
         left: 8%;
@@ -57,6 +58,7 @@
     .listcard{
         box-shadow: none;
         margin-right: 0%;
+        height: fit-content;
     }
 
     //CONTENT OF PAGE
@@ -98,7 +100,7 @@
         
     
         #recentcarousel{
-            height: max-content;
+            height: fit-content;
             left: 16%;
         }
         .coverpic{

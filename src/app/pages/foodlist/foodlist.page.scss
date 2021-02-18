@@ -1,3 +1,21 @@
+:root {
+    --ion-color-newp:#522158;
+    --ion-color-newp-rgb: 82,33,88;
+    --ion-color-newp-contrast: #ffffff;
+    --ion-color-newp-contrast-rgb: 255,255,255;
+    --ion-color-newp-shade: #372158;
+    --ion-color-newp-tint: #582143;
+  }
+
+  .ion-color-newp{
+    --ion-color-base: var(--ion-color-newp);
+    --ion-color-base-rgb: var(--ion-color-newp-rgb);
+    --ion-color-contrast: var(--ion-color-newp-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-newp-contrast-rgb);
+    --ion-color-shade: var(--ion-color-newp-shade);
+    --ion-color-tint: var(--ion-color-newp-tint);
+  }
+
 #Logo{
     position: relative;
     z-index: 1;
@@ -61,11 +79,12 @@
 #foodname{
     font-size: 16px;
     font-family: 'Segoe UI';
+    margin-top: 10px;
 }
 #locate{
     font-size: 12px;
     font-family: 'Segoe UI';
-    margin-top: 2px;
+    margin-top: 3px;
 }
 #cart_bottom{
     width: 100%;
@@ -76,20 +95,13 @@
     z-index:1;
 }
 
-.image-cropper {
-    width: 100px;
-    height: 75px;
-    position: relative;
-    padding: 3px;
-    z-index: 2;
-    overflow: hidden;
-    border-radius: 10%;     
-  }
-
   #fdimg {
     display: inline;
-    margin: 0 auto;
-    height: 100%;
-    width: auto;
-    border-radius: 10%;  
+    height: 120px;
+    width: 110px; 
+    border-radius: 13px;
+    padding: 3px;
+    padding-left: 8px;
+    padding-right: 8px;
+    
   }

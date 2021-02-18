@@ -404,7 +404,7 @@ export class Tab2Page {
   async collected(){
     const alert2 = await this.alertCtrl.create({
       header: 'Confirm Collection?',
-      message: 'changes is irrevisible',
+      message: 'Change(s) is IRREVERSIBLE',
       buttons:[
         {
           text: 'Yes',

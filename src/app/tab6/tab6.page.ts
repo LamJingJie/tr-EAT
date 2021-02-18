@@ -42,7 +42,8 @@ export class Tab6Page {
   userSub: Subscription;
   userSub3: Subscription;
   canteenSub: Subscription;
-
+  favFood1Sub:Subscription;
+  favFood2Sub: Subscription;
 
   today: Date;
   today2: Date;
@@ -88,6 +89,11 @@ export class Tab6Page {
 
   }
 
+  deleteFav(foodid){
+    console.log(foodid);
+    this.deleteFoodbyFavourites(foodid);
+  }
+
   async ngOnInit() {
     //console.log("Init")
     this.currentAccount = await this.storage.get('email')
@@ -129,6 +135,8 @@ export class Tab6Page {
 
     this.userEmail = await this.storage.get('email');
     this.userRole = await this.storage.get('role');
+    this.search_text = ""//Reset search bar
+      this.getFoodList(); //refresh//refresh
     if (this.userRole === 'student') {
       this.checkOrders();
     }
@@ -202,6 +210,30 @@ export class Tab6Page {
         this.foodlist = res;
         this.loadedfoodlist = res;
         this.getKeys();
+         //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
+    this.favFood1Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.favs = data.map((x) => x.foodid)
+      //console.log(this.favs)
+
+      for (var i = 0; i < this.foodlist.length; i++) {
+             
+        //console.log(this.foodlist[i].id)
+        for (var j = 0; j < this.favs.length; j++) {
+          
+          //console.log(this.favs[j])
+          if (this.foodlist[i].id === this.favs[j]) {
+            //console.log("true")
+            this.foodlist[i].favourites = true
+            break;
+            //console.log(this.foodlist[i])
+          }
+          else { this.foodlist[i].favourites = false }
+        }
+        //console.log(this.redeemfoodArray[i].id)
+      }
+        //console.log(this.foodlistArray)
+     this.favFood1Sub.unsubscribe();
+    })
         //console.log(this.foodM.entries());
         this.foodSubscription.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
@@ -234,6 +266,31 @@ export class Tab6Page {
         this.foodlist = res;
         this.loadedfoodlist = res;
         console.log(this.foodlist);
+
+         //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
+    this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.favs = data.map((x) => x.foodid)
+      //console.log(this.favs)
+
+      for (var i = 0; i < this.foodlist.length; i++) {
+             
+       // console.log(this.foodlist[i].id)
+        for (var j = 0; j < this.favs.length; j++) {
+          
+          //console.log(this.favs[j])
+          if (this.foodlist[i].id === this.favs[j]) {
+            console.log("true")
+            this.foodlist[i].favourites = true
+            break;
+            //console.log(this.foodlistArray[i])
+          }
+          else { this.foodlist[i].favourites = false }
+        }
+        //console.log(this.redeemfoodArray[i].id)
+      }
+        //console.log(this.foodlist)
+     this.favFood2Sub.unsubscribe();
+    })
         this.foodRedemSub.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
     }
@@ -303,13 +360,21 @@ export class Tab6Page {
   }
   //Changes made 
   async addFoodbyFavourites(foodid) {
-    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).set({ foodid: foodid }).then((res) => { console.log(res); }).catch((err) => { console.log(err) });
+    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).set({ foodid: foodid }).then((res) => {
+      this.search_text = ""//Reset search bar
+      this.getFoodList(); //refresh//refresh 
+      console.log(res);
+       }).catch((err) => { console.log(err) });
 
   }
 
   async deleteFoodbyFavourites(foodid) {
     console.log(foodid);
-    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
+    (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { 
+      this.search_text = ""//Reset search bar
+      this.getFoodList(); //refresh//refresh
+      console.log(res); 
+    }).catch((err) => { console.log(err) });
 
   }
 

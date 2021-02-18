@@ -42,17 +42,25 @@
     position: relative;
     left: 8%;
 }
+.subtitle{
+    font-family: "Segoe UI";
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    color: black;
+    position: relative;
+    left: 8%;
+}
 .section{
     padding: 5px;
 }
 .coverimg{
-    padding-top:5px;
-    padding-right:5px;
-    padding-left:5px;
-    padding-bottom: 0;
-        border-radius: 25px;
-        border: 2px;
-    height:max-content;
+    padding: 5px;
+    padding-bottom:0;
+    border-radius: 10px;
+    border: 2px;
+    width: fit-content;
+    height: 160px;
 }
 #txtlabelposition{
     text-align: left;
@@ -61,6 +69,9 @@
 #vendorname{
     font-size: 18px;
     font-family: 'Segoe UI';
+    padding-top: 10px;
+    padding-bottom: 15px;
+    padding-left: 10px;
 }
 #stallde{
     font-size: 12px;

@@ -8,8 +8,8 @@
 
 <ion-content [fullscreen]="true">
 
-  <div style="position: absolute; right:0; padding: 10px;">
-    <ion-button (click)='aboutus_modal()'></ion-button>
+  <div style="position: absolute; right:0; padding: 20px;">
+    <ion-icon (click)='aboutus_modal()' size=large name="information-circle-outline"></ion-icon> 
   </div>
 
   <img id="Logo" src="./assets/Logo.png" />
@@ -41,19 +41,22 @@
           <ion-card-subtitle style="font-size: 13px;"> {{food.value.foodname}} - {{food.value.canteen}}:
             {{food.value.stall}} </ion-card-subtitle><br>
 
-          <button *ngIf="!food.value.favourites " (click)="addFoodbyFavourites(food.value.id)">Favourite</button>
-          <button *ngIf="food.value.favourites ">Favourited</button>
+            <div style="position: absolute; right:0; ">
+              <button style="background: transparent;" *ngIf="!food.value.favourites " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
+              <button style="background: transparent;" *ngIf="food1.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon  size="large" name="star-sharp"></ion-icon></button>
+      
+            </div>
         </div>
 
         <button *ngIf="userRole === 'sponsor'"
           (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
 
         <!--Increase and decrease amount to be added to cart-->
-        <div *ngIf="userRole === 'sponsor'">
+        <!--<div *ngIf="userRole === 'sponsor'">
           <ion-button (click)="deductAmt(food.value.id)">-1</ion-button>
           {{food.key | cartitemcount: valueArray | async}}
           <ion-button (click)="addAmt(food.value.id)">+1</ion-button>
-        </div>
+        </div>-->
       </div>
 
     </ion-card>
@@ -67,17 +70,55 @@
 
     <ion-card class='food_container' *ngFor="let food1 of foodlist">
       <ion-item *ngIf="food1.userlisted === true && food1.userdeleted === false && food1.canteendeleted === false">
+       
 
         <div class="image-cropper">
           <img id="fdimg" width="100%" src={{food1.image}} />
         </div>
+        <div style="display: flex;">
 
-        {{food1.foodname}} - {{food1.canteen}}: {{food1.stall}} - {{food1.foodprice | currency}} -
-        {{food1.availquantity}}
+      
+        <div style="flex: 6;">
+          <div style="width:90%; height:max-content;display: inline-block;padding-right: 10px;">
+            <div style="font-family: 'Segoe UI';font-size: 13px;color:black;font-weight: 650;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
+           </div>
+           <div style="font-weight: 500; font-size: 12px;">{{food1.foodprice | currency}} </div>
+           <div style="font-weight: 500; font-size: 12px;">{{food1.canteen}} • {{food1.stall}} </div>
+          
+           
+          <div style="width:90%; height:max-content;padding-right: 8px;padding-bottom: 20px;">
+              <div style="display: inline-block;">
+                <div style="font-family: 'Segoe UI';font-size: 10px;font-weight: 550;padding-left: 2px;padding-right: 10px;"><i>Available Qty: {{food1.availquantity}} </i></div>
+              </div>
+            </div>
+        </div>
+        
+        <div style="margin:auto; padding-left: 30px;" >
+          <div style="display: inline-block;padding-right: 3px;">
+            <button style="color:#FDDEA3; font-size: 12px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMadeTday === false"
+        (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)"
+        size="small" >REDEEM</button>
+          </div>
+        </div>
+        
+           
+        
+      </div>
+       
+      <div style="position: absolute; top:0; right:0;" >
+        <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="food1.favourites  " (click)="deleteFav(food1.id)"><ion-icon  size="large" name="star-sharp"></ion-icon></button>
 
-        <ion-button *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMadeTday === false"
-          (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)" style="display: inline-block"
-          size="small" color="dark">REDEEM</ion-button>
+      </div>
+
+        <!--<div style="font-weight: 550; font-size: 15px; padding-right: 20px;">{{food1.foodname}} </div> 
+        <div style="font-weight: 500; font-size: 12px;">{{food1.canteen}} • {{food1.stall}} </div>
+        <div style="font-weight: 500; font-size: 12px;">{{food1.foodprice | currency}} </div>
+          <div style="font-weight: 500; font-size: 12px;">{{food1.availquantity}}</div>-->
+
+     
+
+         
       </ion-item>
     </ion-card>
     <!--Shown for students-->
