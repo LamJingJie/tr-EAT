@@ -45,9 +45,10 @@
 
       <!--Quantity-->
       <div style="padding-right:20px;vertical-align:middle;">
-        <ion-icon style="padding-right: 10px;" name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)">-</ion-icon>
+        
+        <ion-icon style="padding-right: 10px;" name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
        <b>{{cart.orderquantity}}</b>
-        <ion-icon style="padding-left: 5px;" name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+        <ion-icon  style="padding-left: 5px;" name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
       </div>
 
       <!--Food name-->

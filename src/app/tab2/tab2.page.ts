@@ -22,6 +22,7 @@ import { ModalVerifychckoutPage } from 'src/app/Modal/modal-verifychckout/modal-
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 import { Clipboard } from '@ionic-native/clipboard/ngx';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tab2',
@@ -59,6 +60,7 @@ export class Tab2Page {
   bankChosen: any;
 
   disabled:boolean;
+  disabled2:boolean;
 
   receiptData: any = [];
 
@@ -160,14 +162,21 @@ export class Tab2Page {
 
   increaseAmt(quantity, cartid){
     //console.log(quantity);
-    setTimeout(()=>{
-      quantity = quantity + 1;
+    //alert('increase')
+
+      this.disabled2 = true;
+      setTimeout(()=>{
+        quantity = quantity + 1;
       this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
         this.calculate_total_price();
       })).catch((res =>{
         this.showError(res);
       }));
-    }, 300)
+      }, 300)
+      
+
+      
+
  
      
  
@@ -176,17 +185,24 @@ export class Tab2Page {
 
   decreaseAmt(quantity, cartid){
     //console.log(quantity);
-  
+    //alert('decrease')
       if(quantity > 1){
-        //console.log(">1");
-        setTimeout(()=>{
-          quantity = quantity -1;
-          this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
-            this.calculate_total_price();
-          })).catch((res=>{
-            this.showError(res);
-          }));
-        }, 300)
+  
+           //console.log(">1");
+           this.disabled2 = true;
+           setTimeout(()=>{
+            quantity = quantity -1;
+            this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+              this.calculate_total_price();
+              this.disabled2 = false;
+            })).catch((res=>{
+              this.showError(res);
+            }));
+           }, 300)
+          
+          
+     
+
        
       }else{
         //console.log("<1");
@@ -222,6 +238,7 @@ export class Tab2Page {
         this.leavePopup();
       });
     }
+    this.disabled2 = true;
 
     this.disabled = true; //Disable the purchase btn to give time to load total cost
     setTimeout(()=>{
@@ -392,15 +409,18 @@ export class Tab2Page {
           this.cartArray[index].price = resFood['foodprice'];
           this.cartArray[index].totalfoodprice = resFood['foodprice'] * resEach['orderquantity'];
           this.cartArray[index].foodname = resFood['foodname'];
-          this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
+          this.totalPriceAll += this.cartArray[index].totalfoodprice;
           //console.log(this.totalPriceAll);
   
-          this.foodSub.unsubscribe();
+          
         }))
-      
+        //alert(this.cartArray[index].price + " : " + this.cartArray[index].totalfoodprice + " : " + this.cartArray[index].foodname)
+        //console.log(this.cartArray);
       })
+      this.disabled2 = false;
 
      // console.log(this.cartArray);
+     
       
       //this.cartSubscription.unsubscribe();
   }

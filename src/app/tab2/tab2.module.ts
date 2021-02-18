@@ -10,6 +10,7 @@ import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { FoodnamePipe } from './foodname.pipe';
 import { FoodpricePipe } from './foodprice.pipe';
 
+
 @NgModule({
   imports: [
     IonicModule,
