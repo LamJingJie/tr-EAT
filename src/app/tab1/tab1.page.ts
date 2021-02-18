@@ -65,11 +65,11 @@ export class Tab1Page {
       this.canteen = data;
     });
     //Changes added 
-    this.foodSub = foodService.getAllFood().subscribe((data) => {
+    /*this.foodSub = foodService.getAllFood().subscribe((data) => {
       this.cuisinename = data;
-      console.log(data);
+      //console.log(data);
       //Changes ended
-    });
+    });*/
 
     // this.userRole = this.authService.currentUserRole();
     // this.userEmail = this.authService.currentUserEmail();

@@ -68,9 +68,10 @@
   <!--Payment selection-->
   <ion-card>
    <div style="padding-left: 15px;padding-top: 5px;font-weight: 550;"> Payment Method </div>
-  <ion-select style="font-weight: 550;color: black;" value="PAYNOW" (ionChange)="changePaymentMtd($event.detail.value)">
-    <ion-select-option value="PAYNOW">PAYNOW</ion-select-option>
-    <ion-select-option value="PAYLAH">PAYLAH</ion-select-option>
+  <ion-select style="font-weight: 550;color: black;" value="OCBC" (ionChange)="changePaymentMtd($event.detail.value)">
+    <ion-select-option value="OCBC">OCBC - PAYNOW</ion-select-option>
+    <ion-select-option value ="UOB">UOB - PAYNOW</ion-select-option>
+    <ion-select-option value="DBS">DBS - PAYLAH</ion-select-option>
   </ion-select>
 </ion-card>
 

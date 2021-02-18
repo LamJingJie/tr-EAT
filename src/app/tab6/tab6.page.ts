@@ -114,19 +114,19 @@ export class Tab6Page {
 
     this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
       this.favs = data.map((x) => x.foodid)
-      console.log(this.favs)
+      //console.log(this.favs)
 
       for (var i = 0; i < this.foodlistArray.length; i++) {
         for (var j = 0; j < this.favs.length; j++) {
           if (this.foodlistArray[i].id === this.favs[i]) {
-            console.log("true")
+            //console.log("true")
             this.foodlistArray[i].favourites = true
-            console.log(this.foodlistArray[i])
+            //console.log(this.foodlistArray[i])
           }
           else { this.foodlistArray[i].favourites = false }
         }
       }
-      console.log(this.foodlistArray)
+      //console.log(this.foodlistArray)
     })
 
   }
@@ -363,23 +363,23 @@ export class Tab6Page {
     (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).set({ foodid: foodid }).then((res) => {
       this.search_text = ""//Reset search bar
       this.getFoodList(); //refresh//refresh 
-      console.log(res);
+      //console.log(res);
        }).catch((err) => { console.log(err) });
 
   }
 
   async deleteFoodbyFavourites(foodid) {
-    console.log(foodid);
+   // console.log(foodid);
     (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { 
       this.search_text = ""//Reset search bar
       this.getFoodList(); //refresh//refresh
-      console.log(res); 
+      //console.log(res); 
     }).catch((err) => { console.log(err) });
 
   }
 
   async getFoodbyfavourites(userid) {
-    console.log(userid);
+    //console.log(userid);
     return this.firestore.collection("favourites").doc(userid).collection("data").valueChanges();
   }
   //Sponsors
@@ -559,7 +559,10 @@ export class Tab6Page {
   //Refresh
   doRefresh(event) {
     if (event.target.complete()) {
-      this.checkOrderSubscription.unsubscribe();
+      if(this.checkOrderSubscription){
+        this.checkOrderSubscription.unsubscribe();
+      }
+      
       this.checkOrders();
       this.getFoodList();
       this.search_text = ""//Reset search bar

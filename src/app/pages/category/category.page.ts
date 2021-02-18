@@ -368,7 +368,7 @@ export class CategoryPage implements OnInit {
   }
 
   deleteFav(foodid){
-    console.log(foodid);
+    //console.log(foodid);
     this.deleteFoodbyFavourites(foodid);
   }
 
@@ -557,12 +557,12 @@ export class CategoryPage implements OnInit {
 
       for (var i = 0; i < this.foodlistArray.length; i++) {
              
-        console.log(this.foodlistArray[i].id)
+        //console.log(this.foodlistArray[i].id)
         for (var j = 0; j < this.favs.length; j++) {
           
-          console.log(this.favs[j])
+          //console.log(this.favs[j])
           if (this.foodlistArray[i].id === this.favs[j]) {
-            console.log("true")
+            //console.log("true")
             this.foodlistArray[i].favourites = true
             break;
             //console.log(this.foodlistArray[i])
@@ -585,23 +585,23 @@ export class CategoryPage implements OnInit {
      // console.log(filter);
       
       this.foodRedemSub = this.foodService.getRedeemableFoodNFilter2(filter).subscribe((res => {
-        console.log(res);
+        //console.log(res);
         
         this.redeemfoodArray = res;
        // console.log(this.redeemfoodArray);
         this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
           this.favs = data.map((x) => x.foodid)
-          console.log(this.favs)
+          //console.log(this.favs)
          
     
             for (var i = 0; i < this.redeemfoodArray.length; i++) {
              
-              console.log(this.redeemfoodArray[i].id)
+              //console.log(this.redeemfoodArray[i].id)
               for (var j = 0; j < this.favs.length; j++) {
                 
-                console.log(this.favs[j])
+                //console.log(this.favs[j])
                 if (this.redeemfoodArray[i].id === this.favs[j]) {
-                  console.log("true")
+                  //console.log("true")
                   this.redeemfoodArray[i].favourites = true
                   break;
                   //console.log(this.foodlistArray[i])

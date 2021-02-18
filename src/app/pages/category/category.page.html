@@ -1,8 +1,7 @@
 <ion-header>
-  
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
-    </ion-icon>
-  
+  <ion-toolbar >
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -31,40 +30,52 @@
   </div> 
 
   <!--Food data shown to sponsors and vendor and admin-->
-  <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'">
-    <ion-card style="margin-top: 0;" *ngFor="let food of foodlistArray | keyvalue;">
-      <div style="text-align: left; padding:8px; display: inline-block; "><img style="height:90px; width: 90px;"
-          src={{food.value.image}} /></div>
-      <div style="display:inline-block; text-align: left; padding: 5px;">
-        <ion-card-subtitle style="font-size: 10px;">${{food.value.foodprice}}</ion-card-subtitle>
-        <ion-card-subtitle style="font-size: 13px;"> {{food.value.foodname}} </ion-card-subtitle><br>
+  <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
+    <ion-card style="width:94%;margin: auto;" *ngFor = "let food of foodlistArray | keyvalue;">
 
-
-        <div style="position: absolute; right:0; ">
-          <button style="background: transparent;" *ngIf="!food.value.favourites" (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
-          <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFoodbyfavourites(food.value.id)"><ion-icon  size="large" name="star-sharp"></ion-icon></button>
-  
-        </div>
+      <div style="position: absolute; right:0;">
+        <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="large" name="star-sharp"></ion-icon></button>
 
       </div>
 
-      <button *ngIf="userRole === 'sponsor'"
-        (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
+      <div style="width:32%;height:140px; text-align:center; padding-top: 8px;padding-bottom: 0%; float: left;">
+        <img id="fdimg" src={{food.value.image}}/></div> 
 
-      <!--Increase and decrease amount to be added to cart-->
-      <!--<div *ngIf="userRole === 'sponsor'">
-        <ion-button (click)="deductAmt(food.value.id)">-1</ion-button>
-        {{food.key | cartitemcount: valueArray | async}}
-        <ion-button (click)="addAmt(food.value.id)">+1</ion-button>
-      </div>-->
-    </ion-card>
+        <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
+          <div style="font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-left: 2px;">
+             <div style="font-size: 13px;font-weight: 550;"><i>${{food.value.foodprice}}</i></div>{{food.value.foodname}}</div>
+        </div>
+       
+        
+            <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
+              <div style="display: inline-block;">
+                 <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;"><i>Noodles,Halal </i></div>
+              </div>
 
-    <p *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</p>
-  </div>
+              <div style="display: inline-block;padding-right: 3px;">
+                <button style="color:#FDDEA3; font-size: 15px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button> 
+              </div>        
+            </div>
+        
+        
+
+  <!--Shown for sponsors-->
+    <!--Increase and decrease amount to be added to cart-->
+   <!-- <div *ngIf="userRole === 'sponsor'">
+      <ion-button (click)="deductAmt(food.value.id)">-1</ion-button>
+      {{food.key | cartitemcount: valueArray | async}}
+      <ion-button (click)="addAmt(food.value.id)">+1</ion-button>
+    </div>-->
+     
+</ion-card>
+
+<div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</div>
+</div>
 
   <!--Food data shown to students-->
   <div *ngIf="userRole === 'student' ">
-    <ion-card style="width:94%;margin: auto; margin-bottom: 5px;" *ngFor = "let food1 of redeemfoodArray">
+    <ion-card style="width:94%;margin: auto;" *ngFor = "let food1 of redeemfoodArray ">
       
       <div style="position: absolute; right:0; ">
         <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
@@ -78,7 +89,7 @@
 
           <!-- <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 650;padding: 3px;"><i>{{food1.foodprice | currency}} </i></div>-->
          <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
-          <div style="color:black;font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
+          <div style="font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
          </div>
          
         <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
@@ -92,9 +103,9 @@
         </div>
         
     </ion-card>    
-     <!--Shown for students-->
-  <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="redeemfoodArray.length ==0"><i>[Error Msg]No "{{chosenFilter}}" Food Retrieved</i></div>
 
+    <!--Shown for students-->
+    <div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" Food Retrieved</div>
   
   </div>
  

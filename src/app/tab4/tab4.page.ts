@@ -65,6 +65,10 @@ export class Tab4Page {
     if (this.currentRole == 'student') {
       this.getStamps();
     }
+
+    this.favSub = this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.fillfav(data);
+    })
   }
 
   async ionViewWillEnter() {
@@ -74,18 +78,15 @@ export class Tab4Page {
         this.leavePopup();
       });
     }
-    this.currentAccount = await this.storage.get('email');
     //Changes below
     //console.log(this.currentAccount);
-     this.favSub = this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
-      this.fillfav(data);
-    })
+    
   }
   fillfav(data) {
     this.fav = [];
     data.forEach((element: any) => {
       this.fav2 = this.foodService.getFoodById(element.foodid).pipe(first()).subscribe((res) => {
-        console.log(res)
+        //console.log(res)
         this.fav.push(res)
        
       })
@@ -145,7 +146,7 @@ export class Tab4Page {
   }
   //NEed to fix refreshing of profile   
   async deleteFoodbyFavourites(foodid) {
-    console.log(foodid);
+    //console.log(foodid);
     (await this.firestore.collection('favourites').doc(this.currentAccount)).collection('data').doc(foodid).delete().then((res) => { console.log(res); }).catch((err) => { console.log(err) });
 
   }
@@ -160,9 +161,7 @@ export class Tab4Page {
         this.customBackBtnSubscription.unsubscribe();
       }
     }
-    if(this.favSub){
-      this.favSub.unsubscribe();
-    }
+   
     if (this.orderSubscription) {
       this.orderSubscription.unsubscribe();
     }
@@ -208,6 +207,9 @@ export class Tab4Page {
 
     if (this.userSub2) {
       this.userSub2.unsubscribe();
+    }
+    if(this.favSub){
+      this.favSub.unsubscribe();
     }
   }
 }

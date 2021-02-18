@@ -157,16 +157,16 @@ export class AdminorderMonthlyPage implements OnInit {
  }
 
  getOrders(date1, date2, vendorArray: any[]){
-   console.log('order')
+   //console.log('order')
   return new Promise(async (resolve, reject)=>{
 
     //console.log(date1)
     //console.log(date2);
       
     this.orderSubscription = this.orderService.getMonthly(date1, date2).subscribe((resMonth=>{
-      this.newOrderArray = [];  
-      //this.vendorM.clear();
-      //this.vendorM2.clear();
+      this.newOrderArray = [];
+      this.vendorM.clear();
+      this.vendorM2.clear();
       //console.log(resMonth);
       //this.newOrderArray = res;
       //console.log(this.newOrderArray);
@@ -199,12 +199,12 @@ export class AdminorderMonthlyPage implements OnInit {
         //console.log(this.newOrderArray);
       });
         
-      console.log(this.newOrderArray);
+      //console.log(this.newOrderArray);
   
       this.orderSubscription.unsubscribe();
        
       this.getTotalCost();
-      console.log("calculate")
+      //console.log("calculate")
       resolve("Loaded");
     }))
   })

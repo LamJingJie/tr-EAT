@@ -52,13 +52,17 @@
     </ion-card>
 
     <ion-card>
-      <ion-item class="ion-no-padding">
-        <ion-label> Select Cuisine </ion-label>
+      
+ 
+        <h6 style="text-align: center; color: black;">Select Cuisine</h6>
+        <ion-item *ngFor="let cuisine of currentCuisine">
+          {{cuisine}}
+        </ion-item>
         <ion-button (click)="selectCuisine($event)">
           <ion-icon name="create-outline"> </ion-icon>
           Edit Cuisine Choice
         </ion-button>
-      </ion-item>
+
     </ion-card>
 
 

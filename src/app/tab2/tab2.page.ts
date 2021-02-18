@@ -160,14 +160,16 @@ export class Tab2Page {
 
   increaseAmt(quantity, cartid){
     //console.log(quantity);
- 
- 
+    setTimeout(()=>{
       quantity = quantity + 1;
       this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
         this.calculate_total_price();
       })).catch((res =>{
         this.showError(res);
       }));
+    }, 300)
+ 
+     
  
    
   }
@@ -175,15 +177,17 @@ export class Tab2Page {
   decreaseAmt(quantity, cartid){
     //console.log(quantity);
   
-
       if(quantity > 1){
         //console.log(">1");
-        quantity = quantity -1;
-        this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
-          this.calculate_total_price();
-        })).catch((res=>{
-          this.showError(res);
-        }));
+        setTimeout(()=>{
+          quantity = quantity -1;
+          this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
+            this.calculate_total_price();
+          })).catch((res=>{
+            this.showError(res);
+          }));
+        }, 300)
+       
       }else{
         //console.log("<1");
         this.quantityRemove(cartid);

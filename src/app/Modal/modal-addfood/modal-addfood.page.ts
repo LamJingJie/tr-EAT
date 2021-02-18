@@ -94,6 +94,7 @@ export class ModalAddfoodPage implements OnInit {
   // THESES ARE MY STUPID CHANGES
   //create function for Cuisine Choices
   async selectCuisine() {
+
     const alert = this.alertController
       .create({
         
@@ -127,6 +128,7 @@ export class ModalAddfoodPage implements OnInit {
           checked: false, 
         },
       ],
+      
         buttons: [
           { text: "Cancel", role: "cancel" },
           {

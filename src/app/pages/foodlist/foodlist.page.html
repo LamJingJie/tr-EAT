@@ -36,7 +36,7 @@
       <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
         <ion-card style="width:94%;margin: auto;" *ngFor = "let food of foodlistArray | keyvalue;">
 
-          <div style="position: absolute; right:0;" *ngFor="let favFood of ">
+          <div style="position: absolute; right:0;">
             <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
             <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="large" name="star-sharp"></ion-icon></button>
 
