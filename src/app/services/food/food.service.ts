@@ -150,17 +150,22 @@ export class FoodService {
   }
 
   //When admin didn't select any images to update/edit
-  editFoodNoImg(foodname, foodprice: number, availquantity: number, halal: boolean, vegetarian: boolean, userid, id, cuisinename) {
+  editFoodNoImg(foodname, foodprice: number, availquantity: number, halal, vegetarian, userid, id, cuisinename) {
+    var boolHalal = JSON.parse(halal)
+    var boolVeg = JSON.parse(vegetarian)
+    //console.log(halal)
+   // console.log(boolHalal);
 
     return this.firestore.collection('food').doc(id).update({
       availquantity: availquantity, foodname: foodname, foodprice: foodprice,
-      halal: halal, userid: userid, vegetarian: vegetarian, cuisinename: cuisinename
+      halal: boolHalal, userid: userid, vegetarian: boolVeg, cuisinename: cuisinename
     })
   }
 
   //When admin has select an image to update/edit
-  async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal: boolean, vegetarian: boolean, userid, id, image, filename, mergedName1, cuisinename) {
-
+  async editFoodWithImg(foodname, foodprice: number, availquantity: number, halal, vegetarian, userid, id, image, filename, mergedName1, cuisinename) {
+    var boolHalal = JSON.parse(halal)
+    var boolVeg = JSON.parse(vegetarian)
     this.storage.ref('Food Images/' + mergedName1).delete(); //Delete previous food image
 
     var storageURL = 'Food Images/';
@@ -172,7 +177,7 @@ export class FoodService {
 
     return this.firestore.collection('food').doc(id).update({
       availquantity: availquantity, foodname: foodname, foodprice: foodprice,
-      halal: halal, userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, cuisinename: cuisinename
+      halal: boolHalal, userid: userid, vegetarian: boolVeg, image: downloadURL, mergedName: mergedName, cuisinename: cuisinename
     })
 
 
