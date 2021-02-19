@@ -160,45 +160,50 @@ export class Tab2Page {
     this.paymentMethod = event;
   }
 
-  increaseAmt(quantity, cartid){
+   async presentLoading(){
+     const loading = await this.loading.create({
+       cssClass: 'my-custom-class',
+       id: 'presentLoad'
+     });
+     await loading.present();
+
+   }
+
+  async increaseAmt(quantity, cartid){
     //console.log(quantity);
     //alert('increase')
-
+      await this.presentLoading();
       this.disabled2 = true;
-      setTimeout(()=>{
+    
         quantity = quantity + 1;
       this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
         this.calculate_total_price();
+        this.loading.dismiss(null, null, 'presentLoad');
       })).catch((res =>{
+        this.loading.dismiss(null, null, 'presentLoad');
         this.showError(res);
       }));
-      }, 300)
-      
-
-      
-
- 
-     
- 
+   
    
   }
 
-  decreaseAmt(quantity, cartid){
+  async decreaseAmt(quantity, cartid){
     //console.log(quantity);
     //alert('decrease')
       if(quantity > 1){
-  
+          await this.presentLoading();
            //console.log(">1");
            this.disabled2 = true;
-           setTimeout(()=>{
+           
             quantity = quantity -1;
             this.cartService.updateQuantity(this.userEmail, quantity, cartid).then((res=>{
               this.calculate_total_price();
-              this.disabled2 = false;
+              this.loading.dismiss(null, null, 'presentLoad');
             })).catch((res=>{
+              this.loading.dismiss(null, null, 'presentLoad');
               this.showError(res);
             }));
-           }, 300)
+        
           
           
      
