@@ -52,6 +52,6 @@
       </ion-item>
     </ion-card>
     <!-- submit form -->
-    <ion-button type="submit">Proceed</ion-button>
+    <ion-button [disabled] = '!canteenForm.valid' type="submit">Proceed</ion-button>
   </form>
 </ion-content>

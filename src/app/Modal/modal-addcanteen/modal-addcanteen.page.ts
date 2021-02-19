@@ -54,9 +54,15 @@ export class ModalAddcanteenPage implements OnInit {
     private loading: LoadingController,
   ) {
     this.canteenForm = this.formBuilder.group({
-      canteenname: "",
-      canteenimage: "",
+      canteenname: new FormControl('', Validators.compose([
+        Validators.required,
+      ])),
+      canteenimage: new FormControl('',Validators.compose([
+  
+      ])),
+
     })
+  
   }
 
   ngOnInit() {
@@ -103,7 +109,7 @@ export class ModalAddcanteenPage implements OnInit {
       let colorChosen = args[0].toRGBA();
 
       this.colorChose = colorChosen.toString();
-      console.log(this.colorChose);
+      //console.log(this.colorChose);
       //(<HTMLElement>document.querySelector('.colorshown')).style.setProperty('--background', this.colorChose);
       pickr.hide();
     });
@@ -135,19 +141,26 @@ export class ModalAddcanteenPage implements OnInit {
 
   //Function synced from canteenService, posts the data to firestore 
   async submitCanteen(data) {
-    await this.startLoader();
-    this.canteenService.addCanteen(
-      data.value.canteenname,
-      this.colorChose,
-    ).then(res => {
-      this.loading.dismiss(null, null, 'addCanteenAdmin');
-      this.showSuccess();
-      this.dismiss();
-
-    }).catch((error) => {
-      this.loading.dismiss(null, null, 'addCanteenAdmin');
-      this.showError(error);
-    })
+    //console.log(this.colorChose);
+    if(this.colorChose !== undefined){
+      //console.log('not empty')
+      await this.startLoader();
+      this.canteenService.addCanteen(
+        data.value.canteenname,
+        this.colorChose,
+      ).then(res => {
+        this.loading.dismiss(null, null, 'addCanteenAdmin');
+        this.showSuccess();
+        this.dismiss();
+  
+      }).catch((error) => {
+        this.loading.dismiss(null, null, 'addCanteenAdmin');
+        this.showError(error);
+      })
+    }else{
+      this.showMessage("Color not chosen!");
+    }
+   
   }
 
   // Loader for on submit canteen
@@ -189,5 +202,10 @@ export class ModalAddcanteenPage implements OnInit {
   }
   dismiss() {
     this.modalController.dismiss()
+  }
+
+  async showMessage(msg){
+    const toast = await this.toast.create({message: msg, position: 'bottom', duration: 3000,buttons: [ { text: 'ok', handler: () => { console.log('Cancel clicked');} } ]});
+    toast.present();
   }
 }

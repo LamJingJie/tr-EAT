@@ -13,6 +13,7 @@ import { KeyValuePipe } from '@angular/common';
 import { ModalController, PickerController } from '@ionic/angular';
 import { CanteenService } from 'src/app/services/canteen/canteen.service';
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-vendors',
@@ -26,10 +27,12 @@ export class VendorsPage implements OnInit {
   canteenSubscription: Subscription;
   canteenSubscription2: Subscription; //for canteen name
 
+  canteenAllSub: Subscription; //for when user clicks on 'all'
+
   vendorSubscription: Subscription;
   AllVendorSubscription: Subscription;
 
-  vendorArray: any = [];
+  vendorArray: any[] = [];
 
   constructor(private userService: UserService, private authService: AuthenticationService, private router: Router, 
     private navCtrl:NavController, private alertCtrl: AlertController, private toast: ToastController,
@@ -78,7 +81,15 @@ export class VendorsPage implements OnInit {
   getAllVendors(){
     this.AllVendorSubscription = this.userService.getOnlyVendor().subscribe((res =>{
       this.vendorArray = res;
-      //console.log(res);
+      this.vendorArray.forEach((val, index)=>{
+        //get canteen name
+        this.canteenAllSub = this.canteenService.getCanteenbyid(val['canteenID']).pipe(first()).subscribe((canteenres=>{
+          this.vendorArray[index].canteenname = canteenres['canteenname'];
+          //this.canteenAllSub.unsubscribe();
+        }))
+      })
+      
+      console.log(this.vendorArray);
     }))
   }
 
@@ -101,6 +112,9 @@ export class VendorsPage implements OnInit {
     }
     if(this.AllVendorSubscription){
       this.AllVendorSubscription.unsubscribe();
+    }
+    if(this.canteenAllSub){
+      this.canteenAllSub.unsubscribe();
     }
   }
 

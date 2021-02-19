@@ -13,25 +13,25 @@
   <!--Use ngModal to ensure first segment btn is checked. For some reason the previous version stopped working and so had to change-->
   <ion-segment scrollable (ionChange)="dateChanged($event)" [(ngModel)]="segmentModel" >
     <ion-segment-button value ={{todayVar}}>
-      <ion-label>{{todayVar | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{todayVar | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdVar}}>
-      <ion-label>{{ytdVar | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdVar | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdMinus1Var}}>
-      <ion-label>{{ytdMinus1Var | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdMinus1Var | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdMinus2Var}}>
-      <ion-label>{{ytdMinus2Var | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdMinus2Var | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdMinus3Var}}>
-      <ion-label>{{ytdMinus3Var | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdMinus3Var | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdMinus4Var}}>
-      <ion-label>{{ytdMinus4Var | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdMinus4Var | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
      <ion-segment-button value ={{ytdMinus5Var}}>
-      <ion-label>{{ytdMinus5Var | date: 'dd MMM'}}</ion-label>
+      <ion-label>{{ytdMinus5Var | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
   </ion-segment>
 

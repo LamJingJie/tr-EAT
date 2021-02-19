@@ -8,6 +8,9 @@
   <img id="RICE" src="./assets/RICE.png"/>
 
    <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
+     <h6 style="position: absolute; top:37%; width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf='signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>
+       "Password" & "Confirm Password" does not match!
+     </h6>
       <ion-card>
         <ion-item>
           <ion-input  type="email" formControlName="email" placeholder="Enter your email"></ion-input>
@@ -16,6 +19,7 @@
       </ion-card>
       
       <ion-card>
+        <ion-label *ngIf="password.invalid && (password.dirty || password.touched)"></ion-label>
         <ion-item>
           <ion-input  #password1 type="password" formControlName="password" placeholder="Enter your password"></ion-input>
           <ion-icon *ngIf="password.invalid && (password.dirty || password.touched)" name="alert-circle" color="danger"></ion-icon>

@@ -104,11 +104,14 @@ export class ViewaccountPage implements OnInit {
 
   deductStamp(id, stamp){
     //console.log(stamp);
-    stamp = stamp -1;
-    console.log(stamp);
-    this.userService.updateStamp(id, stamp).catch(err =>{
-      this.showError(err);
-    })
+    if(stamp != 0){
+      stamp = stamp -1;
+      console.log(stamp);
+      this.userService.updateStamp(id, stamp).catch(err =>{
+        this.showError(err);
+      })
+    }
+    
   }
 
   addStamp(id, stamp){

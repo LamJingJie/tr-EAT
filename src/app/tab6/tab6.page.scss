@@ -95,7 +95,17 @@
   }
 
 
-
+ //Horizontal scrolling for ngFor food type
+ .foodtype {
+    overflow: hidden; 
+    white-space: nowrap;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    .scroll {
+      overflow: auto;
+    }
+  }
 
 //remove margin from food so that after filtering, remaining food will not be shown anywhere else other than at the top
 .food_container{

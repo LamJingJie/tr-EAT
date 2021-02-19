@@ -10,6 +10,9 @@
 
 
   <form [formGroup]="editcanteen_form" (ngSubmit)="editCanteen(editcanteen_form.value)">
+    <ion-card >
+      <div style="width: 100%; height:100px;" [style.background-color]="colorChose"></div>
+    </ion-card>
     <ion-card>
       <ion-item>
         <ion-label position="floating"> Enter Canteen Name: </ion-label>

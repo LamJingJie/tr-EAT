@@ -12,7 +12,7 @@
     
       <form [formGroup] = "editstall_form" (ngSubmit)="editStall()">
         <ion-item>
-          Stall:
+          <ion-label position="floating">Stall Name</ion-label>
           <ion-input [(ngModel)]="userDetails.stallname"  (ionChange)="editStallName()" formControlName="stallname"></ion-input>
           <ion-button type="submit" *ngIf="editedStall === true" [disabled] = '!editstall_form.valid'>
             <ion-icon name="checkmark-outline"></ion-icon>
@@ -37,7 +37,7 @@
       Role: {{userDetails.role}}
     </ion-item>
     <ion-item>
-        Canteen:
+        <ion-label position="floating">Canteen</ion-label>
         <!---Added NgIf because of a bug that hasn't been fixed yet by the ionic team. The ngIf solves it by rerendering the control,
         thus displaying the value on load.--->
         <ion-select *ngIf="canteenData && canteenData.length" value={{userDetails.canteenID}} (ionChange)="changeCanteen($event)">
@@ -47,7 +47,7 @@
      
     </ion-item>
     <ion-item>
-      Listed: {{userDetails.listed}}
+      Label: {{userDetails.listed}}  
     </ion-item>
     
     <ion-button [routerLink]="['/tabs/tab5/viewaccount/adminfood', currentAccount]">View Food</ion-button>

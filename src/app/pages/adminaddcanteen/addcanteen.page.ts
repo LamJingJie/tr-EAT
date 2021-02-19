@@ -54,7 +54,7 @@ export class AddcanteenPage {
     private loading: LoadingController
   ) {
     this.data = true;
-    this.canteenSub = canteenService.getAll().subscribe((data) => { this.canteen = data; });
+    this.canteenSub = canteenService.All().subscribe((data) => { this.canteen = data; });
   }
 
   ngOnInit() {

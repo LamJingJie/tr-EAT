@@ -68,7 +68,9 @@ export class ModalEditdelcanteenPage implements OnInit {
     //Get data passed from url
     this.canteenSubscription = this.canteenService.getCanteenbyid(this.id).subscribe(res => {
       this.canteen = res;
-      this.oldImage = this.canteen.mergedname
+      this.oldImage = this.canteen.mergedname;
+      this.colorChose = res['color'];
+      console.log(this.colorChose);
       //console.log(this.canteen);
     });
 

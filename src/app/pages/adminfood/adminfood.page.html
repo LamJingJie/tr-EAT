@@ -9,15 +9,18 @@
 
 
 
-  <ion-card *ngFor="let food of foodData">
-    <ion-item>
+  <ion-card style="margin-bottom: 30px;" *ngFor="let food of foodData">
+    <ion-item  (click)="editFood(food.id)">
       <img src="{{food.image}}" alt='image' width="50%;" />
       <div>
         <h5>{{food.foodname}}</h5>
-        <ion-button (click)="editFood(food.id)">Edit</ion-button>
-        <ion-button (click)="deleteFoodPopUp(food.id, food.foodname, food.mergedName)">Delete</ion-button>
       </div>
     </ion-item>
+    <div style="text-align: center;">
+      <ion-button style="width:100%; font-size: 13px; margin: auto;" (click)="deleteFoodPopUp(food.id, food.foodname, food.mergedName)">
+        Delete<ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
   </ion-card>
 
 

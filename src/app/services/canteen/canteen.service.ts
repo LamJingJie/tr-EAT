@@ -52,6 +52,10 @@ export class CanteenService {
   Update(id, deleted:boolean) {
     this.firestore.collection('canteen').doc(id).update({ deleted: deleted })
   }
+  //Ignores if deleted or not
+  All() {
+    return this.firestore.collection('canteen', ref => ref.orderBy('canteenname', 'asc')).valueChanges({ idField: 'id' });
+  }
 
   getAll() {
     return this.firestore.collection('canteen', ref => ref.where('deleted', '==', false)).valueChanges({ idField: 'id' });
