@@ -374,6 +374,11 @@ export class AuthenticationService {
 
           //Delete account from firebase cloud database
           this.userService.deleteUser(email);
+
+          //Delete favourite
+          this.foodService.deleteAllFavFromUser(email).catch((error=>{
+            console.log(error);
+          }))
          
           if(role === "vendor"){   
    
