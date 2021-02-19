@@ -33,7 +33,7 @@
   <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
     <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food of foodlistArray | keyvalue;">
 
-      <div style="position: absolute; right:0;">
+      <div style="position: absolute; right:0;padding: 5px;">
         <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
         <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="small" name="star-sharp"></ion-icon></button>
 
@@ -81,9 +81,9 @@
 
   <!--Food data shown to students-->
   <div *ngIf="userRole === 'student' ">
-    <ion-card style="width:94%;margin: auto;" *ngFor = "let food1 of redeemfoodArray ">
+    <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food1 of redeemfoodArray ">
       
-      <div style="position: absolute; right:0; ">
+      <div style="position: absolute; right:0; padding: 5px;">
         <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
         <button style="background: transparent;" *ngIf="food1.favourites  " (click)="deleteFav(food1.id)"><ion-icon  size="small" name="star-sharp"></ion-icon></button>
 
