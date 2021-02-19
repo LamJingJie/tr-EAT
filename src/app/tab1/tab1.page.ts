@@ -115,9 +115,12 @@ export class Tab1Page {
     this.router.navigate(['/tabs/tab1/vendors'], navigationExtras);
   }
 
-  ChosenCuisines() {
-    this.router.navigate(['/tabs/tab1/category']);
+  ChosenCuisines(cuisinename,) {
+    let navigationExtras: NavigationExtras = { queryParams: { cuisinename: cuisinename } };
+    this.router.navigate(['/tabs/tab1/category'], navigationExtras);
+
   }
+
 
   ngOnDestroy() {
     if (this.canteenSub) {

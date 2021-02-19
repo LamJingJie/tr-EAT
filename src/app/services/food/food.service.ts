@@ -15,8 +15,6 @@ export class FoodService {
 
   test1: Subscription;
   test2: Subscription;
-
-  deleteAllFavSub: Subscription;
   constructor(private firestore: AngularFirestore, private storage: AngularFireStorage, private toast: ToastController,
     private orderService: OrderService, private historyService: HistoryService) { }
 
@@ -77,19 +75,6 @@ export class FoodService {
 
   deleteFoodbyfavourites(foodid, userid) {
     return this.firestore.collection('favourites').doc(userid).collection("data").doc(foodid).delete();
-  }
-
-  deleteAllFavFromUser(userid){
-    return new Promise((resolve, reject) =>{
-      this.deleteAllFavSub = this.firestore.collection('favourites').doc(userid).collection('data').get().subscribe((async res=>{
-        res.forEach((doc=>{
-          doc.ref.delete(); //Delete every data in the sub-collection in the document
-        }))
-        await this.firestore.collection('favourites').doc(userid).delete();//Then delete the parent document
-        resolve(null);
-        this.deleteAllFavSub.unsubscribe();
-      }));
-    })
   }
   //CHANGES END
 

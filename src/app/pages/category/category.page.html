@@ -154,8 +154,7 @@
     </ion-card>-->
     
 
-
-  <!---Cart to be shown at the bottom of the screen, only for sponsors to see--->
+ <!---Cart to be shown at the bottom of the screen, only for sponsors to see--->
   <ion-button id="cart_bottom" (click)="cartPage()" *ngIf="userRole === 'sponsor'">
     <ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount
       inside {{countCart}}</ion-badge>

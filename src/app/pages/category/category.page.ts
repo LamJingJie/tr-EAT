@@ -55,6 +55,7 @@ export class CategoryPage implements OnInit {
   vendor: any;
   stall: any;
   canteen: any;
+  cuisinename: any;
   foodlistArray: any = [];
   redeemfoodArray: any = [];
 
@@ -123,7 +124,9 @@ export class CategoryPage implements OnInit {
     private carttotalcostpipe: CartTotalCostPipe,
     private firestore: AngularFirestore,
     private loading: LoadingController,
-    private canteenService: CanteenService) {
+    private canteenService: CanteenService) 
+    
+    {
     this.chosenFilter = 'all'
     this.count = 1;
     this.currentAmt = 1;
@@ -140,11 +143,14 @@ export class CategoryPage implements OnInit {
       this.stall = params.stall;
       this.vendor = params.vendor;
       this.canteen = params.canteenid;
+      this.chosenFilter = params.cuisinename;
+      this.filterFood(this.chosenFilter)
+      console.log(this.chosenFilter)
+
       //console.log(this.stall);
       //console.log(this.vendor);
     });
 
-    
 
   }
 
@@ -531,7 +537,7 @@ export class CategoryPage implements OnInit {
   //Get food based on which filter user chose
   filterFood(filter) {
 
-    //console.log(filter);
+    console.log("inside", filter);
     //console.log(this.userRole);
 
     //For sponsors and vendor
@@ -645,6 +651,7 @@ export class CategoryPage implements OnInit {
 
       //console.log(res.data.title);
       this.chosenFilter = res.data.title;
+      console.log(this.chosenFilter)
       this.filterFood(this.chosenFilter);
 
     })).catch((err => {
