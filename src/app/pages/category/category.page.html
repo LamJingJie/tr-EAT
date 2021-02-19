@@ -31,30 +31,30 @@
 
   <!--Food data shown to sponsors and vendor and admin-->
   <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
-    <ion-card style="width:94%;margin: auto;" *ngFor = "let food of foodlistArray | keyvalue;">
+    <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food of foodlistArray | keyvalue;">
 
       <div style="position: absolute; right:0;">
-        <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
-        <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="large" name="star-sharp"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="small" name="star-sharp"></ion-icon></button>
 
       </div>
 
-      <div style="width:32%;height:140px; text-align:center; padding-top: 8px;padding-bottom: 0%; float: left;">
+      <div style="width:32%;height:130px; text-align:center; padding-top: 5px;padding-bottom: 0%; float: left;">
         <img id="fdimg" src={{food.value.image}}/></div> 
 
         <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
-          <div style="font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-left: 2px;">
+          <div style="font-family: 'Segoe UI';font-size: 16px;font-weight: 600;color: black;padding-top: 30px;padding-left: 2px;">
              <div style="font-size: 13px;font-weight: 550;"><i>${{food.value.foodprice}}</i></div>{{food.value.foodname}}</div>
         </div>
        
         
             <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
               <div style="display: inline-block;">
-                 <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;"><i>Noodles,Halal </i></div>
+                 <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 65px; padding-top: 10px;"><i>Noodles,Halal </i></div>
               </div>
 
-              <div style="display: inline-block;padding-right: 3px;">
-                <button style="color:#FDDEA3; font-size: 15px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button> 
+              <div style="display: inline-block;padding-right: 0px;">
+                <button style="color:#FDDEA3; font-size: 12px; font-weight: 550; background-color: #54549E;padding: 5px;border-radius: 5px;" *ngIf="userRole === 'sponsor'" (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button> 
               </div>        
             </div>
         
@@ -78,8 +78,8 @@
     <ion-card style="width:94%;margin: auto;" *ngFor = "let food1 of redeemfoodArray ">
       
       <div style="position: absolute; right:0; ">
-        <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="large" name="star-outline"></ion-icon></button>
-        <button style="background: transparent;" *ngIf="food1.favourites  " (click)="deleteFav(food1.id)"><ion-icon  size="large" name="star-sharp"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
+        <button style="background: transparent;" *ngIf="food1.favourites  " (click)="deleteFav(food1.id)"><ion-icon  size="small" name="star-sharp"></ion-icon></button>
 
       </div>
 
@@ -89,7 +89,7 @@
 
           <!-- <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 650;padding: 3px;"><i>{{food1.foodprice | currency}} </i></div>-->
          <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
-          <div style="font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
+          <div style="font-family: 'Segoe UI';font-size: 16px;font-weight: 600;color: black;padding-top: 30px;">{{food1.foodname}}</div>
          </div>
          
         <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">

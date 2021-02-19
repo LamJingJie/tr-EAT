@@ -65,7 +65,7 @@
       <ion-slides [options]="sliderConfigx" >    
  
         <ion-slide *ngFor="let food of foodArray" style="margin-left: 10px;">
-        <ion-card style="background-color: transparent;box-shadow:1;">
+        <ion-card style="background-color: white;box-shadow:1;">
 
          <div id ="coverimg"  style="display: flex;">
           <div  class="coverpic" style="flex: 1;" [style.background-color] = "food.canteencolor"></div>
@@ -83,7 +83,7 @@
          </div>
   
          <div id="txtlabelposition">
-          <ion-card-title id ="foodname">
+          <ion-card-title id ="foodname" style="font-size: 14px;">
             {{food.foodname}}
           </ion-card-title>
           <ion-card-subtitle id="locate">
@@ -105,24 +105,24 @@
       <ion-slides [options]="sliderConfigx" >    
  
         <ion-slide *ngFor="let food of fav" style="margin-left: 10px;">
-        <ion-card style="background-color: transparent;box-shadow:1;">
+        <ion-card style="background-color: white;box-shadow:1;">
           <div id="coverimg">
             <img class="coverpic" id="fdimg" width="100%" src={{food.image}} />
           </div>
-          <div style="display:flex;">
-            <div style="flex:1; ">
-              <div style="width:100%; display:flex; font-weight: bold;">
+          <div style="display:flex; padding: 5px; padding-bottom: 8px; ">
+            <div style="flex:1;padding-left: 5px ; ">
+              <div style="width:100%; display:flex; font-weight: 550;color: black;font-size: 14px;">
                 {{food.foodname}}
               </div>
-              <div style="width:100%; display:flex;">
+              <div style="width:100%; display:flex;font-size: 12px;">
                 {{food.foodprice | currency}}
               </div>
-              <div style="width:100%; display:flex;">
-                Amt available: {{food.availquantity}}
+              <div style="width:100%; display:flex;font-size: 12px;padding-top: 3px;">
+               <i> Available Qty: {{food.availquantity}}</i>
               </div>
             </div>
             <div>
-              <button style="background: transparent;" (click)='deleteFoodbyFavourites(food.id)' ><ion-icon  size="large" name="star-sharp"></ion-icon></button>
+              <button style="background: transparent;" (click)='deleteFoodbyFavourites(food.id)' ><ion-icon  size="small" name="star-sharp"></ion-icon></button>
             </div>
           </div>
 
