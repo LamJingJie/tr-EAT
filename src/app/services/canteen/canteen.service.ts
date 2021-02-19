@@ -49,7 +49,7 @@ export class CanteenService {
     return this.firestore.collection('canteen').doc(id).update({ id: id, mergedName: mergedName, color: color })
   }
   //This is for the change deleted field in canteen collection
-  Update(id, deleted) {
+  Update(id, deleted:boolean) {
     this.firestore.collection('canteen').doc(id).update({ deleted: deleted })
   }
 

@@ -32,10 +32,10 @@
     <ion-card>
       <ion-item>
         <ion-label floating>Halal</ion-label>
-        <ion-select value="{{currentHalal}}" formControlName="halal">
-          <ion-select-option value="{{currentHalal}}">{{currentHalal}}</ion-select-option>
-          <ion-select-option value="false" *ngIf="currentHalal === true">false</ion-select-option>
-          <ion-select-option value="true" *ngIf="currentHalal === false">true</ion-select-option>
+        <ion-select value={{currentHalal}} formControlName="halal">
+          <ion-select-option value={{currentHalal}}>{{currentHalal}}</ion-select-option>
+          <ion-select-option value=false *ngIf="currentHalal === true">false</ion-select-option>
+          <ion-select-option value=true *ngIf="currentHalal === false">true</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-card>
@@ -43,10 +43,10 @@
     <ion-card>
       <ion-item>
         <ion-label floating>Vegetarian</ion-label>
-        <ion-select value="{{currentVeg}}" formControlName="vegetarian">
-          <ion-select-option value="{{currentVeg}}">{{currentVeg}}</ion-select-option>
-          <ion-select-option value="false" *ngIf="currentVeg === true">false</ion-select-option>
-          <ion-select-option value="true" *ngIf="currentVeg === false">true</ion-select-option>
+        <ion-select value={{currentVeg}} formControlName="vegetarian">
+          <ion-select-option value={{currentVeg}}>{{currentVeg}}</ion-select-option>
+          <ion-select-option value=false *ngIf="currentVeg === true">false</ion-select-option>
+          <ion-select-option value=true *ngIf="currentVeg === false">true</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-card>

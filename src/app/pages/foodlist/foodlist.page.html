@@ -53,7 +53,15 @@
             <!--Supposed to get by category-->
                 <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
                   <div style="display: inline-block;">
-                     <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;"><i>Noodles,Halal </i></div>
+                     <div *ngFor="let cuisine of food.value.cuisinename" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                      <i>{{cuisine}} </i>
+                    </div>
+                    <div *ngIf="food.value.halal === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                      Halal
+                    </div>
+                    <div  *ngIf="food.value.vegetarian === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                      Vegetarian
+                    </div>
                   </div>
 
                   <div style="display: inline-block;padding-right: 3px;">
@@ -100,6 +108,15 @@
           <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
               <div style="display: inline-block;">
                 <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 550;padding-left: 2px;padding-right: 40px;"><i>Available Qty: {{food1.availquantity}} </i></div>
+              </div>
+              <div *ngFor="let cuisine of food1.cuisinename" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                <i>{{cuisine}} </i>
+              </div>
+              <div *ngIf="food1.halal === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                Halal
+              </div>
+              <div  *ngIf="food1.vegetarian === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                Vegetarian
               </div>
 
               <div style="display: inline-block;padding-right: 3px;">

@@ -41,6 +41,15 @@
               <div style="font-family: 'Segoe UI';font-size: 13px;color:black;font-weight: 650;padding-bottom: 5px;padding-left: 2px;">{{food.value.foodname}}</div>
               <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food.value.foodprice | currency}} </div>
               <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food.value.canteen}} • {{food.value.stall}} </div>
+              <div *ngFor="let cuisine of food.value.cuisinename" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                <i>{{cuisine}} </i>
+              </div>
+              <div *ngIf="food.value.halal === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                Halal
+              </div>
+              <div  *ngIf="food.value.vegetarian === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+                Vegetarian
+              </div>
             </div>
             
           </div>
@@ -97,6 +106,15 @@
             <div style="font-family: 'Segoe UI';font-size: 13px;color:black;font-weight: 650;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
             <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food1.foodprice | currency}} </div>
            <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food1.canteen}} • {{food1.stall}} </div>
+           <div *ngFor="let cuisine of food1.cuisinename" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+            <i>{{cuisine}} </i>
+          </div>
+          <div *ngIf="food1.halal === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+            Halal
+          </div>
+          <div  *ngIf="food1.vegetarian === true" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
+            Vegetarian
+          </div>
           </div>
            
           

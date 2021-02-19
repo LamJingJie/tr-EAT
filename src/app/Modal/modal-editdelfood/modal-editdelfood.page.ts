@@ -23,8 +23,8 @@ image: string;
 id: string;
 foodData: any = [];
 
-currentHalal: string;
-currentVeg: string;
+currentHalal: boolean;
+currentVeg: boolean;
 
 filestring: string;
 selectedFile: any;
