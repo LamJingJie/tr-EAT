@@ -18,7 +18,7 @@
       <p>Do sent to <b>+65 <b (click)="copy('12345678')"id="clipboard">12345678</b></b> during payment.</p>
       <p>After payment, you have to wait for the admin to verify that you have paid before you can purchase again.</p>
     </div>
-    
+    <div *ngIf="paid === false">
     <div id = "intro">
     <div style="font-family: 'Segoe UI';font-size: 22px;font-weight: bold;">YOUR CART</div>
     </div>
@@ -84,7 +84,31 @@
 
   <!--Payment here-->
   <ion-button color="primary" style="padding-left:15px;padding-right: 15px; font-weight: bold;"*ngIf="totalPriceAll !== 0" [disabled]="disabled === true" (click)="proceedPayment()" expand="block">Proceed W Payment</ion-button>
+  </div> 
+  <div *ngIf="paid === true">
+    <h5>Previous Purchase Cart</h5>
+    <ion-card>
+      <ion-item *ngFor="let history of historyData" style="display:flex; padding-left:5px;padding-right: 5px;">
+       
+        <div style="flex:1">
+          <div style="font-family: 'Segoe UI';width:160px;font-size: 15px;font-weight:550;"> {{history.foodname}} x{{history.orderquantity}}</div>
+        </div>
+        <!--Price-->
+        <div>
+          <div style="font-family: 'Segoe UI';font-size: 15px;font-weight:550; float:right;"> {{history.totalcost | currency}} </div>
+        </div>
+      </ion-item>
+      <ion-item>
+        <div style="font-family: 'Segoe UI';font-size: 18px;font-weight:bold;display: inline;padding-top: 20px;padding-bottom: 20px;margin-left: 85px;">
+          Total <div style="font-size: 20px;font-weight: bold;padding-left: 90px;display: inline;"> {{totalcostall | currency}} </div>
+        </div>
+      </ion-item>
+    </ion-card>
+
+    <!--Payment confirmation-->
+    <!--<ion-button *ngIf="paid === true" [disabled]="disabled === true" (click)="paymentMade()">Confirmation of Payment Made</ion-button>-->
   </div>
+</div>
   
 
 

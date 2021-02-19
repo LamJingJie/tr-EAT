@@ -587,7 +587,7 @@ export class FoodlistPage implements OnInit {
       //For students
       this.foodRedemSub = this.foodService.getRedeemableFoodNFilter(this.vendor, filter).subscribe((res => {
         this.redeemfoodArray = res;
-        console.log(this.redeemfoodArray);
+        //console.log(this.redeemfoodArray);
 
         this.favouriteSub2 =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
           this.favs = data.map((x) => x.foodid)
