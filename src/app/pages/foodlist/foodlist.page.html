@@ -50,8 +50,8 @@
                  <div style="font-size: 14px;font-weight: 550;"><i>${{food.value.foodprice}}</i></div>{{food.value.foodname}}</div>
             </div>
            
-            <!--Supposed to get by category-->
-                <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
+            
+                <div style="width:68%; height:max-content;display:flex; padding-top:5px;padding-right: 10px;padding-bottom: 20px;">
                   <div style="display: inline-block;">
                      <div *ngFor="let cuisine of food.value.cuisinename" style="font-family: 'Segoe UI';font-size: 13px;font-weight: 400;padding-left: 2px;padding-right: 40px;">
                       <i>{{cuisine}} </i>
@@ -105,7 +105,7 @@
             <div style="font-family: 'Segoe UI';font-size: 18px;font-weight: 650;padding-top: 25px;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
            </div>
            
-          <div style="width:68%; height:max-content;float:right;padding-right: 10px;padding-bottom: 20px;">
+          <div style="width:68%; height:max-content;display:flex; padding-top:5px;padding-right: 10px;padding-bottom: 20px;">
               <div style="display: inline-block;">
                 <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 550;padding-left: 2px;padding-right: 40px;"><i>Available Qty: {{food1.availquantity}} </i></div>
               </div>
