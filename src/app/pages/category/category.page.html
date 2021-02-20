@@ -31,7 +31,7 @@
 
   <!--Food data shown to sponsors and vendor and admin-->
   <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'" >
-    <ion-list style="padding-bottom: 100px;">
+    <ion-list style="padding-bottom: 100px; background: transparent;">
     <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food of foodlistArray | keyvalue;">
 
       <div style="position: absolute; right:0;padding: 5px;">
@@ -46,6 +46,7 @@
         <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
           <div style="font-family: 'Segoe UI';font-size: 16px;font-weight: 600;color: black;padding-top: 30px;padding-left: 2px;">
              <div style="font-size: 13px;font-weight: 550;"><i>${{food.value.foodprice}}</i></div>{{food.value.foodname}}</div>
+             <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food.value.canteen}} • {{food.value.stall}} </div>
         </div>
        
         
@@ -85,7 +86,7 @@
 
   <!--Food data shown to students-->
   <div *ngIf="userRole === 'student' ">
-    <ion-list style="padding-bottom: 100px;">
+    <ion-list style="padding-bottom: 100px; background: transparent;">
     <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food1 of redeemfoodArray ">
       
       <div style="position: absolute; right:0; padding: 5px;">
@@ -101,6 +102,7 @@
           <!-- <div style="font-family: 'Segoe UI';font-size: 13px;font-weight: 650;padding: 3px;"><i>{{food1.foodprice | currency}} </i></div>-->
          <div style="width:68%; height:max-content;display: inline-block;padding-right: 10px;">
           <div style="font-family: 'Segoe UI';font-size: 16px;font-weight: 600;color: black;padding-top: 30px;">{{food1.foodname}}</div>
+          <div style="font-weight: 500; font-size: 12px;padding-bottom: 5px;padding-left: 2px;">{{food1.canteen}} • {{food1.stall}} </div>
          </div>
          
         <div style="width:68%; height:max-content; display:flex;  padding-top:5px; padding-right: 10px;padding-bottom: 20px;">
@@ -124,7 +126,7 @@
           </div>
           <div>
             <div style="display: inline-block;padding-right: 3px;">
-              <button style="color:#FDDEA3; font-size: 15px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMade === false"(click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)">REDEEM</button> 
+              <button style="color:#FDDEA3; font-size: 15px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMade === false"(click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid, food1.canteenid)">REDEEM</button> 
           </div> 
         </div>          
         </div>

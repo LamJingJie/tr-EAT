@@ -26,7 +26,7 @@
 
   <!--Food data shown to sponsors and vendor and admin-->
   <div *ngIf="userRole === 'sponsor' || userRole === 'vendor' || userRole === 'admin'">
-    <ion-list style="padding-bottom: 100px;">
+    <ion-list style="padding-bottom: 100px; background: transparent;">
     <ion-card  class='food_container' *ngFor="let food of foodlist | keyvalue;">
       <ion-item style="margin-top: 5px;"
         *ngIf="food.value.userlisted === true && food.value.userdeleted === false && food.value.canteendeleted === false">
@@ -93,7 +93,7 @@
 
   <!--Food data shown to students-->
   <div *ngIf="userRole === 'student'">
-    <ion-list style="padding-bottom: 100px;">
+    <ion-list style="padding-bottom: 100px; background: transparent;">
     <ion-card class='food_container' *ngFor="let food1 of foodlist">
       <ion-item *ngIf="food1.userlisted === true && food1.userdeleted === false && food1.canteendeleted === false">
        

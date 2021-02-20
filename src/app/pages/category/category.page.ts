@@ -53,6 +53,12 @@ export class CategoryPage implements OnInit {
   favFood1Sub: Subscription;
   favFood2Sub: Subscription;
 
+  getCanteenSubscription: Subscription;
+  getCanteenSubscription2: Subscription;
+
+  canteennameSubscription: Subscription;
+  canteennameSubscription2: Subscription;
+
   vendor: any;
   stall: any;
   canteen: any;
@@ -136,7 +142,7 @@ export class CategoryPage implements OnInit {
 
   async ngOnInit() {
     //changes here 
-    this.currentAccount = await this.storage.get('email');
+    this.userEmail = await this.storage.get('email');
     this.userRole = await this.storage.get('role');
     this.chosenFilter2 = 'all'
     //console.log("ngOnInit");
@@ -286,6 +292,21 @@ export class CategoryPage implements OnInit {
     if (this.getPaid) {
       this.getPaid.unsubscribe();
     }
+    //canteen name, id and stall name for sponsor, vendors, admin
+    if(this.canteennameSubscription){
+      this.canteennameSubscription.unsubscribe();
+    }
+    if(this.getCanteenSubscription){
+      this.getCanteenSubscription.unsubscribe();
+    }
+
+    //canteen name, id and stall name for students
+    if(this.canteennameSubscription2){
+      this.canteennameSubscription2.unsubscribe();
+    }
+    if(this.getCanteenSubscription2){
+      this.getCanteenSubscription2.unsubscribe();
+    }
 
   }
 
@@ -366,7 +387,7 @@ export class CategoryPage implements OnInit {
   //These codes is for getting and retrieving based on favourites
   async addFoodbyFavourites(foodid) {
     (await this.firestore.collection('favourites')
-    .doc(this.currentAccount)).collection('data')
+    .doc(this.userEmail)).collection('data')
     .doc(foodid).set({ foodid: foodid })
     .then((res) => { console.log(res);
  
@@ -382,7 +403,7 @@ export class CategoryPage implements OnInit {
 
   async deleteFoodbyFavourites(foodid) {
     //console.log(foodid);
-    (await this.firestore.collection('favourites').doc(this.currentAccount))
+    (await this.firestore.collection('favourites').doc(this.userEmail))
       .collection('data').doc(foodid).delete().then((res) => {
         this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
          console.log(res); 
@@ -396,7 +417,7 @@ export class CategoryPage implements OnInit {
   //Changes End
 
   //Student
-  async RedeemFood(id, foodname, foodprice: number, vendorid) {
+  async RedeemFood(id, foodname, foodprice: number, vendorid, canteenid) {
 
     var food_name = foodname;
 
@@ -432,15 +453,21 @@ export class CategoryPage implements OnInit {
                       var foodprice: number = res['foodprice'];
                       var foodname = res['foodname'];
                       var image = res['image'];
+                      console.log("foodprice: " + foodprice);
 
                       //console.log(availquantity);
 
                       if (availquantity > 0) {
                         var todayDate: Date = new Date();
                         var stamp = 1;
-
+                        //console.log(canteenid);
+                        //console.log(id);
+                        //console.log(vendorid);
+                        //console.log(this.userEmail);
+                        //console.log(foodname);
+                        
                         //Create new order
-                        this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
+                        this.orderService.addOrders(canteenid, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
                           .then((async res => {
 
                             popularity = popularity + 1;
@@ -466,9 +493,6 @@ export class CategoryPage implements OnInit {
 
                             this.loading.dismiss(null, null, 'redeem');
 
-                            //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
-                            //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
-                            //false to true.
                             this.RedeemshowSuccess(food_name);
 
                           })).catch((err => {
@@ -552,15 +576,28 @@ export class CategoryPage implements OnInit {
         this.foodlistArray = res;
 
         //console.log(this.foodlistArray);
-        res.forEach((res => {
+        res.forEach((resData, index) => {
           //console.log(res.id);
-          this.foodM.set(res.id, this.count); //Store each food with count = 1
+          this.foodM.set(resData.id, this.count); //Store each food with count = 1
 
-        }))
+          //retrieve cateen id
+          this.getCanteenSubscription =  this.userService.getOne(resData['userid']).pipe(first()).subscribe((userRes=>{
+            console.log(userRes);
+            this.foodlistArray[index].canteenid = userRes['canteenID'];
+            this.foodlistArray[index].stall = userRes['stallname'];
+            //get canteen name
+            this.canteennameSubscription = this.canteenService.getCanteenbyid(userRes['canteenID']).pipe(first()).subscribe((canteenRes=>{
+              this.foodlistArray[index].canteen = canteenRes['canteenname']
+           
+            }))
+        
+          }))
+
+        })
         this.getKeys();
 
         //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
-    this.favFood1Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+    this.favFood1Sub =  this.foodService.getFoodbyfavourites(this.userEmail).subscribe((data) => {
       this.favs = data.map((x) => x.foodid)
       //console.log(this.favs)
 
@@ -588,6 +625,8 @@ export class CategoryPage implements OnInit {
       }))
     }
 
+
+
     //For students
     if (this.userRole === 'student') {
       //For students
@@ -597,11 +636,27 @@ export class CategoryPage implements OnInit {
         //console.log(res);
         
         this.redeemfoodArray = res;
+        res.forEach((resData, index) => {
+          //console.log(res.id);
+
+          //retrieve cateen id
+          this.getCanteenSubscription2 =  this.userService.getOne(resData['userid']).pipe(first()).subscribe((userRes=>{
+            //console.log(userRes);
+            this.redeemfoodArray[index].canteenid = userRes['canteenID'];
+            this.redeemfoodArray[index].stall = userRes['stallname'];
+            //get canteen name
+            this.canteennameSubscription2 = this.canteenService.getCanteenbyid(userRes['canteenID']).pipe(first()).subscribe((canteenRes=>{
+              this.redeemfoodArray[index].canteen = canteenRes['canteenname']
+              
+            }))
+            
+          }))
+
+        })
        // console.log(this.redeemfoodArray);
-        this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+        this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.userEmail).subscribe((data) => {
           this.favs = data.map((x) => x.foodid)
-          //console.log(this.favs)
-         
+          //console.log(this.favs)    
     
             for (var i = 0; i < this.redeemfoodArray.length; i++) {
              
