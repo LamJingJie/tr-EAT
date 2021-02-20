@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -75,7 +75,8 @@ export class Tab2Page {
     private modalCtrl: ModalController,private pickerCtrl: PickerController, private activatedRoute: ActivatedRoute, 
     private foodService: FoodService,private popoverCtrl: PopoverController, private storage: Storage, 
     private cartService: CartService, private historyService: HistoryService, private canteenService: CanteenService,
-    private clipboard: Clipboard, private loading: LoadingController, private firestore: AngularFirestore,) {
+    private clipboard: Clipboard, private loading: LoadingController, private firestore: AngularFirestore,
+    private zone: NgZone) {
       this.paymentMethod = 'OCBC';
   
     }
@@ -405,23 +406,28 @@ export class Tab2Page {
   calculate_total_price(){
       this.totalPriceAll = 0;
       
-     // console.log("cart")
-      this.cartArray.forEach((resEach,index)=>{
-       // console.log("loop")
-        //Calculate total food price
-        this.foodSub = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
-          
-          this.cartArray[index].price = resFood['foodprice'];
-          this.cartArray[index].totalfoodprice = resFood['foodprice'] * resEach['orderquantity'];
-          this.cartArray[index].foodname = resFood['foodname'];
-          this.totalPriceAll += this.cartArray[index].totalfoodprice;
-          //console.log(this.totalPriceAll);
-  
-          
-        }))
-        //alert(this.cartArray[index].price + " : " + this.cartArray[index].totalfoodprice + " : " + this.cartArray[index].foodname)
-        //console.log(this.cartArray);
-      })
+         // console.log("cart")
+        this.cartArray.forEach((resEach,index)=>{
+        // console.log("loop")
+         //Calculate total food price
+        
+          this.foodSub = this.foodService.getFoodById(resEach.id).pipe(first()).subscribe((resFood=>{
+           
+            //this.cartArray[index].price = resFood['foodprice'];
+            
+            this.cartArray[index].totalfoodprice = resFood['foodprice'] * resEach['orderquantity'];
+            //this.cartArray[index].foodname = resFood['foodname'];
+            this.totalPriceAll += this.cartArray[index].totalfoodprice;
+            //console.log(this.totalPriceAll);
+            
+          }))
+        
+        
+         //alert(this.cartArray[index].price + " : " + this.cartArray[index].totalfoodprice + " : " + this.cartArray[index].foodname)
+         //console.log(this.cartArray);
+       })
+      
+    
       this.disabled2 = false;
 
      // console.log(this.cartArray);

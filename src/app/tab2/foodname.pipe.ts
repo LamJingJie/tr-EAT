@@ -17,6 +17,7 @@ export class FoodnamePipe implements PipeTransform {
     return new Promise((resolve) =>{
       this.foodSubscription = this.foodService.getFoodById(foodid).subscribe((res=>{
         //console.log(res['foodname']);
+        //alert(res['foodname']);
         resolve(res['foodname']);
 
         this.foodSubscription.unsubscribe();

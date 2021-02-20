@@ -53,12 +53,13 @@
 
       <!--Food name-->
       <div>
-        <div style="font-family: 'Segoe UI';width:160px;font-size: 15px;font-weight:550;"> {{cart.foodname}}</div>
+        <div style="font-family: 'Segoe UI';width:160px;font-size: 15px;font-weight:550;"> {{cart.id | foodname | async}}</div>
       </div>
+      
 
       <!--Price-->
       <div>
-        <div style="font-family: 'Segoe UI';font-size: 15px;font-weight:550;"> {{cart.totalfoodprice | currency}} </div>
+        <div style="font-family: 'Segoe UI';font-size: 15px;font-weight:550;"> {{cart.id | foodprice: cart.orderquantity | async | currency}} </div>
       </div>
      
     </ion-item>
