@@ -13,7 +13,7 @@
 
 
   <div id="intro">
-    <div class="font" style="font-size: 20px;">Find-by Category</div>
+    <div class="font" style="font-size: 20px;">"{{chosenFilter | uppercase}}" Category</div>
   </div>
   <br>
   <br>
@@ -80,7 +80,7 @@
      
 </ion-card>
 </ion-list>
-<div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</div>
+<div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" & "{{chosenFilter2}}" Food Retrieved</div>
 </div>
 
   <!--Food data shown to students-->
@@ -132,7 +132,7 @@
     </ion-card>    
   </ion-list>
     <!--Shown for students-->
-    <div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" Food Retrieved</div>
+    <div style="padding-left: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" & "{{chosenFilter2}}" Food Retrieved</div>
   
   </div>
  
@@ -155,9 +155,8 @@
     
 
  <!---Cart to be shown at the bottom of the screen, only for sponsors to see--->
-  <ion-button id="cart_bottom" (click)="cartPage()" *ngIf="userRole === 'sponsor'">
-    <ion-icon name="cart"></ion-icon>Cart Total: {{totalPriceAll | currency: 'SGD'}} <ion-badge color="danger">Amount
-      inside {{countCart}}</ion-badge>
+  <ion-button id="cart_bottom" color="tertiary" style="padding-left:5px; padding-right:6px;"expand="block"  (click)="cartPage()" *ngIf="userRole === 'sponsor'">
+    <ion-icon name="cart"></ion-icon>Cart Total:<b> {{totalPriceAll | currency: 'SGD'}}</b> <ion-badge color="danger">{{countCart}}</ion-badge>
   </ion-button>
 
 </ion-content>

@@ -58,12 +58,23 @@ export class FoodService {
 
   //CHANGES MADE
   //To filter food based on cuisine types
-  getFoodBasedOnCuisineNFilter(cuisinename) {
+  getFoodBasedOnCuisineNFilter(cuisinename, filter) {
     if (cuisinename === 'all') {
-      return this.firestore.collection('food').valueChanges({ idField: 'id' });
-    } else {
-      return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename)).valueChanges({ idField: 'id' });
-    }
+      //Check if user chose to show all vegetarian and halal
+     if(filter === 'all'){
+       return this.firestore.collection('food').valueChanges({ idField: 'id' });
+     }else{
+       return this.firestore.collection('food', ref => ref.where(filter, '==', true)).valueChanges({ idField: 'id' });
+     }
+   } else {
+     //Check if user chose to show all vegetarian and halal
+     if(filter === 'all'){
+       return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename)).valueChanges({ idField: 'id' });
+     }else{
+       return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename).where(filter, '==', true)).valueChanges({ idField: 'id' });
+     }
+    
+   }
   }
 
   //This function adds food in favourite collection
@@ -96,7 +107,7 @@ export class FoodService {
 
   //Get food that has availquantity in it to be shown for students to redeem
   getRedeemableFoodNFilter(vendor, filter) {
-    console.log(filter)
+    //console.log(filter)
     if (filter === 'all') {
      
       return this.firestore.collection('food', ref => ref.where('userid', '==', vendor).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
@@ -105,13 +116,25 @@ export class FoodService {
     }
   }
 
-  getRedeemableFoodNFilter2(filter) {
-    console.log(filter)
-    if (filter === 'all') {
-     
-      return this.firestore.collection('food', ref => ref.where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+  //for filtering by cuisine
+  getRedeemableFoodNFilter2(cuisinename, filter) {
+    //console.log("Redeem" + filter)
+    //console.log("cuisinename" + cuisinename)
+    if (cuisinename === 'all') {
+       //Check if user chose to show all vegetarian and halal
+      if(filter === 'all'){
+        return this.firestore.collection('food', ref => ref.where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+      }else{
+        return this.firestore.collection('food', ref => ref.where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+      }
     } else {
-      return this.firestore.collection('food', ref => ref.where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+      //Check if user chose to show all vegetarian and halal
+      if(filter === 'all'){
+        return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+      }else{
+        return this.firestore.collection('food', ref => ref.where('cuisinename', "array-contains", cuisinename).where(filter, '==', true).where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
+      }
+     
     }
   }
 

@@ -627,7 +627,7 @@ export class FoodlistPage implements OnInit {
     this.valueArray = values;
   }
 
-  //Filter button
+  //Filter buttons
   async filter(ev) {
     const popover = await this.popoverCtrl.create({
       component: FoodfilterComponent,

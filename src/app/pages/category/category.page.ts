@@ -24,6 +24,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 
 //Component and Modal Imports
 import { CategoryfilterComponent } from 'src/app/component/categoryfilter/categoryfilter.component';
+import { FoodfilterComponent } from 'src/app/component/foodfilter/foodfilter/foodfilter.component'
 import { ModalAboutusPage } from 'src/app/Modal/modal-aboutus/modal-aboutus.page';
 
 @Component({
@@ -62,6 +63,7 @@ export class CategoryPage implements OnInit {
   cartArray: any = [];
 
   chosenFilter: any;
+  chosenFilter2: any; //For halal or vegetarian
 
   userRole: any;
   userEmail: any;
@@ -127,7 +129,7 @@ export class CategoryPage implements OnInit {
     private canteenService: CanteenService) 
     
     {
-    this.chosenFilter = 'all'
+    
     this.count = 1;
     this.currentAmt = 1;
   }
@@ -135,8 +137,8 @@ export class CategoryPage implements OnInit {
   async ngOnInit() {
     //changes here 
     this.currentAccount = await this.storage.get('email');
-    this.currentRole = await this.storage.get('role');
-
+    this.userRole = await this.storage.get('role');
+    this.chosenFilter2 = 'all'
     //console.log("ngOnInit");
     this.getfoodSubscription = this.activatedRoute.queryParams.subscribe(params => {
 
@@ -144,8 +146,8 @@ export class CategoryPage implements OnInit {
       this.vendor = params.vendor;
       this.canteen = params.canteenid;
       this.chosenFilter = params.cuisinename;
-      this.filterFood(this.chosenFilter)
-      console.log(this.chosenFilter)
+      this.filterFood(this.chosenFilter, this.chosenFilter2)
+      //console.log("Chosen filter: "  + this.chosenFilter)
 
       //console.log(this.stall);
       //console.log(this.vendor);
@@ -178,7 +180,7 @@ export class CategoryPage implements OnInit {
     this.calculateTotalCost();
 
     this.userRole = await this.storage.get('role');
-    this.filterFood(this.chosenFilter);
+ 
 
     if (this.userRole === 'student') {
       this.getStudentData();
@@ -325,7 +327,7 @@ export class CategoryPage implements OnInit {
         if (!doc.exists) {
           this.showError("Food does not exists");
           this.loading.dismiss(null, null, 'cart');
-          this.filterFood(this.chosenFilter); //refresh
+          this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
         } else {
           //Get vendor 'listed' boolean field
           this.userSub2 = this.userService.getOne(vendorid).subscribe((userres => {
@@ -335,12 +337,12 @@ export class CategoryPage implements OnInit {
               this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res => {
                 this.CartshowSuccess(foodname123);
                 this.calculateTotalCost();
-                this.filterFood(this.chosenFilter);
+                this.filterFood(this.chosenFilter, this.chosenFilter2);
                 this.loading.dismiss(null, null, 'cart');
               })).catch((err => {
                 this.showError(err);
                 this.loading.dismiss(null, null, 'cart');
-                this.filterFood(this.chosenFilter);//Refresh page
+                this.filterFood(this.chosenFilter, this.chosenFilter2);//Refresh page
               }))
 
             } else {
@@ -368,7 +370,7 @@ export class CategoryPage implements OnInit {
     .doc(foodid).set({ foodid: foodid })
     .then((res) => { console.log(res);
  
-        this.filterFood(this.chosenFilter);//refresh
+        this.filterFood(this.chosenFilter, this.chosenFilter2);//refresh
      })
     .catch((err) => { console.log(err) });
   }
@@ -382,7 +384,7 @@ export class CategoryPage implements OnInit {
     //console.log(foodid);
     (await this.firestore.collection('favourites').doc(this.currentAccount))
       .collection('data').doc(foodid).delete().then((res) => {
-        this.filterFood(this.chosenFilter); //refresh
+        this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
          console.log(res); 
        }).catch((err) => { console.log(err) });
   }
@@ -413,7 +415,7 @@ export class CategoryPage implements OnInit {
             foodDoc.get().toPromise().then(doc => {
               if (!doc.exists) {
                 this.showError("Food does not exists");
-                this.filterFood(this.chosenFilter); //refresh
+                this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
                 this.loading.dismiss(null, null, 'redeem');
               } else {
 
@@ -475,7 +477,7 @@ export class CategoryPage implements OnInit {
                           }))
                       } else {
                         this.showError("Food no longer available")
-                        this.filterFood(this.chosenFilter); //refresh
+                        this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
                         this.loading.dismiss(null, null, 'redeem');
                       }
 
@@ -535,16 +537,17 @@ export class CategoryPage implements OnInit {
   }
 
   //Get food based on which filter user chose
-  filterFood(filter) {
+  filterFood(filter, filter2) {
 
-    console.log("inside", filter);
+    //console.log("inside", filter);
+    //console.log("inside2", filter2);
     //console.log(this.userRole);
 
     //For sponsors and vendor
     if (this.userRole === 'sponsor' || this.userRole === 'vendor' || this.userRole === 'admin') {
       this.foodM.clear(); //reset hashmap
-
-      this.filterfoodSubscription = this.foodService.getFoodBasedOnCuisineNFilter(filter).subscribe((res => {
+      //console.log('1')
+      this.filterfoodSubscription = this.foodService.getFoodBasedOnCuisineNFilter(filter, filter2).subscribe((res => {
 
         this.foodlistArray = res;
 
@@ -589,8 +592,8 @@ export class CategoryPage implements OnInit {
     if (this.userRole === 'student') {
       //For students
      // console.log(filter);
-      
-      this.foodRedemSub = this.foodService.getRedeemableFoodNFilter2(filter).subscribe((res => {
+     //console.log('students')
+      this.foodRedemSub = this.foodService.getRedeemableFoodNFilter2(filter,filter2).subscribe((res => {
         //console.log(res);
         
         this.redeemfoodArray = res;
@@ -638,10 +641,10 @@ export class CategoryPage implements OnInit {
   //Filter button
   async filter(ev) {
     const popover = await this.popoverCtrl.create({
-      component: CategoryfilterComponent,
+      component: FoodfilterComponent,
       event: ev,
       translucent: true,
-      componentProps: { chosenFilter: this.chosenFilter },
+      componentProps: { chosenFilter: this.chosenFilter2 },
       cssClass: 'filter-popover'
 
     });
@@ -650,9 +653,9 @@ export class CategoryPage implements OnInit {
     popover.onDidDismiss().then((res => {
 
       //console.log(res.data.title);
-      this.chosenFilter = res.data.title;
-      console.log(this.chosenFilter)
-      this.filterFood(this.chosenFilter);
+      this.chosenFilter2 = res.data.title;
+      console.log(this.chosenFilter2)
+      this.filterFood(this.chosenFilter, this.chosenFilter2);
 
     })).catch((err => {
       //If user did not select anything and clicked on the outside
