@@ -68,7 +68,7 @@ export class ModalVerifychckoutPage implements OnInit {
 
       //Get data so that if there's any changes to the db, the user will see it here as the cart page doesn't automatically update
       this.foodSub = this.foodService.getFoodById(res['id']).pipe(first()).subscribe((foodres=>{
-       
+        this.cart[index].price = foodres['foodprice'];
         this.cart[index].foodname = foodres['foodname']; //store foodname
         this.cart[index].individualfoodPrice = foodres['foodprice'] * res['orderquantity']; //total price for individual food
         this.cart[index].image = foodres['image'];
