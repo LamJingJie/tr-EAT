@@ -263,6 +263,9 @@ export class AuthenticationService {
             //Reason: when user logs out, they will sign out as well and if 2 'navigateRoot' is runned,
             //it will cause the page clicked afterwards, which in this case will be the signup page.
             //it will result in the device back btn in the signup page to stop working.
+            await this.storage.remove('role');
+            await this.storage.remove('email');
+            await this.storage.remove('adminusage');
             this.router.navigateByUrl("login");
             //await this.SignOut();
             console.log("Logged Out");  
@@ -373,10 +376,10 @@ export class AuthenticationService {
           (await this.ngFireAuth.currentUser).delete();
 
           //Delete account from firebase cloud database
-          this.userService.deleteUser(email);
+          await this.userService.deleteUser(email);
 
           //Delete favourite
-          this.foodService.deleteAllFavFromUser(email).catch((error=>{
+          await this.foodService.deleteAllFavFromUser(email).catch((error=>{
             console.log(error);
           }))
          

@@ -76,18 +76,23 @@ export class ModalAddfoodPage implements OnInit {
 
   //Upload Food Data into cloud firebase and storage
   async addFood(){
-    await this.presentAddFoodLoading();
-   // console.log(this.currentAcc)
-   this.foodService.addFood(this.addfood_form.value['foodname'], this.addfood_form.value['foodprice'], this.currentHalal,
-    this.currentAcc, this.currentVeg,this.selectedFile, this.filename, this.currentCuisine).then(res=>{
-      this.loading.dismiss(null,null,'addFoodAdmin');
-      this.showSuccess();
-      this.dismiss();
-     
-    }).catch((error)=>{
-      this.loading.dismiss(null,null,'addFoodAdmin');
-      this.showError(error);
-    })
+    if(this.currentCuisine === undefined){
+      this.showError("Please select a cuisine!")
+    }else{
+      await this.presentAddFoodLoading();
+      // console.log(this.currentAcc)
+      this.foodService.addFood(this.addfood_form.value['foodname'], this.addfood_form.value['foodprice'], this.currentHalal,
+       this.currentAcc, this.currentVeg,this.selectedFile, this.filename, this.currentCuisine).then(res=>{
+         this.loading.dismiss(null,null,'addFoodAdmin');
+         this.showSuccess();
+         this.dismiss();
+        
+       }).catch((error)=>{
+         this.loading.dismiss(null,null,'addFoodAdmin');
+         this.showError(error);
+       })
+    }
+   
   }
 
 
