@@ -142,8 +142,10 @@ export class FoodService {
     return this.firestore.collection('food', ref => ref.where('availquantity', '>', 0)).valueChanges({ idField: 'id' });
   }
 
-  async addFood(foodname, foodprice: number, halal: boolean, userid, vegetarian: boolean, image, filename, cuisinename) {
+  async addFood(foodname, foodprice: number, halal, userid, vegetarian, image, filename, cuisinename) {
     //console.log(image);
+    var boolHalal = JSON.parse(halal)
+    var boolVeg = JSON.parse(vegetarian)
     var storageURL = 'Food Images/';
     var mergedName = filename + userid + foodname + foodprice;
 
@@ -153,8 +155,8 @@ export class FoodService {
     //console.log(downloadURL); 
 
     return this.firestore.collection('food').add({
-      availquantity: 0, foodname: foodname, foodprice: foodprice, halal: halal,
-      userid: userid, vegetarian: vegetarian, image: downloadURL, mergedName: mergedName, popularity: 0, cuisinename: cuisinename
+      availquantity: 0, foodname: foodname, foodprice: foodprice, halal: boolHalal,
+      userid: userid, vegetarian: boolVeg, image: downloadURL, mergedName: mergedName, popularity: 0, cuisinename: cuisinename
     });
   }
 
