@@ -84,7 +84,7 @@
         padding: 3px;
         width: 80px;
         height: 80px;
-        background-color: #fddea3;
+        background-color: #474242;
         border: .3px solid  #e7c88e;
         border-radius: 50%;
         color: black; //txtclr//
@@ -93,6 +93,20 @@
         font-weight: bold;
         font-size: 10px;
         box-shadow: 1px 5px 6px rgb(170, 169, 169);
+     }
+     .btnrect{
+        padding: 3px;
+        width: 326px;
+        height: auto;
+        background-color: #55559F;
+        border: .3px solid  #55559F;
+        border-radius: 10px;
+        color: white; //txtclr//
+        text-align: center;
+        font-family: 'Segoe UI';
+        font-weight: bold;
+        font-size: 10px;
+        
      }
 
      .btnroundedStamp{

@@ -57,8 +57,9 @@
 }
 #foodname{
     font-family: 'Segoe UI';
-    font-weight: bolder;
-    font-size: 35px;    
+    font-weight: 650;
+    font-size: 28px;  
+    padding: 10px;  
     text-align: center;
     color: #55559F;
 }
@@ -68,6 +69,7 @@
     font-size: 20px;    
     text-align: center;   
     color: black;
+    padding: 10px;
 }
 
 #clipboard:active{

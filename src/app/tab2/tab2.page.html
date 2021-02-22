@@ -119,13 +119,13 @@
     <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="receiptData.orderid === ''"><i>[Error Msg]Collection verification page: No Food has been redeemed</i></div>
    
 
-    <div *ngIf="receiptData.orderid !==''">
+    <div style="padding-left: 8px;padding-right: 8px;" *ngIf="receiptData.orderid !==''">
  
       <div id="Headertxt" style="padding:10px;padding-bottom: 5px;">REDEEMPTION SUCCESSFUL!</div>
       <ion-card style="background-color: #FFE7E7;">
         <div style="padding: 20px;"></div>
        <div class="headercnt">
-         <div class="rdmlabel">Redemption Number</div><i style="color: #55559F;"> #{{receiptData.orderid}}</i></div>
+         <div class="rdmlabel">Redemption Number</div><i style="color: #55559F;font-size: 18px;font-weight: 550;"> #{{receiptData.orderid}}</i></div>
         
           <br>
           <br>

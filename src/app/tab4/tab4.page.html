@@ -25,25 +25,9 @@
 
   <div class="wrapbtnrectangle">
     <div id="btns">
-      <div class="btnprop" style="display:relative; position: relative; right: 3%;">
+      <div class="btnrect"  *ngIf="currentRole === 'student'">
         <div style="text-align: center;">
-        <img width="50%" style="padding-top: 3px;" src="./assets/ProfileImg.png"/>
-        <p style="margin:auto; width: 95%;">UPDATE USER INFO</p>
-        </div>
-      </div>
-      
-      <div class="btnprop" style="display:block;">
-        <div style="text-align: center;">
-        <img width="50%" style="padding-top: 3px;" src="./assets/FavStar.png"/>
-        <p style="margin:auto; width: 95%;">Favourites</p>
-        </div>
-        
-      </div>
-
-      <div class="btnprop" style="display:relative; position:relative; left:3%;"  *ngIf="currentRole === 'student'">
-        <div style="text-align: center;">
-        <div style="text-align: center;font-weight: bolder;font-family: 'Segoe UI'; font-size: 30px;color: #55559F;"> {{stamps}} </div>
-        <p style="margin:auto; width: 95%;">Redemption Left</p>
+        <div style="font-weight: 600;font-family: 'Segoe UI'; font-size: 30px;color: #e7c88e;"> {{stamps}} <div style="font-weight: 550;font-size: 20px;color: white;">Redemption Left </div></div>
         </div>
       </div>
       

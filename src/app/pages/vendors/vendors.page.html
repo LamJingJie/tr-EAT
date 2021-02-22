@@ -24,12 +24,13 @@
     <img class="coverimg" src= {{vendor.stallimage}} alt='image'/>
     
       <ion-card-title id="vendorname">
-        {{vendor.stallname}}  •   {{vendor.canteenname}}
+        {{vendor.stallname}} 
+        <div id="stallde">
+          {{vendor.canteenname}}
+       </div> 
         </ion-card-title>
-        <!--<ion-card-subtitle id="stallde">
-          Stall Description
-        </ion-card-subtitle>
-    </ion-card-header>
+        
+    <!--</ion-card-header>
   </ion-card>
 
   <div *ngIf="vendorArray.length === 0">No stall retrieved</div>
