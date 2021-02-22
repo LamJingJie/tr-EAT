@@ -8,9 +8,19 @@
   <img id="RICE" src="./assets/RICE.png"/>
 
    <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
-     <h6 style="position: absolute; top:37%; width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf='signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>
-       "Password" & "Confirm Password" does not match!
-     </h6>
+      <!--Error messages-->
+     <div>
+      <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf="email.invalid && (email.dirty || email.touched)">
+        Email is invalid. Must be in all lower case
+      </h6>
+      <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;"  *ngIf="password.invalid && (password.dirty || password.touched)">
+        Password must have a minimum of 7 characters.
+      </h6>
+      <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf='signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>
+        "Password" & "Confirm Password" does not match!
+      </h6>
+     </div>
+     
       <ion-card>
         <ion-item>
           <ion-input  type="email" formControlName="email" placeholder="Enter your email"></ion-input>
@@ -40,6 +50,9 @@
       
       <div id="signupbtn">
         <ion-button fill="clear" class="buttons" type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
+      </div>
+      <div id="signupbtn">
+        <ion-button fill="clear" class="buttons" (click)="bckLogin()">Login</ion-button>
       </div>
     </form>
 

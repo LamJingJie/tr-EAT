@@ -35,7 +35,7 @@ export class FoodService {
   }
 
   getAllFood() {
-    return this.firestore.collection('food').valueChanges({ idField: 'id' });
+    return this.firestore.collection('food', ref=> ref.orderBy("foodname", 'asc')).valueChanges({ idField: 'id' });
   }
 
 
