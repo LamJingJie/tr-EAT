@@ -68,7 +68,7 @@
         </div>
 
        
-        <div style="position: absolute; right:0; top:0; padding: 5px; ">
+        <div style="position: absolute; right:0; top:0; padding: 10px; ">
           <button style="background: transparent;" *ngIf="!food.value.favourites " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
           <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon  size="small" name="star-sharp"></ion-icon></button>
   
