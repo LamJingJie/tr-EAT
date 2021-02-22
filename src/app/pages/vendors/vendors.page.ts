@@ -45,6 +45,10 @@ export class VendorsPage implements OnInit {
 
   ngOnInit() {
 
+    
+  }
+
+  ionViewWillEnter(){
     this.canteenSubscription = this.activatedRoute.queryParams.subscribe(params =>{
       this.canteen_chosen = params.canteenid;
       //Get canteen name
@@ -89,7 +93,7 @@ export class VendorsPage implements OnInit {
         }))
       })
       
-      console.log(this.vendorArray);
+      //console.log(this.vendorArray);
     }))
   }
 
@@ -101,6 +105,11 @@ export class VendorsPage implements OnInit {
   }
 
   ngOnDestroy(){
+   
+  }
+
+  ionViewWillLeave(){
+    console.log("Leave")
     if(this.canteenSubscription){
       this.canteenSubscription.unsubscribe();
     }

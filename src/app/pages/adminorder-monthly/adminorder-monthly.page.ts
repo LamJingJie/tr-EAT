@@ -95,6 +95,8 @@ export class AdminorderMonthlyPage implements OnInit {
     this.vendorSubscription = this.userService.getVendor().subscribe((res=>{
       
       this.vendorArray = res;
+      //console.log("VendorArray: " + this.vendorArray)
+      //console.log("VendorArray 123: " + res)
       
       this.getOrders(this.today, this.tmr, this.vendorArray).then((res=>{
         this.onload = false;
@@ -167,7 +169,7 @@ export class AdminorderMonthlyPage implements OnInit {
       this.newOrderArray = [];
       this.vendorM.clear();
       this.vendorM2.clear();
-      //console.log(resMonth);
+      //console.log("ResMonth:" + resMonth);
       //this.newOrderArray = res;
       //console.log(this.newOrderArray);
       this.count = 0;
@@ -180,7 +182,7 @@ export class AdminorderMonthlyPage implements OnInit {
       let keys = Array.from(this.vendorM.keys());
       this.vendorArray2 = keys;
      
-      //console.log(this.vendorArray2);
+      //console.log("VendorArray2: " + this.vendorArray2);
   
       resMonth.map((currElement, index)=>{
    

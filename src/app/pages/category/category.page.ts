@@ -406,7 +406,7 @@ export class CategoryPage implements OnInit {
     (await this.firestore.collection('favourites').doc(this.userEmail))
       .collection('data').doc(foodid).delete().then((res) => {
         this.filterFood(this.chosenFilter, this.chosenFilter2); //refresh
-         console.log(res); 
+         //console.log(res); 
        }).catch((err) => { console.log(err) });
   }
 
@@ -582,7 +582,7 @@ export class CategoryPage implements OnInit {
 
           //retrieve cateen id
           this.getCanteenSubscription =  this.userService.getOne(resData['userid']).pipe(first()).subscribe((userRes=>{
-            console.log(userRes);
+            //console.log(userRes);
             this.foodlistArray[index].canteenid = userRes['canteenID'];
             this.foodlistArray[index].stall = userRes['stallname'];
             //get canteen name
@@ -709,7 +709,7 @@ export class CategoryPage implements OnInit {
 
       //console.log(res.data.title);
       this.chosenFilter2 = res.data.title;
-      console.log(this.chosenFilter2)
+      //console.log(this.chosenFilter2)
       this.filterFood(this.chosenFilter, this.chosenFilter2);
 
     })).catch((err => {

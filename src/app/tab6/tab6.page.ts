@@ -41,6 +41,7 @@ export class Tab6Page {
   redeemSub: Subscription;
   userSub: Subscription;
   userSub3: Subscription;
+  userSub4: Subscription;
   canteenSub: Subscription;
   favFood1Sub:Subscription;
   favFood2Sub: Subscription;
@@ -101,7 +102,6 @@ export class Tab6Page {
     this.userEmail = await this.storage.get('email');
     this.userRole = await this.storage.get('role');
 
-    this.getFoodList();
 
     if (this.userRole === 'student') {
       this.getStudentData();
@@ -112,22 +112,6 @@ export class Tab6Page {
       this.checkIfPaid();
     }
 
-    this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
-      this.favs = data.map((x) => x.foodid)
-      //console.log(this.favs)
-
-      for (var i = 0; i < this.foodlistArray.length; i++) {
-        for (var j = 0; j < this.favs.length; j++) {
-          if (this.foodlistArray[i].id === this.favs[i]) {
-            //console.log("true")
-            this.foodlistArray[i].favourites = true
-            //console.log(this.foodlistArray[i])
-          }
-          else { this.foodlistArray[i].favourites = false }
-        }
-      }
-      //console.log(this.foodlistArray)
-    })
 
   }
 
@@ -170,11 +154,13 @@ export class Tab6Page {
   checkIfPaid() {
     this.getPaid = this.userService.getOne(this.userEmail).subscribe((res => {
       this.paid = res['paid'];
+      console.log("Paid Data")
     }))
   }
 
   getStudentData() {
     this.studentDataSub = this.userService.getOne(this.userEmail).subscribe((res => {
+      console.log("Stud Data")
       this.orderid = res['orderid'];
       this.stampsLeft = res['stampLeft'];
     }))
@@ -185,12 +171,12 @@ export class Tab6Page {
       this.foodM.clear(); //reset hashmap
 
       this.foodSubscription = this.foodService.getAllFood().subscribe((res => {
-
+        console.log("Food List Data")
         //console.log(res);
         res.forEach((res, index) => {
           //console.log(res.id);
           this.foodM.set(res.id, this.count); //Store each food with count = 1
-          this.userSub3 = this.userService.getOne(res['userid']).subscribe((userres => {
+          this.userSub3 = this.userService.getOne(res['userid']).pipe(first()).subscribe((userres => {
             this.foodlist[index].stall = userres['stallname'];
             this.loadedfoodlist[index].stall = userres['stallname'];
             this.foodlist[index].userlisted = userres['listed'];
@@ -246,7 +232,7 @@ export class Tab6Page {
 
         res.forEach((res, index) => {
           //get stall name
-          this.userSub3 = this.userService.getOne(res['userid']).subscribe((userres => {
+          this.userSub4 = this.userService.getOne(res['userid']).pipe(first()).subscribe((userres => {
             this.foodlist[index].stall = userres['stallname'];
             this.loadedfoodlist[index].stall = userres['stallname'];
             this.foodlist[index].userlisted = userres['listed'];
@@ -594,6 +580,9 @@ export class Tab6Page {
     }
     if (this.userSub3) {
       this.userSub3.unsubscribe();
+    }
+    if (this.userSub4) {
+      this.userSub4.unsubscribe();
     }
   }
 
