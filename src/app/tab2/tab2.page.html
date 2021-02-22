@@ -116,7 +116,11 @@
 
   <!--When student click on redeem, the receipt will be shown here-->
   <div *ngIf="userRole === 'student'">
-    <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="receiptData.orderid === ''"><i>[Error Msg]Collection verification page: No Food has been redeemed</i></div>
+    <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="receiptData.orderid === ''">
+      <i>[Error Msg] Collection verification page: No Food has been redeemed</i>
+      <br><br><br>
+      <i>[Info] Redemption can only be done once per day. If 'Redemption Remaining:0' you can no longer redeem till it resets.</i>
+    </div>
    
 
     <div style="padding-left: 8px;padding-right: 8px;" *ngIf="receiptData.orderid !==''">
@@ -155,7 +159,7 @@
 
   <!--Show latest orders from students that is pending-->
   <div *ngIf="userRole === 'vendor'">
-      <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="vendorOrderArray.length == 0"><i>[Error Msg] Redemption can only be done once per day. If 'Redemption Remaining:0' you can no longer redeem till it resets.</i></div>
+      <div style="padding-left: 20px;padding-right: 20px; font-family: 'Segoe UI';font-size: 15px;font-weight: 550;"  *ngIf="vendorOrderArray.length == 0"><i>[Error Msg] Uncompleted Orders will be shown here</i></div>
     <ion-card *ngFor="let order of vendorOrderArray">
     <div style="padding: 8px;">
         <!--Redemption order ID-->

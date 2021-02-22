@@ -35,7 +35,7 @@
         </div>
         
         <div style="display: flex; width: 65%;">
-          <div style="flex: 6;">
+          <div style=" width: 65%;">
 
             <div style="width:94%; height:max-content;display: inline-block;padding-right: 10px;">
               <div style="font-family: 'Segoe UI';font-size: 13px;color:black;font-weight: 650;padding-bottom: 5px;padding-left: 2px;">{{food.value.foodname}}</div>
@@ -57,7 +57,7 @@
             
           </div>
          
-          <div style="margin:auto;" >
+          <div style="margin:auto; width: 35%;" >
             <div style="display: inline-block;padding-right: 3px;">
               <button style="color:#FDDEA3; font-size: 12px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'sponsor'"
               (click)="CartFood(food.value.id, food.value.foodname, food.value.userid)">Add to Cart</button>
@@ -104,7 +104,7 @@
         <div style="display: flex; width: 65%;">
 
       
-        <div style="flex: 6;">
+        <div style="width:65%;">
           <div style="width:90%; height:max-content;display: inline-block;padding-right: 10px;padding-top: 10px; padding-left: 5px;padding-bottom: 10px;">
               <div style="font-family: 'Segoe UI';font-size: 13px;color:black;font-weight: 650;padding-bottom: 5px;padding-left: 2px;">{{food1.foodname}}</div>
               <div style="font-weight: 450; font-size: 12px;padding-bottom: 1px;padding-left: 2px;">{{food1.canteen}} • {{food1.stall}} </div>
@@ -124,7 +124,7 @@
           </div>
         </div>
         
-        <div style="margin:auto;" >
+        <div style="margin:auto; width: 35%;" >
           <div style="display: inline-block;padding-right: 3px;">
             <button style="color:#FDDEA3; font-size: 12px; font-weight: 550; background-color: #54549E;padding: 8px;border-radius: 5px;" *ngIf="userRole === 'student' && stampsLeft > 0 && orderid === '' && ordersMadeTday === false"
         (click)="RedeemFood(food1.id, food1.foodname, food1.foodprice, food1.userid)"
@@ -136,7 +136,7 @@
         
       </div>
        
-      <div style="position: absolute; top:0; right:0;padding: 5px; " >
+      <div style="position: absolute; top:0; right:0;padding: 10px; " >
         <button style="background: transparent;" *ngIf="!food1.favourites " (click)="addFoodbyFavourites(food1.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
         <button style="background: transparent;" *ngIf="food1.favourites  " (click)="deleteFav(food1.id)"><ion-icon  size="small" name="star-sharp"></ion-icon></button>
 

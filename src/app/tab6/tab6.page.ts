@@ -251,7 +251,7 @@ export class Tab6Page {
         })
         this.foodlist = res;
         this.loadedfoodlist = res;
-        console.log(this.foodlist);
+        //console.log(this.foodlist);
 
          //This function is for the "favourites button" it loops and retrieves the favourites and shows if it is favourite or not 
     this.favFood2Sub =  this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
