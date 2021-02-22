@@ -56,6 +56,10 @@ export class SignupPage implements OnInit {
    
   }
 
+  bckLogin(){
+    this.navCtrl.pop();
+  }
+
   async aboutus_modal(){
 
 

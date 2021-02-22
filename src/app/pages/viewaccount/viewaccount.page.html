@@ -11,7 +11,7 @@
 
   <ion-card>
     <ion-item>
-      <ion-select value="vendor" (ionChange)="changeRole($event)">
+      <ion-select value={{currentRole}} (ionChange)="changeRole($event)">
         <ion-select-option value="vendor">vendor</ion-select-option>
         <ion-select-option value="student" >student</ion-select-option>
         <ion-select-option value="sponsor" >sponsor</ion-select-option>
