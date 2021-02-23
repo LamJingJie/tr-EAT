@@ -48,7 +48,7 @@
     <div id="RecOdr">
       <ion-slides [options]="sliderConfigx" >    
  
-        <ion-slide *ngFor="let food of foodArray" style="margin-left: 10px;">
+        <ion-slide *ngFor="let food of foodArray" >
         <ion-card style="background-color: white;box-shadow:1;">
 
          <div id ="coverimg"  style="display: flex;">
@@ -88,7 +88,7 @@
     <div id="RecOdr">
       <ion-slides [options]="sliderConfigx" >    
  
-        <ion-slide *ngFor="let food of fav" style="margin-left: 10px;">
+        <ion-slide *ngFor="let food of fav" >
         <ion-card style="background-color: white;box-shadow:1;">
           <div id="coverimg">
             <img class="coverpic" id="fdimg" width="100%" src={{food.image}} />
