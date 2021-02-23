@@ -58,17 +58,13 @@ export class Tab4Page {
     this.currentAccount = await this.storage.get('email');
     this.currentRole = await this.storage.get('role');
 
-    if (this.currentRole == 'vendor') {
-      this.getVendorFood();
-    }
+
 
     if (this.currentRole == 'student') {
       this.getStamps();
     }
 
-    this.favSub = this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
-      this.fillfav(data);
-    })
+
   }
 
   async ionViewWillEnter() {
@@ -78,6 +74,17 @@ export class Tab4Page {
         this.leavePopup();
       });
     }
+
+    this.currentAccount = await this.storage.get('email');
+    this.currentRole = await this.storage.get('role');
+
+    if (this.currentRole == 'vendor') {
+      this.getVendorFood();
+    }
+
+    this.favSub = this.foodService.getFoodbyfavourites(this.currentAccount).subscribe((data) => {
+      this.fillfav(data);
+    })
     //Changes below
     //console.log(this.currentAccount);
     
@@ -165,6 +172,12 @@ export class Tab4Page {
     if (this.orderSubscription) {
       this.orderSubscription.unsubscribe();
     }
+    if(this.favSub){
+      this.favSub.unsubscribe();
+    }
+    if (this.foodSub) {
+      this.foodSub.unsubscribe();
+    }
   }
 
   async leavePopup() {
@@ -188,6 +201,8 @@ export class Tab4Page {
     await alert1.present();
   }
 
+
+
   ngOnDestroy() {
     if (this.platform.is('android')) {
       if (this.customBackBtnSubscription) {
@@ -198,9 +213,7 @@ export class Tab4Page {
     if (this.userSub) {
       this.userSub.unsubscribe();
     }
-    if (this.foodSub) {
-      this.foodSub.unsubscribe();
-    }
+    
     if (this.canteenSubscription) {
       this.canteenSubscription.unsubscribe();
     }
@@ -208,8 +221,6 @@ export class Tab4Page {
     if (this.userSub2) {
       this.userSub2.unsubscribe();
     }
-    if(this.favSub){
-      this.favSub.unsubscribe();
-    }
+    
   }
 }
