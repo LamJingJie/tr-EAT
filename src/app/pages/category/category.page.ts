@@ -330,7 +330,7 @@ export class CategoryPage implements OnInit {
   }
 
   //Sponsors
-  async CartFood(foodid, foodname, vendorid) {
+  async CartFood(foodid, foodname, vendorid, canteenid) {
     //Add data into cart 
 
     //If paid allow to add to cart
@@ -353,7 +353,7 @@ export class CategoryPage implements OnInit {
             var listed = userres['listed'];
             //Check if vendor is currently listed
             if (listed === true) {
-              this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res => {
+              this.cartService.addToCart(foodid, this.userEmail, canteenid, amountOrdered, vendorid).then((res => {
                 this.CartshowSuccess(foodname123);
                 this.calculateTotalCost();
                 this.filterFood(this.chosenFilter, this.chosenFilter2);

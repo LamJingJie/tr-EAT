@@ -133,15 +133,15 @@ export class Tab4Page {
   }
 
   getVendorFood() {
-    this.foodSub = this.foodService.getFoodBasedOnStall(this.currentAccount).subscribe((res => {
+    this.foodSub = this.foodService.getFoodBasedOnStall(this.currentAccount).pipe(first()).subscribe((res => {
       this.foodArray = res;
       //console.log(this.foodArray);
       this.foodArray.forEach((val, index) => {
         //Get canteen id
-        this.userSub2 = this.userService.getOne(this.currentAccount).subscribe((userres => {
+        this.userSub2 = this.userService.getOne(this.currentAccount).pipe(first()).subscribe((userres => {
           var canteenid = userres['canteenID'];
           //Get canteen name and color
-          this.canteenSubscription = this.canteenService.getCanteenbyid(canteenid).subscribe((canteenres => {
+          this.canteenSubscription = this.canteenService.getCanteenbyid(canteenid).pipe(first()).subscribe((canteenres => {
             this.foodArray[index].canteenname = canteenres['canteenname'];
             this.foodArray[index].canteencolor = canteenres['color'];
           }))
@@ -163,6 +163,7 @@ export class Tab4Page {
   }
 
   ionViewWillLeave() {
+    
     if (this.platform.is('android')) {
       if (this.customBackBtnSubscription) {
         this.customBackBtnSubscription.unsubscribe();
@@ -176,7 +177,14 @@ export class Tab4Page {
       this.favSub.unsubscribe();
     }
     if (this.foodSub) {
+      console.log("Leave")
       this.foodSub.unsubscribe();
+    }
+    if (this.userSub2) {
+      this.userSub2.unsubscribe();
+    }
+    if (this.canteenSubscription) {
+      this.canteenSubscription.unsubscribe();
     }
   }
 
@@ -214,13 +222,9 @@ export class Tab4Page {
       this.userSub.unsubscribe();
     }
     
-    if (this.canteenSubscription) {
-      this.canteenSubscription.unsubscribe();
-    }
+    
 
-    if (this.userSub2) {
-      this.userSub2.unsubscribe();
-    }
+    
     
   }
 }
