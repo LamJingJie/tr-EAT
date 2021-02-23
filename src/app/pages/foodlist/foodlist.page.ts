@@ -249,9 +249,7 @@ export class FoodlistPage implements OnInit {
     if (this.filterfoodSubscription) {
       this.filterfoodSubscription.unsubscribe();
     }
-    if (this.getfoodSubscription) {
-      this.getfoodSubscription.unsubscribe();
-    }
+    
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
     }
@@ -669,6 +667,9 @@ export class FoodlistPage implements OnInit {
     }
     if(this.favouriteSub2){
       this.favouriteSub2.unsubscribe();
+    }
+    if (this.getfoodSubscription) {
+      this.getfoodSubscription.unsubscribe();
     }
 
   }

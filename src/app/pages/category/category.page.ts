@@ -271,9 +271,7 @@ export class CategoryPage implements OnInit {
     if (this.filterfoodSubscription) {
       this.filterfoodSubscription.unsubscribe();
     }
-    if (this.getfoodSubscription) {
-      this.getfoodSubscription.unsubscribe();
-    }
+   
     if (this.cartSubscription) {
       this.cartSubscription.unsubscribe();
     }
@@ -737,5 +735,8 @@ export class CategoryPage implements OnInit {
   }
 
   ngOnDestroy() {
+    if (this.getfoodSubscription) {
+      this.getfoodSubscription.unsubscribe();
+    }
   }
 }
