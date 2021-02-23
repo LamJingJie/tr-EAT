@@ -219,7 +219,6 @@ export class FoodlistPage implements OnInit {
           this.totalPriceAll += resEach['orderquantity'] * this.cartArray[index].price;
           //console.log(this.totalPriceAll);
 
-          this.foodSubscription.unsubscribe();
         }))
 
         this.countCart = this.countCart + 1;
