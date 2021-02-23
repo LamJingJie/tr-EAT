@@ -585,9 +585,12 @@ export class CategoryPage implements OnInit {
             //console.log(userRes);
             this.foodlistArray[index].canteenid = userRes['canteenID'];
             this.foodlistArray[index].stall = userRes['stallname'];
+            this.foodlistArray[index].userlisted = userRes['listed'];
+            this.foodlistArray[index].userdeleted = userRes['deleted'];
             //get canteen name
             this.canteennameSubscription = this.canteenService.getCanteenbyid(userRes['canteenID']).pipe(first()).subscribe((canteenRes=>{
-              this.foodlistArray[index].canteen = canteenRes['canteenname']
+              this.foodlistArray[index].canteen = canteenRes['canteenname'];
+              this.foodlistArray[index].canteendeleted = canteenRes['deleted'];
            
             }))
         
@@ -644,9 +647,12 @@ export class CategoryPage implements OnInit {
             //console.log(userRes);
             this.redeemfoodArray[index].canteenid = userRes['canteenID'];
             this.redeemfoodArray[index].stall = userRes['stallname'];
+            this.redeemfoodArray[index].userlisted = userRes['listed'];
+            this.redeemfoodArray[index].userdeleted = userRes['deleted'];
             //get canteen name
             this.canteennameSubscription2 = this.canteenService.getCanteenbyid(userRes['canteenID']).pipe(first()).subscribe((canteenRes=>{
               this.redeemfoodArray[index].canteen = canteenRes['canteenname']
+              this.redeemfoodArray[index].canteendeleted = canteenRes['deleted'];
               
             }))
             

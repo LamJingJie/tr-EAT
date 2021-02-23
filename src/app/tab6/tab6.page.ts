@@ -220,6 +220,7 @@ export class Tab6Page {
         //console.log(this.foodlistArray)
      this.favFood1Sub.unsubscribe();
     })
+      //console.log(this.foodlist);
         //console.log(this.foodM.entries());
         this.foodSubscription.unsubscribe(); //Unsub because if many users are redeeming food at the same time, page will keep refreshing
       }))
