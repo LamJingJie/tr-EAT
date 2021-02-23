@@ -37,8 +37,8 @@
         <ion-list style="padding-bottom: 100px; background: transparent;">
         <ion-card style="width:94%;margin: 14px;margin-top: 5px; margin-bottom: 3px;" *ngFor = "let food of foodlistArray | keyvalue;">
 
-          <div style="position: absolute; right:0; ">
-            <button style="background: transparent;padding-top: 10px;padding-right: 10px;;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
+          <div style="position: absolute; right:0; padding:10p; ">
+            <button style="background: transparent;" *ngIf="!food.value.favourites  " (click)="addFoodbyFavourites(food.value.id)"><ion-icon  size="small" name="star-outline"></ion-icon></button>
             <button style="background: transparent;" *ngIf="food.value.favourites  " (click)="deleteFav(food.value.id)"><ion-icon size="small" name="star-sharp"></ion-icon></button>
 
           </div>

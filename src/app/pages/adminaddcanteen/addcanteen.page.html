@@ -26,9 +26,9 @@
           <ion-button style="font-size: 11px; margin: auto;" *ngIf="ct.deleted === false" (click)="changeCanteenPopUp(ct.id, ct.deleted)">Archive<ion-icon name="archive-outline"></ion-icon></ion-button>
           <ion-button style="font-size: 11px; margin: auto;" *ngIf="ct.deleted === true" (click)="changeCanteenPopUp(ct.id, ct.deleted)">Unarchive<ion-icon name="archive-outline"></ion-icon></ion-button>
         </div>
-        <div style="flex: 1; display: flex;" >
+        <!--<div style="flex: 1; display: flex;" >
           <ion-button style="font-size: 11px; margin: auto;" (click)="deleteCanteenPopUp(ct.id, ct.mergedname)">Delete<ion-icon name="trash-outline"></ion-icon></ion-button>
-        </div>
+        </div>-->
       </ion-card-content>
  
       <!--<img src="{{ct.image}}" alt="image">-->
