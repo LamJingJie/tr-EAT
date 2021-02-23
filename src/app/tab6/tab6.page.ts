@@ -393,6 +393,7 @@ export class Tab6Page {
             var listed = userres['listed'];
             //Check if vendor is currently listed
             if (listed === true) {
+              
               this.cartService.addToCart(foodid, this.userEmail, userres['canteenID'], amountOrdered, vendorid).then((res => {
                 this.CartshowSuccess(foodname123);
                 this.getFoodList(); //refresh

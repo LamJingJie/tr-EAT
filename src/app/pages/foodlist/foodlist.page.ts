@@ -323,6 +323,7 @@ export class FoodlistPage implements OnInit {
             var listed = userres['listed'];
             //Check if vendor is currently listed
             if (listed === true) {
+              
               this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res => {
                 this.CartshowSuccess(foodname123);
                 this.calculateTotalCost();
