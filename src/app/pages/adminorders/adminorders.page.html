@@ -1,18 +1,15 @@
-<ion-header>
+
   <ion-toolbar >
-
-    <ion-title>All Vendor Orders (7 days)</ion-title>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
-    
-
+    <ion-title >All Vendor Orders (7 days)</ion-title>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px;padding-left: 10px" ></ion-icon>
   </ion-toolbar>
-</ion-header>
+
 
 <ion-content>
   
   <!--Use ngModal to ensure first segment btn is checked. For some reason the previous version stopped working and so had to change-->
   <ion-segment scrollable (ionChange)="dateChanged($event)" [(ngModel)]="segmentModel" >
-    <ion-segment-button value ={{todayVar}}>
+    <ion-segment-button  value ={{todayVar}}>
       <ion-label>{{todayVar | date: 'dd MMM y'}}</ion-label>
     </ion-segment-button>
     <ion-segment-button value ={{ytdVar}}>
@@ -61,7 +58,7 @@
         </div>
       </div>
       <!--Display each food from each vendor-->
-      <ion-item  *ngFor="let o of order.value" id="orderData">
+      <ion-item style="padding-top: 5px ;" *ngFor="let o of order.value" id="orderData">
 
         <div style="display:flex; width:100%;">
           <div style="flex:1;">
@@ -73,18 +70,18 @@
             </div>
           </div>
           <div>
-            <div *ngIf="o.foodprice != null" id="foodprice_date">
-              <div>
-                  <ion-badge color="primary">${{o.foodprice}}</ion-badge>
+            <div>
+              <div style="font-weight: 650; padding-top: 10px; padding-bottom: 5px;"*ngIf="o.foodprice != null" id="foodprice_date">${{o.foodprice}}
+                 <!-- <ion-badge color="primary">${{o.foodprice}}</ion-badge>-->
               </div>
              
               <div id="date">
-                {{o.datecompleted?.toDate() | date: 'mediumTime'}}
+               <i>{{o.datecompleted?.toDate() | date: 'mediumTime'}}</i>
               </div>
               
             </div>
-            <div *ngIf="o.foodprice == null">
-              <ion-badge color="success" style="font-size: 15px;">Total Cost: ${{o}}</ion-badge>
+            <div style="font-family: 'Segoe UI';font-weight: 550; padding-top: 10px; padding-bottom: 5px;" *ngIf="o.foodprice == null">
+               <ion-badge color="tertiary" style="font-size: 16px;width: 160px; text-align: center;">Total Cost: ${{o}}</ion-badge>
             </div>
           </div>
         </div>
@@ -97,7 +94,7 @@
   </div>
 
   <p *ngIf = "newOrderArray.length == 0; then NoData;"></p>
-  <ng-template #NoData>No Data Retrieved</ng-template>
+  <ng-template #NoData><div style="text-align: center; padding-top: 20px;font-family: 'Segoe UI';font-size: 15px;font-weight: 550;">No Data Retrieved</div></ng-template>
 
   <!--Allow admin to select any date-->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">

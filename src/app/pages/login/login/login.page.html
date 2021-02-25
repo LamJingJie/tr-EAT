@@ -12,14 +12,14 @@
   <img id="RICE" src="./assets/RICE.png"/>
 
   
-  <form [formGroup] = "login_form" (ngSubmit)="login(login_form.value)">
+  <form style="padding:10px" [formGroup] = "login_form" (ngSubmit)="login(login_form.value)">
     <!--Error messages-->
     <div>
       <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf="email.invalid && (email.dirty || email.touched)">
         Email is invalid. Must be in all lower case
       </h6>
       <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf="password.invalid && (password.dirty || password.touched)">
-        Password has to have minimum of 7 characters
+        Password is incorrect.
       </h6>
     </div>
     
@@ -42,7 +42,7 @@
    
    <div id= btn>
     <ion-button fill=clear class= "buttons" type="submit" [disabled] = "!login_form.valid">LOGIN</ion-button>
-    <ion-button fill=clear class="buttons" (click)="goSignUp()">Sign Up</ion-button>
+    <ion-button fill=clear class="buttons" (click)="goSignUp()">SIGN UP</ion-button>
     <!--
     <ion-button fill=clear class="buttons" style="font-size: 14px;" (click)="passwordreset()">Forget Password?</ion-button>-->
     <!--<ion-button fill=clear class= "input">SIGN-UP</ion-button>-->

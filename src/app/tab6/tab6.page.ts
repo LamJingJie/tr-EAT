@@ -308,7 +308,11 @@ export class Tab6Page {
       //console.log(v.foodname);
       if (v.foodname && q) {
         //Filter by foodname
-        if (v.foodname.toLowerCase().indexOf(q.toLowerCase()) > -1) {
+   
+        if (("halal".toLowerCase().indexOf(q.toLowerCase()) > -1 && v.halal) ||
+        ("vegetarian".toLowerCase().indexOf(q.toLowerCase()) > -1 && v.vegetarian) ||
+
+        v.foodname.toLowerCase().indexOf(q.toLowerCase()) > -1) {
           this.foodM.set(v.id, this.count); //Store each food with count = 1
           //console.log('filter' + v.foodname + v.id)
           return true;

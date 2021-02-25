@@ -14,18 +14,18 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-card>   
+    <ion-card style="padding: 10px;">   
       <h4 style="font-weight: bold; text-align: center;">Completed Orders</h4>
       <ion-button expand="block" (click)="openOrders()">View Orders (Weekly)</ion-button>
       <ion-button expand="block" (click)="openOrdersMonthly()">View Orders (Monthly)</ion-button>
     </ion-card>
 
-    <ion-card>   
+    <ion-card style="padding: 10px;">   
       <h4 style="font-weight: bold; text-align: center;">Canteens</h4>
       <ion-button expand="block" (click)="addCanteenPopUp()">View Canteen</ion-button>
     </ion-card>
 
-    <ion-card>   
+    <ion-card style="padding: 10px;">   
         <h4 style="font-weight: bold; text-align: center;">Users</h4>
         <ion-button expand="block" (click)="ViewAccount()">View Account</ion-button>
         <ion-button expand="block" (click)="ViewVerify()">Verify Sponsor Users Purchase<ion-badge *ngIf="verify_count != 0" style="padding: 5px;" color="danger">{{verify_count}}</ion-badge></ion-button>

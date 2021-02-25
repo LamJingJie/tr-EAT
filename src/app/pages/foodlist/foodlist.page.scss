@@ -51,6 +51,7 @@
  #intro{
     position: relative;
     left: 8%;
+    
 }
 
 .font{
@@ -108,14 +109,17 @@
 
   //Horizontal scrolling for ngFor food type
   .foodtype {
-  width: 100px;
+  width: 130px;
+  height: 15px;
   overflow: hidden; 
   white-space: nowrap;
-  padding-right: 3px;
+  text-overflow: ellipsis;
+  padding-right: 10px;
   ::-webkit-scrollbar {
     display: none;
   }
   .scroll {
-    overflow: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }

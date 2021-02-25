@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Edit Canteen</ion-title>
+    <ion-title>Edit Canteen Details</ion-title>
     <ion-icon name="close-outline" slot="end" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
     </ion-icon>
   </ion-toolbar>
@@ -9,14 +9,16 @@
 <ion-content>
 
 
-  <form [formGroup]="editcanteen_form" (ngSubmit)="editCanteen(editcanteen_form.value)">
-    <ion-card >
+  <form style="padding:10px" [formGroup]="editcanteen_form" (ngSubmit)="editCanteen(editcanteen_form.value)">
+    <ion-card style="padding:14px;">
+      <div style="font-family: 'Segoe UI'; font-size: 13px;font-weight: 550;padding-bottom: 5px; color: black;">Canteen Color Label: </div>
       <div style="width: 100%; height:100px;" [style.background-color]="colorChose"></div>
     </ion-card>
+
     <ion-card>
       <ion-item>
-        <ion-label position="floating"> Enter Canteen Name: </ion-label>
-        <ion-input type="text" formControlName="canteenname" [(ngModel)]="canteen.canteenname"></ion-input>
+        <ion-label style="font-family: 'Segoe UI'; font-weight: 550;padding-bottom: 5px" position="floating"> Enter Canteen Name: </ion-label>
+        <ion-input style="font-family: 'Segoe UI';font-weight:550; font-size: 20px;" type="text" formControlName="canteenname" [(ngModel)]="canteen.canteenname"></ion-input>
       </ion-item>
     </ion-card>
 
@@ -32,19 +34,17 @@
       </ion-item>-->
 
     <!--Below is the code for choosing a different color for the canteens to be displayed-->
-    <ion-card>
-      <ion-item>
-        <div>
-          <ion-label> Choose Canteen colour: </ion-label>
+    <ion-card style="padding:14px;">
+        <div style="font-family: 'Segoe UI'; font-size: 13px;font-weight: 550;padding-bottom: 5px; color: black;">
+           Change Canteen Colour Label: 
         </div>
         <div>
-          <ion-button class="color-picker">Color Picker</ion-button>
+          <ion-button style="padding-left: 10px;" class="color-picker">Color Picker</ion-button>
         </div>
-      </ion-item>
     </ion-card>
 
     <ion-input hidden formControlName="mergedName" value={{canteen.mergedName}}>{{canteen.mergedName}}</ion-input>
-    <ion-button type="submit">Confirm</ion-button>
+    <ion-button style="padding-left: 9px;padding-right: 7px;  font-family: 'Segoe UI'; font-weight: 550;" expand="block" type="submit">Confirm</ion-button>
   </form>
 
 

@@ -11,9 +11,11 @@
 
   <ion-card style="margin-bottom: 30px;" *ngFor="let food of foodData">
     <ion-item  (click)="editFood(food.id)">
-      <img src="{{food.image}}" alt='image' width="50%;" />
+      
+      <img style="padding :10px;"src="{{food.image}}" alt='image' width="50%;" />
+
       <div>
-        <h5>{{food.foodname}}</h5>
+        <div style="padding-left: 5 px; font-family: 'Segoe UI'; font-size: 15px ;font-weight: 550;">{{food.foodname}}</div>
       </div>
     </ion-item>
     <div style="text-align: center;">

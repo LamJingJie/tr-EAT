@@ -16,9 +16,9 @@
 
   <div class="Footer"class="BGDrectangle">
     
-    <div id="userinfo" class="Font">
-      <div style="font-size: 20px;padding-top: 25px;"> Hello,</div>
-      <div style="font-size: 23px;"> {{currentAccount}} </div>
+    <div id="userinfo" style="padding-top:25px"class="Font">
+      <div style="font-size: 20px;font-weight: 650;padding-top: 25px;display: inline;"> Hello <div style="display: inline;padding-top:25px;text-transform: capitalize;">{{currentRole}} ,</div></div>
+      <div style="font-size: 20px;font-weight: 550;"><i> {{currentAccount}} </i> </div>
     </div>
     <br>
     <br>
@@ -84,24 +84,24 @@
 
     </div>
 
-    <div style="padding-top: 24px;padding-left: 10px;font-weight: 500;font-size: 17px;font-family: 'Segoe UI';">Your Favourites</div>
+    <div style="padding-top: 24px;padding-left: 30px;font-weight: 590;font-size: 17px;font-family: 'Segoe UI';">Your Favourites</div>
     <div id="RecOdr">
       <ion-slides [options]="sliderConfigx" >    
  
         <ion-slide *ngFor="let food of fav" >
-        <ion-card style="background-color: white;box-shadow:1;">
+        <ion-card style="background-color: white;box-shadow:1;border-radius: 10px; padding:10px;">
           <div id="coverimg">
             <img class="coverpic" id="fdimg" width="100%" src={{food.image}} />
           </div>
-          <div style="display:flex; padding: 5px; padding-bottom: 8px; ">
-            <div style="flex:1;padding-left: 5px ; ">
-              <div style="width:100%; display:flex; font-weight: 550;color: black;font-size: 14px;">
+          <div style="display:flex; padding-top: 8px; padding-bottom: 8px; ">
+            <div style="flex:1;padding-left: 5px ; padding-top:5px; ">
+              <div style="width: 150px;max-height: 17px; display:flex;text-align:left; font-weight: 550;color: black;font-size: 14px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
                 {{food.foodname}}
               </div>
-              <div style="width:100%; display:flex;font-size: 12px;">
+              <div style="width:100%; display:flex;font-size: 12px;padding-top: 3px;">
                 {{food.foodprice | currency}}
               </div>
-              <div style="width:100%; display:flex;font-size: 12px;padding-top: 3px;">
+              <div style="width:100%; display:flex;font-size: 12px;padding-top: 3px;padding-bottom: 3px;">
                <i> Available Qty: {{food.availquantity}}</i>
               </div>
             </div>

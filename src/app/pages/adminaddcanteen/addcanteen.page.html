@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>Canteens</ion-title>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;">
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-left: 10px;">
     </ion-icon>
   </ion-toolbar>
 </ion-header>
@@ -10,22 +10,23 @@
 <ion-content [fullscreen]="true">
   <!--<app-explore-container name="Tab 1 page"></app-explore-container>-->
   <!--This entire section below here are all for testing purposes. You can remove them anytime-->
-  <div>
+  <div style="padding: 10px;">
     <ion-card  *ngFor="let ct of canteen">
 
-      <ion-card-header (click)="editCanteen(ct.id)">
+      <ion-card-content (click)="editCanteen(ct.id)" style="padding:17px;padding-top: 10px;padding-bottom: 10px;">
         <div style="width: 100%; height:100px;" [style.background-color]="ct.color"></div>
-        <ion-card-title class='allusers'>
-          {{ct.canteenname}}
-        </ion-card-title>
-        <ion-card-subtitle>Archived: {{ct.deleted}}</ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content style="display: flex;">
-        <div style="flex: 1; display: flex;">
-          <!--Archive button does a "Soft Delete", it just removes itself from app, but its content is still in the firestore-->
-          <ion-button style="font-size: 11px; margin: auto;" *ngIf="ct.deleted === false" (click)="changeCanteenPopUp(ct.id, ct.deleted)">Archive<ion-icon name="archive-outline"></ion-icon></ion-button>
-          <ion-button style="font-size: 11px; margin: auto;" *ngIf="ct.deleted === true" (click)="changeCanteenPopUp(ct.id, ct.deleted)">Unarchive<ion-icon name="archive-outline"></ion-icon></ion-button>
+        <div style="display: inline-block;padding-top: 5px;padding-left: 2px;">
+          <div style="font-family: 'Segoe UI'; font-weight: 550; font-size: 20px;width: 180px;"class='allusers'> {{ct.canteenname}} </div> 
+          <div  style="font-family: 'Segoe UI'; font-weight: 500; font-size: 13px;width: 180px;">Archived Status: {{ct.deleted}}</div>
         </div>
+      
+      <!--<ion-card-content style="display: flex;">-->
+        <div style="display:inline-block;width: 118px;text-align: end;vertical-align: bottom;padding-bottom: 5px;padding-right: 2px;">
+          <!--Archive button does a "Soft Delete", it just removes itself from app, but its content is still in the firestore-->
+          <ion-button color="tertiary" style="font-size: 11px; font-weight: 550;width: 118px; " *ngIf="ct.deleted === false" (click)="changeCanteenPopUp(ct.id, ct.deleted)"><ion-icon style="padding-right: 3px;"name="archive-outline"></ion-icon> Archive</ion-button>
+          <ion-button color="danger" style="font-size: 11px; font-weight: 550;width: 118px;" *ngIf="ct.deleted === true" (click)="changeCanteenPopUp(ct.id, ct.deleted)"><ion-icon style="padding-right: 3px;" name="archive-outline"></ion-icon>Unarchive</ion-button>
+        </div>
+      
         <!--<div style="flex: 1; display: flex;" >
           <ion-button style="font-size: 11px; margin: auto;" (click)="deleteCanteenPopUp(ct.id, ct.mergedname)">Delete<ion-icon name="trash-outline"></ion-icon></ion-button>
         </div>-->
@@ -36,10 +37,11 @@
     </ion-card>
     <p *ngIf="canteen.length == 0; then pass; else fail"></p>
 
-  </div>
+  
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add" (click)="addCanteen()">Add</ion-icon>
+    <ion-fab-button color="dark">
+      <ion-icon name="add"  (click)="addCanteen()">Add</ion-icon>
     </ion-fab-button>
   </ion-fab>
+</div>
 </ion-content>

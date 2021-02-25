@@ -45,6 +45,7 @@
         right: 0%;
         width: 100%;
         height: 100%;
+        border-radius: 10px;
     }
     .subtitle{
         font-family: "Segoe UI";
@@ -100,7 +101,7 @@
         
     
         #recentcarousel{
-            height: fit-content;
+            height:110px;
             left: 16%;
         }
         .coverpic{

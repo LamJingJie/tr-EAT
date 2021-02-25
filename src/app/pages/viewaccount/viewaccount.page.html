@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px;  padding-left: 10px"></ion-icon>
     <ion-title>
       Accounts
     </ion-title>
@@ -9,29 +9,33 @@
 
 <ion-content>
 
-  <ion-card>
+  <div style="padding:10px;">
+      <ion-card>
     <ion-item>
-      <ion-select value={{currentRole}} (ionChange)="changeRole($event)">
-        <ion-select-option value="vendor">vendor</ion-select-option>
-        <ion-select-option value="student" >student</ion-select-option>
-        <ion-select-option value="sponsor" >sponsor</ion-select-option>
+      <ion-select style="font-weight: 550; font-family: 'Segoe UI';" value={{currentRole}} (ionChange)="changeRole($event)">
+        <ion-select-option value="vendor">Vendor</ion-select-option>
+        <ion-select-option value="student" >Student</ion-select-option>
+        <ion-select-option value="sponsor" >Sponsor</ion-select-option>
       </ion-select>
     </ion-item>
   </ion-card>
 
   <ion-card *ngFor="let user of userData" >
     <ion-item id="account">
-      <div id="users" [routerLink]="['/tabs/tab5/viewaccount/admin-account-details', user.id]">
-        <ion-badge color="danger" *ngIf="user.listed === false"><ion-icon name="alert-outline"></ion-icon></ion-badge> 
-        <ion-badge color="success" *ngIf="user.listed === true"><ion-icon name="checkmark-outline"></ion-icon></ion-badge>
-        {{user.id}}
+      <div id="users" [routerLink]="['/tabs/tab5/viewaccount/admin-account-details', user.id]" >
+        <ion-badge style="display: inline;" color="danger" *ngIf="user.listed === false"><ion-icon name="alert-outline"></ion-icon></ion-badge> 
+        <ion-badge style="display: inline;" color="success" *ngIf="user.listed === true"><ion-icon name="checkmark-outline"></ion-icon></ion-badge>
+     
+        <div style="padding: 5px;padding-left: 10px;display: inline; vertical-align: middle;">{{user.id}}</div>
+    
       </div>
 
-        <button ion-button icon-only (click)="presentPopover($event, user.id, user.listed, user.stampLeft)">
+        <button style="background: transparent;" ion-button icon-only (click)="presentPopover($event, user.id, user.listed, user.stampLeft)">
           <ion-icon name="ellipsis-vertical-outline"></ion-icon>
         </button>
 
     </ion-item>
+
     <ion-item *ngIf="user.role == 'student'"  style="font-size: 14px; display: flex;">
 
       <div (click)="openStampAlert(user.stampLeft)" style="flex: 1;">
@@ -49,12 +53,12 @@
   </ion-card>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="currentRole != null">
-    <ion-fab-button>
+    <ion-fab-button color="dark" >
       <ion-icon name="add"  (click)="addAccount()">Add Accounts</ion-icon>
     </ion-fab-button>
   </ion-fab>
 
 
  
-
+  </div>
 </ion-content>

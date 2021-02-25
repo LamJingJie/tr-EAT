@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-left: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -19,7 +19,7 @@
     </div>
 
   <!--Show all the stores-->
-  <div style="padding:5px; padding-bottom: 0px;">
+  <div style="padding: 10px;padding-top: 5px; padding-bottom: 5px;">
   <ion-card style="padding-top: 5px; padding-left: 8px;padding-right: 8px;padding-bottom: 0;" *ngFor="let vendor of vendorArray" (click)="selectedStall(vendor.id, vendor.stallname, vendor.canteenID)" >
     <img class="coverimg" src= {{vendor.stallimage}} alt='image'/>
     

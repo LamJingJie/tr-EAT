@@ -7,7 +7,7 @@
   <img id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
-   <form [formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
+   <form style="padding: 10px;"[formGroup] = "signup_sponsor_form" (ngSubmit)="signup(signup_sponsor_form.value)">
       <!--Error messages-->
      <div>
       <h6 style="width: 100%;font-family: 'Segoe UI'; color: red; font-weight: 500; font-size: 12px; text-align: center; margin: auto;" *ngIf="email.invalid && (email.dirty || email.touched)">
@@ -47,12 +47,13 @@
         </ion-item> 
       </ion-card>
 
-      
+      <div style="text-align: center;">
       <div id="signupbtn">
-        <ion-button fill="clear" class="buttons" type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>Sign Up</ion-button>
+        <ion-button fill="clear" class="buttons" type="submit" [disabled] = '!signup_sponsor_form.valid || signup_sponsor_form.value["password"] != signup_sponsor_form.value["confirmPassword"]'>SIGN UP</ion-button>
       </div>
       <div id="signupbtn">
-        <ion-button fill="clear" class="buttons" (click)="bckLogin()">Login</ion-button>
+        <ion-button fill="clear" class="buttons" (click)="bckLogin()">LOGIN</ion-button>
+      </div>
       </div>
     </form>
 

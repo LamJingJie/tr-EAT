@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-title>All Vendor Orders (6 Months)</ion-title>
-    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px; padding-right: 10px;"></ion-icon>
+    <ion-icon name="arrow-back-outline" slot="start" (click)="dismiss()" style="font-size: 30px;padding-left: 10px;"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -71,17 +71,17 @@
           </div>
           <div>
             <div *ngIf="o.foodprice != null" id="foodprice_date">
-              <div>
-                  <ion-badge color="primary">${{o.foodprice}}</ion-badge>
+              <div  style="font-weight: 650; padding-top: 10px; padding-bottom: 5px;">${{o.foodprice}}
+                 <!-- <ion-badge color="primary">${{o.foodprice}}</ion-badge>-->
               </div>
              
               <div id="date">
-                {{o.datecompleted?.toDate() | date: 'dd/MM/yyyy H:mm'}}
+              <i>  {{o.datecompleted?.toDate() | date: 'dd/MM/yyyy H:mm'}}</i>
               </div>
               
             </div>
-            <div *ngIf="o.foodprice == null">
-              <ion-badge color="success" style="font-size: 15px;">Total Cost: ${{o}}</ion-badge>
+            <div style="font-family: 'Segoe UI';font-weight: 550; padding-top: 10px; padding-bottom: 5px;" *ngIf="o.foodprice == null">
+              <ion-badge color="tertiary" style="font-size: 16px;width: 160px; text-align: center;">Total Cost: ${{o}}</ion-badge>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
   </div>
 
   <p *ngIf = "newOrderArray.length == 0; then NoData;"></p>
-  <ng-template #NoData>No Data Retrieved</ng-template>
+  <ng-template #NoData><div style="text-align: center; padding-top: 20px;font-family: 'Segoe UI';font-size: 15px;font-weight: 550;">No Data Retrieved</div></ng-template>
 
   <!--Allow admin to select any date-->
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">

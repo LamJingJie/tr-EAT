@@ -15,6 +15,8 @@
   <img class="Footer" id="TYN" src="./assets/TYN.png"/>
   <img id="RICE" src="./assets/RICE.png"/>
 
+  <div style="padding-left: 5px;padding-right: 5px;">
+
   <!---About us-->
  
   <div id = "intro">
@@ -62,14 +64,15 @@
    
   <!--Only show for students-->
   <div class="section">
-  <div id="recentcarousel">
-    <div class=subtitle style="padding-top: 30px;">Cuisine Category</div>
+  
+    <div class=subtitle style="padding-top: 30px;padding-bottom: 15px;">Cuisine Category</div>
+    <div id="recentcarousel">
     <ion-slides [options]="sliderConfig" class="slider">    
 
         <ion-slide>
         <ion-card class='cuisines' (click)="ChosenCuisines('all')">
           <div id="btnClick">
-            <img class="img"style="height:115px; width=190px;" src="./assets/ALLCU.jpg" />
+            <img class="img"style="height:110px; width=190px;object-fit:fill" src="./assets/ALLCU.jpg" />
           </div>
         </ion-card>
       </ion-slide>
@@ -77,7 +80,7 @@
       <ion-slide>
         <ion-card class='cuisines' (click)="ChosenCuisines('Asian')">
           <div id="btnClick">
-            <img class="img"style="height:115px; width=190px;" src="./assets/ASIAN.jpg" />
+            <img class="img"style="height:110px; width=190px;object-fit:fill" src="./assets/ASIAN.jpg" />
           </div>
         </ion-card>
       </ion-slide>
@@ -85,7 +88,7 @@
       <ion-slide>
         <ion-card class='cuisines' (click)="ChosenCuisines('Malay')">
           <div id="btnClick">
-            <img class="img"style="height:115px; width=190px;" src="./assets/MALAY.jpg" />
+            <img class="img"style="height:110px; width=190px;object-fit:fill" src="./assets/MALAY.jpg" />
           </div>
         </ion-card>
       </ion-slide>
@@ -93,7 +96,7 @@
       <ion-slide>
         <ion-card class='cuisines' (click)="ChosenCuisines('Western')">
           <div id="btnClick">
-            <img class="img"style="height:115px; width=190px;" src="./assets/WESTERN.jpg" />
+            <img class="img"style="height:110px; width=190px;object-fit:fill" src="./assets/WESTERN.jpg" />
           </div>
         </ion-card>
       </ion-slide>
@@ -101,7 +104,7 @@
       <ion-slide>
         <ion-card class='cuisines' (click)="ChosenCuisines('Others')">
           <div id="btnClick">
-            <img class="img"style="height:115px; width=190px;" src="./assets/OTHERS.jpg" />
+            <img class="img"style="height:110px; width=190px;object-fit:fill" src="./assets/OTHERS.jpg" />
           </div>
         </ion-card>
       </ion-slide>
@@ -122,7 +125,7 @@
       
   </div>
   </div>
-
+</div>
   
 
 
