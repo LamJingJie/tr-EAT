@@ -186,7 +186,7 @@ export class AdminAccountDetailsPage implements OnInit {
               
                 await this.authService.deleteUserAdmin(this.currentAccount, password.password, this.currentRole).then(async res =>{
                 //  console.log(res);
-                
+                console.log("Deleted")
                 this.loading.dismiss(null,null,'deleteAccount');
                 this.dismiss();
                 this.DeleteshowSuccess_account();

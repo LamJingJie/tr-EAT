@@ -61,9 +61,7 @@ export class Tab1Page {
     private foodService: FoodService, private modalCtrl: ModalController, private localNotifications: LocalNotifications) {
     this.data = true;
 
-    this.canteenSub = canteenService.getAll().subscribe((data) => {
-      this.canteen = data;
-    });
+   
     //Changes added 
     /*this.foodSub = foodService.getAllFood().subscribe((data) => {
       this.cuisinename = data;
@@ -81,7 +79,9 @@ export class Tab1Page {
   async ngOnInit() {
     this.userRole = await this.storage.get('role');
     //console.log("init")
-
+    this.canteenSub = this.canteenService.getAll().subscribe((data) => {
+      this.canteen = data;
+    });
   }
 
   async aboutus_modal() {

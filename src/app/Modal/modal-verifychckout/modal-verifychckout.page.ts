@@ -42,6 +42,7 @@ export class ModalVerifychckoutPage implements OnInit {
   pay_foodSub: Subscription;
 
   totalPriceAll: number;
+  timeout: any;
   
   
   constructor(private platform: Platform, private alertCtrl: AlertController,private userService: UserService, 
@@ -79,7 +80,7 @@ export class ModalVerifychckoutPage implements OnInit {
     })
     //console.log(this.cart);
 
-    setTimeout(()=>{
+    this.timeout = setTimeout(()=>{
       this.dismiss();
     }, 5000) //5 seconds
   }
@@ -181,6 +182,7 @@ export class ModalVerifychckoutPage implements OnInit {
   }
 
   ionViewWillLeave(){
+    clearTimeout(this.timeout);
     if(this.foodSub){
       this.foodSub.unsubscribe();
     }

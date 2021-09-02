@@ -142,10 +142,15 @@
     color: black;
     font-weight: bolder;
 }
+
+.cuisines{
+    background: transparent;
+}
 //UP TILL THIS POINT JUST THE #CANTEEN_TXT
 
 #btnClick{
     height: 100%;
+  
 }
 #btnClick:active{
     background-color: rgba(#000000, 0.3);

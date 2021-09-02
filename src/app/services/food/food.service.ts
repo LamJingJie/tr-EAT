@@ -30,7 +30,6 @@ export class FoodService {
 
   //Get 1 Food
   getFoodById(id) {
-
     return this.firestore.collection('food').doc(id).valueChanges({ idField: 'id' });
   }
 

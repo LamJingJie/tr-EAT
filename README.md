@@ -6,6 +6,24 @@ Food for Needy students in temasek polytechnic application
 Version: Ionic 5
 Language: TypeScript
 
+<!----------------------------FOR CLIENT----------------------------->
+
+Hi to whomever thats reading this. (\0.0/)
+
+To change the number that the sponsor user will see in this application
+in order for them to know which number to send it to, you would have to
+change a line of code.
+
+- Find tab2 folder
+- Click on tab2.page.html
+- Go to Line 19.
+- Change the anything with value '12345678' to the number you want
+- Finished
+
+
+
+<!-------------------------------END--------------------------------->
+
 Update Application
 - git pull
 

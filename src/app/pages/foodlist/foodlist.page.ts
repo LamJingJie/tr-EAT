@@ -6,7 +6,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { AlertController, LoadingController, NavController, Platform, ToastController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { PopoverController } from '@ionic/angular';
-import { Observable, Subscription } from 'rxjs';
+import { asapScheduler, Observable, Subscription } from 'rxjs';
 import { OrderService } from 'src/app/services/order/order.service';
 import { rejects } from 'assert';
 import { KeyValuePipe } from '@angular/common';
@@ -321,25 +321,40 @@ export class FoodlistPage implements OnInit {
           //Get vendor 'listed' boolean field
           this.userSub2 = this.userService.getOne(vendorid).subscribe((userres => {
             var listed = userres['listed'];
-            //Check if vendor is currently listed
-            if (listed === true) {
-              
-              this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res => {
-                this.CartshowSuccess(foodname123);
-                this.calculateTotalCost();
-                this.filterFood(this.chosenFilter);
-                this.loading.dismiss(null, null, 'cart');
-              })).catch((err => {
-                this.showError(err);
-                this.loading.dismiss(null, null, 'cart');
-                this.filterFood(this.chosenFilter);//Refresh page
-              }))
+            var canteenid = userres['canteenID'];
+                //check if admin has archived the canteen
+                  this.canteenService.getCanteenbyid(canteenid).pipe(first()).subscribe((canteenres=>{
+                    var canteendelete = canteenres['deleted'];
 
-            } else {
-              this.showError('Vendor is unavailable currently.')
-              this.loading.dismiss(null, null, 'cart');
-              this.navCtrl.pop(); //go back to prev page.
-            }
+                    if(canteendelete === true){
+                      this.showError('Canteen is unavailable currently.')
+                        this.loading.dismiss(null, null, 'cart');
+                      //this.navCtrl.pop(); //go back to prev page.
+                      this.router.navigate(['/tabs/tab1']);
+                    }else{  
+                      //Check if vendor is currently listed
+                      if (listed === true) {
+                        
+                        this.cartService.addToCart(foodid, this.userEmail, this.canteen, amountOrdered, vendorid).then((res => {
+                          this.CartshowSuccess(foodname123);
+                          this.calculateTotalCost();
+                          this.filterFood(this.chosenFilter);
+                          this.loading.dismiss(null, null, 'cart');
+                        })).catch((err => {
+                          this.showError(err);
+                          this.loading.dismiss(null, null, 'cart');
+                          this.filterFood(this.chosenFilter);//Refresh page
+                        }))
+          
+                      } else {
+                        this.showError('Vendor is unavailable currently.')
+                        this.loading.dismiss(null, null, 'cart');
+                        this.navCtrl.pop(); //go back to prev page.
+                      }
+                    }
+
+                  }))
+            
             this.userSub2.unsubscribe();
           }))
 
@@ -412,72 +427,86 @@ export class FoodlistPage implements OnInit {
                 //Get vendor 'listed' boolean field
                 this.userSub = this.userService.getOne(vendorid).subscribe((userres => {
                   var listed = userres['listed'];
-                  //Check if vendor is currently listed
-                  if (listed === true) {
+                  var canteenid = userres['canteenID'];
+                  //check if admin has archived the canteen
+                  this.canteenService.getCanteenbyid(canteenid).pipe(first()).subscribe((canteenres=>{
+                    var canteendelete = canteenres['deleted'];
 
-                    //Get latest data
-                    this.redeemSub = this.foodService.getFoodById(id).subscribe((res => {
-                      var availquantity = res['availquantity'];
-                      var popularity = res['popularity'];
-                      var foodprice: number = res['foodprice'];
-                      var foodname = res['foodname'];
-                      var image = res['image'];
-
-                      //console.log(availquantity);
-
-                      if (availquantity > 0) {
-                        var todayDate: Date = new Date();
-                        var stamp = 1;
-
-                        //Create new order
-                        this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
-                          .then((async res => {
-
-                            popularity = popularity + 1;
-                            this.stampsLeft = this.stampsLeft - 1;
-                            availquantity = availquantity - 1;
-                            //console.log(availquantity);
-                            //console.log(stampsLeft);
-
-                            //Decrease available quantity of that food
-                            this.foodService.decreaseAvailQuantity(id, availquantity);
-
-                            //Deduct stamp
-                            this.userService.updateStamp(this.userEmail, this.stampsLeft);
-
-                            //Increase food popularity
-                            this.foodService.updatePopularity(id, popularity);
-
-                            //Get orders id and update student's 'orderid' field to that
-                            await this.userService.updateOrderId(this.userEmail, res.id);
-
-                            //Go to cart page to show receipt of redeemed food
-                            this.router.navigate(['/tabs/tab2']);
-
+                    if(canteendelete === true){
+                      this.showError('Canteen is unavailable currently.')
+                      this.loading.dismiss(null, null, 'redeem');
+                      //this.navCtrl.pop(); //go back to prev page.
+                      this.router.navigate(['/tabs/tab1']);
+                    }else{                                     
+                          //Check if vendor is currently listed
+                          if (listed === true) {
+        
+                            //Get latest data
+                            this.redeemSub = this.foodService.getFoodById(id).subscribe((res => {
+                              var availquantity = res['availquantity'];
+                              var popularity = res['popularity'];
+                              var foodprice: number = res['foodprice'];
+                              var foodname = res['foodname'];
+                              var image = res['image'];
+        
+                              //console.log(availquantity);
+        
+                              if (availquantity > 0) {
+                                var todayDate: Date = new Date();
+                                var stamp = 1;
+        
+                                //Create new order
+                                this.orderService.addOrders(this.canteen, todayDate, foodname, foodprice, image, stamp, this.userEmail, vendorid, id)
+                                  .then((async res => {
+        
+                                    popularity = popularity + 1;
+                                    this.stampsLeft = this.stampsLeft - 1;
+                                    availquantity = availquantity - 1;
+                                    //console.log(availquantity);
+                                    //console.log(stampsLeft);
+        
+                                    //Decrease available quantity of that food
+                                    this.foodService.decreaseAvailQuantity(id, availquantity);
+        
+                                    //Deduct stamp
+                                    this.userService.updateStamp(this.userEmail, this.stampsLeft);
+        
+                                    //Increase food popularity
+                                    this.foodService.updatePopularity(id, popularity);
+        
+                                    //Get orders id and update student's 'orderid' field to that
+                                    await this.userService.updateOrderId(this.userEmail, res.id);
+        
+                                    //Go to cart page to show receipt of redeemed food
+                                    this.router.navigate(['/tabs/tab2']);
+        
+                                    this.loading.dismiss(null, null, 'redeem');
+        
+                                    //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
+                                    //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
+                                    //false to true.
+                                    this.RedeemshowSuccess(food_name);
+        
+                                  })).catch((err => {
+                                    this.showError(err);
+                                    this.loading.dismiss(null, null, 'redeem');
+                                  }))
+                              } else {
+                                this.showError("Food no longer available")
+                                this.filterFood(this.chosenFilter); //refresh
+                                this.loading.dismiss(null, null, 'redeem');
+                              }
+        
+                              this.redeemSub.unsubscribe();
+                            }))
+                          } else {
+                            this.showError('Vendor is unavailable currently.')
                             this.loading.dismiss(null, null, 'redeem');
-
-                            //Link to the 'cart' tab2 page showing the receipt, at the bottom of the receipt, will have a button that
-                            //says "Got it" that when click will remove the data in 'orderid' field and update the 'completed' field from
-                            //false to true.
-                            this.RedeemshowSuccess(food_name);
-
-                          })).catch((err => {
-                            this.showError(err);
-                            this.loading.dismiss(null, null, 'redeem');
-                          }))
-                      } else {
-                        this.showError("Food no longer available")
-                        this.filterFood(this.chosenFilter); //refresh
-                        this.loading.dismiss(null, null, 'redeem');
-                      }
-
-                      this.redeemSub.unsubscribe();
-                    }))
-                  } else {
-                    this.showError('Vendor is unavailable currently.')
-                    this.loading.dismiss(null, null, 'redeem');
-                    this.navCtrl.pop(); //go back to prev page.
-                  }
+                            this.navCtrl.pop(); //go back to prev page.
+                          }
+                    }
+                  }))
+                  
                   this.userSub.unsubscribe();
                 }))
               }

@@ -22,11 +22,11 @@
     <div style="text-align:left;display:inline-flex;"class="subtitle">Items Available</div> 
     <div style="display:inline-flex; padding:55px;padding-top: 0;padding-bottom: 0;"></div>
   <!----Filter button---->
-     <div style="display: inline-flex;"> 
-    <!--  <ion-button (click)="filter($event)" color="light" shape="round" size="small">
+     <!--<div style="display: inline-flex;"> 
+      <ion-button (click)="filter($event)" color="light" shape="round" size="small">
       <ion-icon style="padding-right:3px;font-weight: 500;" name="funnel-outline"></ion-icon>FILTER
-      </ion-button>-->
-     </div>
+      </ion-button>
+     </div>-->
   </div> 
 
   <!--Food data shown to sponsors and vendor and admin-->
@@ -86,7 +86,7 @@
   </div>
 </ion-card>
 </ion-list>
-<div style="text-align:center;font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" & "{{chosenFilter2}}" Food Retrieved</div>
+<div style="text-align:center;font-family: 'Segoe UI';font-size: 15px;font-weight: 550;" *ngIf="foodlistArray.length == 0">No "{{chosenFilter}}" Food Retrieved</div>
 </div>
 
   <!--Food data shown to students-->
@@ -142,7 +142,7 @@
     </ion-card>    
   </ion-list>
     <!--Shown for students-->
-    <div style="text-align: center;" *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" & "{{chosenFilter2}}" Food Retrieved</div>
+    <div style="text-align: center;" *ngIf="redeemfoodArray.length ==0">No "{{chosenFilter}}" Food Retrieved</div>
   
   </div>
  

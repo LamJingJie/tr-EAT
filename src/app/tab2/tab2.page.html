@@ -15,8 +15,10 @@
   <div *ngIf="userRole ==='sponsor'">
     <div style="text-align: center;padding-right: 10px;padding-left: 10px;padding-bottom: 15px;">
       <h5><b>IMPORTANT</b></h5>
+      <!--Change this section below to the number you want. Just replace the '12345678' to your number-->
      <div style="font-size: 13px;"> <p>Do sent to <b>+65 <b (click)="copy('12345678')"id="clipboard">12345678</b></b> during payment.</p>
-      <p>Upon payment, your transaction is currrently pending for admin verification.</p></div>
+      <p>Upon payment, your transaction is currrently pending for admin verification.</p>
+    </div>
     </div>
     <div *ngIf="paid === false">
 
@@ -26,41 +28,41 @@
     </div>
     
 
-  <!---Cart here--->
-  <ion-card>
+   <!---Cart here--->
+   <ion-card>
     
-    <div style="font-family: 'Segoe UI';font-size: 12px;font-weight:550;padding: 30px;padding-bottom: 0px; padding-top: 15px;">
-      <div style="display: inline-block;padding-left: 18px;">
+    <div style="font-family: 'Segoe UI';font-size: 12px;font-weight:550;padding: 30px;padding-bottom: 0px; padding-top: 15px; display:flex;">
+      <div style="flex:1; display: flex; justify-content: center;">
         Qty
       </div>
       
-      <div style="display: inline-block;padding-left: 30px;">
+      <div style="flex:6; display: flex; justify-content: center;">
            Food Item(s)
       </div>
   
-      <div style="display: inline-block;padding-left: 100px;">
+      <div style="flex:1; display: flex; justify-content: flex-end;">
         Price
       </div>
       </div>
 
-    <ion-item style="padding-left:5px;padding-right: 5px;" *ngFor="let cart of cartArray">
+    <ion-item style="display:flex;padding-left:5px;padding-right: 5px;" *ngFor="let cart of cartArray">
 
       <!--Quantity-->
-      <div style="padding-right:20px;vertical-align:middle;">
+      <div style="flex:1;display: flex; vertical-align:middle; justify-content: center;">
         
-        <ion-icon style="padding-right: 7px;" name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
-       <b style="">{{cart.orderquantity}}</b>
-        <ion-icon  style="padding-left: 5px;" name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+        <ion-icon  name="remove-outline" (click)="decreaseAmt(cart.orderquantity, cart.id)"></ion-icon>
+       <b>{{cart.orderquantity}}</b>
+        <ion-icon   name="add-outline" (click)="increaseAmt(cart.orderquantity, cart.id)"></ion-icon>
       </div>
 
       <!--Food name-->
-      <div>
-        <div style="font-family: 'Segoe UI';width:160px;font-size: 15px;font-weight:550;"> {{cart.id | foodname | async}}</div>
+      <div style="flex: 3;">
+        <div style="display: flex; justify-content: center;font-family: 'Segoe UI';font-size: 15px;font-weight:550;"> {{cart.id | foodname | async}}</div>
       </div>
       
 
       <!--Price-->
-      <div>
+      <div style="flex: 1;display: flex;justify-content: flex-end;">
         <div style="font-family: 'Segoe UI';font-size: 15px;font-weight:550;"> {{cart.id | foodprice: cart.orderquantity | async | currency}} </div>
       </div>
      
@@ -69,8 +71,9 @@
 
      <!--Total Price-->
     <ion-item>
-      <div style="font-family: 'Segoe UI';font-size: 18px;font-weight:bold;display: inline;padding-top: 20px;padding-bottom: 20px;margin-left: 85px;">
-        Total <div style="font-size: 20px;font-weight: bold;padding-left: 90px;display: inline;"> {{totalPriceAll | currency}} </div>
+      <div style="display:flex;width:100%;font-family: 'Segoe UI';font-size: 18px;font-weight:bold;padding-top: 20px;padding-bottom: 20px;margin-left: 85px;">
+        <div style="flex: 5; display: flex; justify-content: center;">Total</div> 
+        <div style="flex: 1; display:flex; justify-content: flex-end; font-size: 20px;font-weight: bold;display: inline;"> {{totalPriceAll | currency}} </div>
       </div>
     </ion-item>
   </ion-card>

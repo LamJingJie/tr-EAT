@@ -383,7 +383,7 @@ export class AuthenticationService {
             console.log(error);
           }))
          
-          if(role === "vendor"){   
+ 
    
             this.foodService.deleteFoodVendorEmail(email).catch((error=>{
               console.log(error);
@@ -393,13 +393,9 @@ export class AuthenticationService {
             this.userService.deleteStallImg(email).catch((error=>{
               console.log(error);
             }));
-            
-          }
-          if(role === "student"){
           
-           
-          }
-          if(role === "sponsor"){
+
+ 
   
             //Delete "history" collection (maybe)
   
@@ -409,8 +405,7 @@ export class AuthenticationService {
             }).catch(err=>{
               console.log(err);
             })
-           
-          }
+  
         
           resolve(res);
   

@@ -41,7 +41,7 @@
    
     <div id="txtlabelposition">
      <ion-card-title style="margin-top:134px; display:flex;"  id ="foodname">
-      <div style="flex: 1;display: inline;">
+      <div style="flex: 1;display: inline;padding-right:5px;">
         {{order.foodname}} <p style="font-size: 11px;display: inline;"><i>x {{order.orderquantity || 1}}</i></p>
        </div>
       <div *ngIf="userRole === 'student' || userRole === 'vendor'" id="locate" style="color: #737373; font-weight: 500;">
@@ -53,8 +53,7 @@
         {{order.stallname}} . {{order.canteenname}}
        </div>
        <div *ngIf="userRole === 'student' || userRole === 'vendor'" >
-         
-       <div style="font-size: 10px; font-weight: 500;font-family: 'Segoe UI'; text-transform: capitalize;"> Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm' || pending }}</div>
+          <div style="font-size: 10px; font-weight: 500;font-family: 'Segoe UI'; text-transform: capitalize;"> Collected: {{order.datecompleted?.toDate() | date: 'dd/MM/yyy H:mm' || pending }}</div>
        </div>
        <div *ngIf="userRole === 'sponsor'">
         {{order.date?.toDate() | date: 'dd/MM/yyy H:mm'}}
